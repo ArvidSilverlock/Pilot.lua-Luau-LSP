@@ -1,0 +1,306 @@
+export type EventConnection = {
+	Unbind: (self: EventConnection) -> (),
+}
+
+type Event<T, U...> = {
+	Connect: (self: Event<T, U...>, callback: T) -> EventConnection,
+	Once: (self: Event<T, U...>, callback: T) -> EventConnection,
+	Wait: (self: Event<T, U...>) -> U...,
+}
+
+type JSONValue = string | number | boolean
+type JSON = { [JSONValue]: JSON } | JSONValue
+
+type _GetPart<T, U> = (object: T) -> U?
+type _GetPartFromPort<T, U> = (port: (number | Port)?, object: T) -> U?
+
+type _GetParts<T, U> = (object: T) -> { U }
+type _GetPartsFromPort<T, U> = (port: (number | Port)?, object: T) -> { U }
+
+export type TemperatureUnit = "K" | "F" | "C"
+export type Permission = "Modify" | "Unlock" | "Paint" | "Configure" | "Interact" | "Attach"
+
+export type CelestialBodyType = "Planet" | "BlackHole" | "Star"
+export type PlanetType = "Desert" | "Terra" | "EarthLike" | "Ocean" | "Tundra" | "Forest" | "Exotic" | "Barren" | "Gas"
+export type StarType = "Red" | "Orange" | "Yellow" | "Blue" | "Neutron"
+
+export type RegionLogType = "HyperDrive" | "Aliens" | "Spawned" | "Death" | "ExitRegion" | "Poison" | "Irradiated" | "Suffocating" | "Freezing" | "Melting"
+
+-- Insert: General Types
+
+export type Cursor = {
+	X: number,
+	Y: number,
+	Player: string,
+	Pressed: boolean,
+}
+
+export type RegionLog = {
+	Event: RegionLogType,
+	Desc: string,
+	TimeAgo: number,
+}
+
+export type RegionLogs = { RegionLog }
+
+export type RegionInfo = {
+	Type: "Planet",
+	SubType: nil,
+	Name: string,
+	TidallyLocked: boolean,
+	HasRings: boolean,
+	BeaconCount: number,
+} | {
+	Type: "Planet",
+	SubType: PlanetType,
+	Name: string,
+	Color: Color3,
+	Resources: { string },
+	Gravity: number,
+	HasAtmosphere: boolean,
+	TidallyLocked: boolean,
+	HasRings: boolean,
+	BeaconCount: number,
+} | {
+	Type: "BlackHole",
+	Name: string,
+	Size: number,
+	BeaconCount: number,
+} | {
+	Type: "Star",
+	SubType: StarType,
+	Name: string,
+	Size: number,
+	BeaconCount: number,
+}
+
+declare class PilotObject
+	-- Raw properties
+	ClassName: string
+	GUID: string
+	Health: number
+	Durability: number
+	PartLocked: number?
+	CreatedBy: number
+	Heat: number
+	Temperature: number
+
+	-- Instance properties
+	CFrame: CFrame
+	Position: Vector3
+	Orientation: Vector3
+	Size: Vector3
+	Color: Color3
+	Material: EnumMaterial
+	Anchored: boolean
+	Mass: number
+	AssemblyMass: number
+	AssemblyLinearVelocity: Vector3
+	AssemblyCenterOfMass: Vector3
+
+	-- Functions
+	function GetTemperature(self, unit: TemperatureUnit?): number
+	function HasPermission(self, permission: Permission): boolean
+	function IsDestroyed(self): boolean
+	function IsGrounded(self): boolean
+	function GetOwnerId(self): number
+	function Click(self)
+
+	-- Component Functions
+	function CanInstallComponent(self, a: any): any
+	function CanUninstallComponent(self, a: any): any
+	function ListComponents(self, a: any): any
+	function HasComponent(self, a: any): any
+	function GetComponent(self, a: any): any
+
+	-- Deprecated functions
+	function GetColor(self): Color3
+	function GetSize(self): Vector3
+	function GetDurability(self): number
+	function GetNameOfOwnerAsync(self): string
+
+	-- Data
+	function GetConfigurables(self): {
+		[string]: {
+			Name: string,
+			Type: string,
+			Description: string,
+
+			DefaultValue: any?,
+
+			MinValue: number?,
+			MaxValue: number?,
+			Step: number?,
+		},
+	}
+	function GetMethods(self): {
+		[string]: {
+			Name: string,
+			Description: string?,
+			Arguments: { Name: string?, Type: string?, Description: string? },
+			Results: { Name: string?, Type: string?, Description: string? },
+		},
+	}
+	function GetEvents(self): { string }
+
+	-- Events
+	Triggered: Event<(otherPart: PilotObject) -> (), PilotObject>
+	Configured: Event<(configurerId: number) -> (), number>
+	OnClick: Event<(clickerId: number) -> (), number>
+	Destroyed: Event<() -> ()>
+end
+
+-- Insert: Part Types
+
+type primitive = string | number | boolean | { primitive } | { [primitive]: primitive }
+
+export type FilePermissions = {
+	read: boolean?,
+	write: boolean?,
+}
+
+export type FileAttributes = {
+	metadata: { [primitive]: primitive }?,
+	permissions: ({
+		owner: "system" | number,
+		userPermissions: { [number]: FilePermissions }?,
+	} & FilePermissions)?,
+}
+
+export type FileSystemDirectory = {
+	kind: "directory",
+	contents: {
+		[string]: FileSystemFileNode,
+	},
+	attributes: FileAttributes?,
+}
+export type FileSystemFile = {
+	kind: "file",
+	contents: string,
+	attributes: FileAttributes?,
+}
+export type FileSystemDevice<T> = {
+	kind: "device",
+	device: T,
+	attributes: FileAttributes?,
+}
+export type FileSystemLink = {
+	kind: "link",
+	target: string,
+	attributes: FileAttributes?,
+}
+
+export type FileSystemRoot = {
+	kind: "root",
+	root: FileSystemDirectory,
+	attributes: FileAttributes?,
+
+	pwd: string,
+}
+
+export type FileSystemFileNode =
+	FileSystemDirectory
+	| FileSystemFile
+	| FileSystemLink
+	| FileSystemRoot
+	| FileSystemDevice<any>
+
+export type FileSystemOperationOptions = {
+	ignoreLinks: boolean?,
+	ignorePermissions: boolean?,
+}
+
+type FileSystem = {
+	new: (source: (FileSystemRoot | FileSystemDirectory)?) -> FileSystem,
+	__index: FileSystem,
+
+	separator: string,
+
+	exists: (pathname: string) -> boolean,
+	resolve: (pathname: string) -> string,
+	split: (pathname: string) -> { string },
+	join: (...string) -> string,
+	parentdir: (pathname: string) -> string,
+	filename: (pathname: string) -> string,
+
+	chdir: (self: FileSystem, pathname: string) -> string,
+	pwd: (self: FileSystem) -> string,
+	writefile: (self: FileSystem, filepath: string, contents: string) -> (),
+	readfile: (self: FileSystem, filepath: string) -> string,
+	readdir: (self: FileSystem, pathname: string) -> { string },
+	mkdir: (self: FileSystem, pathname: string?) -> (),
+	mklink: (self: FileSystem, linkName: string, targetName: string?) -> (),
+	copy: (self: FileSystem, pathnameFrom: string, pathnameTo: string?) -> (),
+	moveMerge: (self: FileSystem, pathnameFrom: string, pathnameTo: string?) -> (),
+	rename: (self: FileSystem, pathnameFrom: string, pathnameTo: string?) -> (),
+	unlink: (self: FileSystem, pathname: string) -> (),
+}
+
+type RawFileSystem = {
+	Device: <T>(device: T, attributes: FileAttributes) -> FileSystemDevice<T>,
+	Link: (pathname: string, attributes: FileAttributes) -> FileSystemLink,
+	File: (contents: string, attributes: FileAttributes) -> FileSystemFile,
+	Directory: (
+		contents: { [string]: FileSystemFileNode },
+		attributes: FileAttributes,
+		readonly: boolean?
+	) -> FileSystemDirectory,
+	Root: (root: FileSystemDirectory, attributes: FileAttributes) -> FileSystemRoot,
+
+	read: (
+		self: RawFileSystem,
+		root: FileSystemRoot,
+		pathname: string,
+		options: FileSystemOperationOptions?
+	) -> FileSystemFileNode?,
+	write: (
+		self: RawFileSystem,
+		root: FileSystemRoot,
+		pathname: string,
+		node: FileSystemFileNode,
+		options: FileSystemOperationOptions?
+	) -> (),
+	readlink: (
+		self: RawFileSystem,
+		root: FileSystemRoot,
+		link: FileSystemLink,
+		options: FileSystemOperationOptions?
+	) -> FileSystemFileNode?,
+
+	SYSTEM_READONLY: FileAttributes,
+	SYSTEM_NOACCESS: FileAttributes,
+}
+
+declare FileSystem: FileSystem
+declare RawFileSystem: RawFileSystem
+
+declare SandboxID: string
+declare SandboxRunID: number
+
+declare function JSONEncode(data: JSON): string
+declare function JSONDecode(json: string): JSON
+
+declare function GetPort(port: number?): Port
+declare function GetPorts(port: number?): { Port }
+declare function TriggerPort(port: Port | number)
+
+declare function GetCPUTime(): number
+
+declare function logError(message: string, level: number?)
+
+declare Microcontroller: Microcontroller | ARController
+
+declare pilot: {
+	setInterrupt: (period: number, callback: () -> ()) -> () -> (),
+	saveRing: (ring: number?) -> () -> (),
+	getTimeout: (thread: thread?) -> number,
+	setTimeout: (timeout: number?, thread: thread?) -> (),
+	getCPUTime: () -> number,
+	setRing: (ring: number, thread: thread?) -> (),
+	hasRing: (ring: number, thread: thread?) -> boolean,
+	getRing: (thread: thread?) -> number,
+	getThreadParent: (thread: thread?) -> thread?,
+	claimThread: (thread: thread) -> boolean,
+}
+
+-- Insert: Globals
