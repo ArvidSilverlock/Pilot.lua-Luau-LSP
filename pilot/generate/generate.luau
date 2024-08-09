@@ -10,7 +10,7 @@ local GLOBAL_DOCUMENTATION = {
 	GetPort = "Gets the connected port of the specified ID.",
 	GetPorts = "Gets all the connected ports of the specified ID.",
 	SandboxID = "The GUID of the microcontroller the program is running in.",
-	SandboxRunID = "A unique ID for the current running program, is chosen when the microcontroller is turned on.",
+	SandboxRunID = "A unique ID for the current running program, it is chosen when the microcontroller is turned on.",
 	TriggerPort = "Triggers the specified port.",
 	JSONEncode = "Encodes JSON.",
 	JSONDecode = "Decodes JSON.",
@@ -163,21 +163,19 @@ do -- Object Parsing
 			)
 		end
 
-		if next(objectDocumentation) then
-			local keys = {}
+		local keys = {}
 
-			for key, description in objectDocumentation do
-				documentation[`@roblox/globaltype/{typeName}.{key}`] = {
-					documentation = description,
-				}
-				keys[key] = `@roblox/globaltype/{typeName}.{key}`
-			end
-
-			documentation[`@roblox/globaltype/{typeName}`] = {
-				documentation = object.Description,
-				keys = keys,
+		for key, description in objectDocumentation do
+			documentation[`@roblox/globaltype/{typeName}.{key}`] = {
+				documentation = description,
 			}
+			keys[key] = `@roblox/globaltype/{typeName}.{key}`
 		end
+
+		documentation[`@roblox/globaltype/{typeName}`] = {
+			documentation = object.Description,
+			keys = if next(keys) then keys else nil,
+		}
 	end
 end
 
