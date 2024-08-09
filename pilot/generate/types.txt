@@ -288,7 +288,7 @@ declare function GetCPUTime(): number
 
 declare function logError(message: string, level: number?)
 
-declare Microcontroller: Microcontroller | ARController
+declare Microcontroller: Microcontroller
 
 declare pilot: {
 	setInterrupt: (period: number, callback: () -> ()) -> () -> (),
