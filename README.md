@@ -3,8 +3,9 @@
 If you have any questions about contributing or setting up, send them in the #questions channel of my [Pilot.lua LSP discord](https://discord.gg/5Uxx2CKkxN) or in my dms.
 
 ## Installation
-Install the [Luau LSP](https://github.com/JohnnyMorganz/luau-lsp) visual studio code extension.
-Install [lune](https://github.com/lune-org/lune), a luau runtime.
+Install the [Luau LSP](https://marketplace.visualstudio.com/items?itemName=JohnnyMorganz.luau-lsp) visual studio code extension.
+
+Install [lune](https://lune-org.github.io/docs), a luau runtime.
 
 Run these commands in order:
 ```
