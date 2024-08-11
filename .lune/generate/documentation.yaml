@@ -1,0 +1,1612 @@
+globals:
+  functions:
+    Beep:
+      description: Produces a beep sound using a triangle wave.
+      parameters:
+      - 'frequency: number'
+    GetCPUTime:
+      deprecated: true
+      description: Returns the current elapsed CPU time.
+      returns:
+      - number
+    GetPart:
+      description: Gets a part of the specified type from any connected ports.
+      parameters:
+      - 'port: ( Port | number )?'
+      - 'part: string'
+    GetPartFromPort:
+      description: Gets a part of the specified type from any port of the specified ID.
+      parameters:
+      - 'port: ( Port | number )?'
+      - 'part: string'
+    GetParts:
+      description: Gets all the parts of the specified type from any connected ports.
+      parameters:
+      - 'port: ( Port | number )?'
+      - 'part: string'
+    GetPartsFromPort:
+      description: Gets all the parts of the specified type from any port of the specified ID.
+      parameters:
+      - 'port: ( Port | number )?'
+      - 'part: string'
+    GetPort:
+      description: Gets the connected port of the specified ID.
+      parameters:
+      - 'id: number'
+      returns:
+      - Port?
+    GetPorts:
+      description: Gets all the connected ports of the specified ID.
+      parameters:
+      - 'id: number'
+      returns:
+      - '{ Port }'
+    JSONDecode:
+      description: Decodes JSON.
+      parameters:
+      - 'data: string'
+      returns:
+      - JSON
+    JSONEncode:
+      description: Encodes JSON.
+      parameters:
+      - 'data: JSON'
+      returns:
+      - string
+    TriggerPort:
+      description: Triggers the specified port.
+      parameters:
+      - 'port: Port | number'
+    logError:
+      description: Logs an error in the output.
+      parameters:
+      - 'message: string'
+      - 'level: number?'
+    pilot:
+      description: Provides functions for accessing/manipulating information about threads such as permissions, ownership, and interrupts.
+      keys:
+        claimThread:
+          description: Sets the thread's parent to the running thread. The target thread must be part of the sandbox and may not exist on a lower ring otherwise nothing will happen.
+          parameters:
+          - 'thread: thread'
+          returns:
+          - boolean
+        getCPUTime:
+          description: Returns the current elapsed CPU time.
+          returns:
+          - number
+        getRing:
+          description: Gets the ring of the target (or running) thread.
+          parameters:
+          - 'thread: thread?'
+          returns:
+          - number
+        getThreadParent:
+          description: Gets the parent of the target (or running) thread. The parent thread must be part of the sandbox and may not exist on a lower ring otherwise nil will be returned.
+          parameters:
+          - 'thread: thread?'
+          returns:
+          - thread?
+        getTimeout:
+          description: Gets the current CPU timeout, or the CPU timeout that the given thread will obey.
+          parameters:
+          - 'thread: thread?'
+          returns:
+          - number
+        hasRing:
+          description: Checks if the target (or running) thread has the specified ring privilege or lower.
+          parameters:
+          - 'ring: number'
+          - 'thread: thread?'
+          returns:
+          - boolean
+        saveRing:
+          description: Creates a function which elevates the caller to the specified (or current) ring regardless of its privilege. You can use this to de-escalate, spawn a new thread, and then re-escalate your thread after. Requires ring 0 or lower.
+          parameters:
+          - 'ring: number?'
+          returns:
+          - () -> ()
+        setInterrupt:
+          description: Will repeatedly call the interrupt every period CPU time on a valid resumption time (ignores yields/waits). Returns a function which deletes the interrupt.
+          parameters:
+          - 'period: number'
+          - 'callback: () -> ()'
+          returns:
+          - () -> ()
+        setRing:
+          description: Sets the ring of the target (or running) thread. You can use .saveRing to store the current ring so you can escalate again later.
+          parameters:
+          - 'ring: number'
+          - 'thread: thread?'
+        setTimeout:
+          description: Sets the CPU timeout of the given thread. Requires ring -1 or lower. This will not let you exceed the game's timeout, but will let you set lower timeouts. This has to do with whatever thread happens to be actively running. Currently there is not a way for you to recover from a timeout, so you should use .setInterrupt to handle your own custom timeouts.
+          parameters:
+          - 'timeout: number?'
+          - 'thread: thread?'
+  types:
+    CelestialBodyType:
+    - Planet
+    - BlackHole
+    - Star
+    ConfigurableData:
+      DefaultValue: any?
+      Description: string
+      MaxValue: number?
+      MinValue: number?
+      Name: string
+      Step: number?
+      Type: string
+    Cursor:
+      Player: string
+      Pressed: boolean
+      X: number
+      Y: number
+    EventConnection:
+      Unbind: '(self: EventConnection) -> ()'
+    EventData: '{ string }'
+    FileAttributes:
+      metadata: '{ [primitive]: primitive }?'
+      permissions:
+      - and?
+      - owner: '"system" | number'
+        userPermissions: '{ [number]: FilePermissions }?'
+      - FilePermissions
+    FilePermissions:
+      read: boolean?
+      write: boolean?
+    FileSystem:
+      chdir: '(self: FileSystem, pathname: string) -> string'
+      copy: '(self: FileSystem, pathnameFrom: string, pathnameTo: string?) -> ()'
+      exists: '(pathname: string) -> boolean'
+      filename: '(pathname: string) -> string'
+      join: (...string) -> string
+      mkdir: '(self: FileSystem, pathname: string?) -> ()'
+      mklink: '(self: FileSystem, linkName: string, targetName: string?) -> ()'
+      moveMerge: '(self: FileSystem, pathnameFrom: string, pathnameTo: string?) -> ()'
+      new: '(source: (FileSystemRoot | FileSystemDirectory)?) -> FileSystem'
+      parentdir: '(pathname: string) -> string'
+      pwd: '(self: FileSystem) -> string'
+      readdir: '(self: FileSystem, pathname: string) -> { string }'
+      readfile: '(self: FileSystem, filepath: string) -> string'
+      rename: '(self: FileSystem, pathnameFrom: string, pathnameTo: string?) -> ()'
+      resolve: '(pathname: string) -> string'
+      separator: string
+      split: '(pathname: string) -> { string }'
+      unlink: '(self: FileSystem, pathname: string) -> ()'
+      writefile: '(self: FileSystem, filepath: string, contents: string) -> ()'
+    FileSystemDevice<T>:
+      attributes: FileAttributes?
+      device: T
+      kind: '"device"'
+    FileSystemDirectory:
+      attributes: FileAttributes?
+      contents: '{ [string]: FileSystemFileNode }'
+      kind: '"directory"'
+    FileSystemFile:
+      attributes: FileAttributes?
+      contents: string
+      kind: '"file"'
+    FileSystemFileNode: FileSystemDirectory | FileSystemFile | FileSystemLink | FileSystemRoot | FileSystemDevice<any>
+    FileSystemLink:
+      attributes: FileAttributes?
+      kind: '"link"'
+      target: string
+    FileSystemOperationOptions:
+      ignoreLinks: boolean?
+      ignorePermissions: boolean?
+    FileSystemRoot:
+      attributes: FileAttributes?
+      kind: '"root"'
+      pwd: string
+      root: FileSystemDirectory
+    InstrumentType:
+    - Speed
+    - RotSpeed
+    - Temperature
+    - Time
+    - Power
+    - Size
+    - Position
+    - TemperatureF
+    - Orientation
+    MethodData:
+      Arguments: '{ MethodParameter }'
+      Description: string?
+      Name: string
+      Results: '{ MethodParameter }'
+    Permission:
+    - Modify
+    - Unlock
+    - Paint
+    - Configure
+    - Interact
+    - Attach
+    PlanetType:
+    - Desert
+    - Terra
+    - EarthLike
+    - Ocean
+    - Tundra
+    - Forest
+    - Exotic
+    - Barren
+    - Gas
+    PolysiliconMode:
+    - Activate
+    - Deactivate
+    - FlipFlop
+    RawFileSystem:
+      Device: '<T>(device: T, attributes: FileAttributes) -> FileSystemDevice<T>'
+      Directory: '(contents: { [string]: FileSystemFileNode }, attributes: FileAttributes, readonly: boolean?) -> FileSystemDirectory'
+      File: '(contents: string, attributes: FileAttributes) -> FileSystemFile'
+      Link: '(pathname: string, attributes: FileAttributes) -> FileSystemLink'
+      Root: '(root: FileSystemDirectory, attributes: FileAttributes) -> FileSystemRoot'
+      SYSTEM_NOACCESS: FileAttributes
+      SYSTEM_READONLY: FileAttributes
+      read: '(self: RawFileSystem, root: FileSystemRoot, pathname: string, options: FileSystemOperationOptions?) -> FileSystemFileNode?'
+      readlink: '(self: RawFileSystem, root: FileSystemRoot, link: FileSystemLink, options: FileSystemOperationOptions?) -> FileSystemFileNode?'
+      write: '(self: RawFileSystem, root: FileSystemRoot, pathname: string, node: FileSystemFileNode, options: FileSystemOperationOptions?) -> ()'
+    RegionInfo:
+    - or
+    - BeaconCount: number
+      HasRings: boolean
+      Name: string
+      SubType: nil
+      TidallyLocked: boolean
+      Type: '"Planet"'
+    - BeaconCount: number
+      Color: Color3
+      Gravity: number
+      HasAtmosphere: boolean
+      HasRings: boolean
+      Name: string
+      Resources: '{ string }'
+      SubType: PlanetType
+      TidallyLocked: boolean
+      Type: '"Planet"'
+    - BeaconCount: number
+      Name: string
+      Size: number
+      Type: '"BlackHole"'
+    - BeaconCount: number
+      Name: string
+      Size: number
+      SubType: StarType
+      Type: '"Star"'
+    RegionLog:
+      Desc: string
+      Event: RegionLogType
+      TimeAgo: number
+    RegionLogType:
+    - HyperDrive
+    - Aliens
+    - Spawned
+    - Death
+    - ExitRegion
+    - Poison
+    - Irradiated
+    - Suffocating
+    - Freezing
+    - Melting
+    RegionLogs: '{ RegionLog }'
+    RelayMode:
+    - Send
+    - Receive
+    StarType:
+    - Red
+    - Orange
+    - Yellow
+    - Blue
+    - Neutron
+    TemperatureUnit:
+    - K
+    - F
+    - C
+    VehicleSeatMode:
+    - Horizontal
+    - Full
+    - Mouse
+  values:
+    FileSystem:
+      type: FileSystem
+    Microcontroller:
+      description: The microcontroller object the program is running in.
+      readonly: true
+      type: Microcontroller
+    RawFileSystem:
+      type: RawFileSystem
+    SandboxID:
+      description: The GUID of the microcontroller the program is running in.
+      readonly: true
+      type: string
+    SandboxRunID:
+      description: A GUID for the current running program, it is (re)generated when the microcontroller is turned on.
+      readonly: true
+      type: string
+objectbase:
+  description: The object that all Waste of Space objects inherit from.
+  events:
+    Configured:
+      description: Fires when the object is configured.
+      parameters:
+      - 'configurerId: number'
+    Destroyed:
+      description: Fires when the object is destroyed.
+      unknowntype: true
+    OnClick:
+      description: Fires when the object is clicked.
+      parameters:
+      - 'clickerId: number'
+    Triggered:
+      description: Fires when the object is triggered.
+      parameters:
+      - 'otherPart: PilotObject'
+  methods:
+    CanInstallComponent:
+      unknowntype: true
+    CanUninstallComponent:
+      unknowntype: true
+    Click:
+      unknowntype: true
+    GetColor:
+      deprecated: Use `.Color` instead.
+      description: Gets the color of the object.
+      returns:
+      - - Color3
+        - The color of the object.
+    GetComponent:
+      unknowntype: true
+    GetConfigurables:
+      description: Gets information about the configurable properties of the object.
+      returns:
+      - '{ [string]: ConfigurableData }'
+    GetDurability:
+      deprecated: Use `.Durability` instead.
+      description: Gets the current durability of the object.
+      returns:
+      - - number
+        - The durability of the part.
+    GetEvents:
+      returns:
+      - - '{ string }'
+        - An array of event names.
+    GetMethods:
+      description: Gets information about the methods of the object.
+      returns:
+      - '{ [string]: MethodData }'
+    GetNameOfOwnerAsync:
+      deprecated: true
+      returns:
+      - string
+    GetOwnerId:
+      description: Returns who locked the part if the part is locked, otherwise returns who created the part.
+      learnmore: https://discord.com/channels/616089055532417036/1145165596967850044/1229499376347381780
+      returns:
+      - number
+    GetSize:
+      deprecated: Use `.Size` instead.
+      description: Gets the size of the object.
+      returns:
+      - - Vector3
+        - The size of the part.
+    GetTemperature:
+      deprecated: Use `.Temperature` instead.
+      description: Gets the temperature of the object.
+      returns:
+      - - number
+        - The temperature of the object.
+    HasComponent:
+      unknowntype: true
+    HasPermission:
+      description: Returns a boolean as to whether or not the microcontroller has permission to do the specified action.
+      parameters:
+      - 'permission: Permission'
+      returns:
+      - boolean
+    IsDestroyed:
+      description: Returns a boolean as to whether or not the object is destroyed.
+      returns:
+      - boolean
+    IsGrounded:
+      description: Returns a boolean as to whether or not the object is grounded.
+      returns:
+      - boolean
+    ListComponents:
+      unknowntype: true
+  properties:
+    Anchored:
+      description: Whether or not the object is anchored.
+      learnmore: https://create.roblox.com/docs/reference/engine/classes/BasePart#Anchored
+      readonly: true
+      type: boolean
+    AssemblyCenterOfMass:
+      description: The center of mass of the object's assembly.
+      learnmore: https://create.roblox.com/docs/reference/engine/classes/BasePart#AssemblyCenterOfMass
+      readonly: true
+      type: Vector3
+    AssemblyLinearVelocity:
+      description: The velocity of the object's assembly.
+      learnmore: https://create.roblox.com/docs/reference/engine/classes/BasePart#AssemblyLinearVelocity
+      readonly: true
+      type: Vector3
+    AssemblyMass:
+      description: The mass of the object's assembly.
+      learnmore: https://create.roblox.com/docs/reference/engine/classes/BasePart#AssemblyMass
+      readonly: true
+      type: number
+    CFrame:
+      description: The current CFrame of the object.
+      learnmore: https://create.roblox.com/docs/reference/engine/classes/BasePart#CFrame
+      readonly: true
+      type: CFrame
+    ClassName:
+      description: The class name of the object
+      readonly: true
+      type: string
+    Color:
+      description: The current color of the object.
+      learnmore: https://create.roblox.com/docs/reference/engine/classes/BasePart#Color
+      readonly: true
+      type: Color3
+    CreatedBy:
+      description: The user ID of the player who created the object.
+      readonly: true
+      type: number
+    Durability:
+      description: The current health/durability of the object
+      readonly: true
+      type: number
+    GUID:
+      description: The unique GUID of the object
+      readonly: true
+      type: string
+    Health:
+      deprecated: Use `.Durability` instead.
+      description: The current health/durability of the object
+      readonly: true
+      type: number
+    Heat:
+      deprecated: Use `.Temperature` instead.
+      description: The current heat/temperature of the object.
+      readonly: true
+      type: number
+    Mass:
+      description: The current mass of the individual object.
+      learnmore: https://create.roblox.com/docs/reference/engine/classes/BasePart#Mass
+      readonly: true
+      type: number
+    Material:
+      description: The material of the object.
+      learnmore: https://create.roblox.com/docs/reference/engine/classes/BasePart#Material
+      readonly: true
+      type: EnumMaterial
+    Orientation:
+      description: The current orientation of the object.
+      learnmore: https://create.roblox.com/docs/reference/engine/classes/BasePart#Orientation
+      readonly: true
+      type: Vector3
+    PartLocked:
+      description: The user ID of the player who locked the object.
+      readonly: true
+      type: number?
+    Position:
+      description: The current position of the object.
+      learnmore: https://create.roblox.com/docs/reference/engine/classes/BasePart#Position
+      readonly: true
+      type: Vector3
+    Size:
+      description: The current size of the object.
+      learnmore: https://create.roblox.com/docs/reference/engine/classes/BasePart#Size
+      readonly: true
+      type: Vector3
+    Temperature:
+      description: The current heat/temperature of the object.
+      readonly: true
+      type: number
+objects:
+  Anchor:
+    description: 'When triggered or clicked, it is able to be anchored, a state in which it is immovable by physics, and applies to parts connected to it. '
+    properties:
+      Anchored:
+        description: Determines whether the anchor is active or not.
+        type: boolean
+  Antenna:
+    categories:
+    - Logic
+    description: |-
+      A wireless transmitter that can transmit electricity from wires and trigger signals from trigger wires and buttons.
+
+      **Categories:** Logic
+    properties:
+      AntennaID:
+        description: |-
+          The ID of this antenna, to transmit to others with the same ID.
+
+          **Range:** 1 to 9999
+
+          **Default:** 1
+        type: number
+  Apparel:
+    description: "A piece of clothing that can be worn by other players. Parts can also be attached to the apparel, meaning you can create your own suits with the apprel.\nIt is similar to the prosthetic, except it can be taken off and does not cause damage. However, electricity does not trasmit throughout the apparel unlike prosthetics.\n\nApparel can also holds less parts than the prosthetic. It can only hold 25 parts, while Prosthetics can hold 50.\n\nApparel has another configuration to it called Transparency, which dictates how transparent it will become when worn. Ranges from 0-1 from non-transparent to transparent.\n\t"
+    properties:
+      Limb:
+        description: The name of the limb that this Apparel is for.
+        type: string
+      Transparency:
+        description: |-
+          The transparency of this Apparel.
+
+          **Range:** 0 to 1
+        type: number
+  Assembler:
+    categories:
+    - Electrical
+    description: |-
+      Assembles items as configured when the structure is supplied with the required power and resources.
+
+      **Categories:** Electrical
+    properties:
+      Assemble:
+        description: The name of the object to be assembled.
+        type: string
+  BallastTank:
+    description: 'Allows for variable ballast to be added to sea vehicles. Also prevents corrosion to attached parts underwater. '
+    properties:
+      Buoyancy:
+        description: |-
+          The buoyancy of this BallastTank, 0 being neutral.
+
+          **Range:** -10 to 10
+        type: number
+  Balloon:
+    description: |-
+      Levitates parts attached to it to a certain configurable height.
+      However, it is easily poppable.
+      Does not work in space, or no-atmosphere planets.
+    properties:
+      Buoyancy:
+        description: |-
+          The buoyancy of this Balloon, 0 being neutral.
+
+          **Range:** -10 to 10
+        type: number
+  Beacon:
+    categories:
+    - Electrical
+    description: "Creates a small beacon of light when powered. \n\tWhen 'ShowOnMap\\' is enabled, it broadcasts a signal into the universe.\n\t\\'BeaconName\\' changes the name of the beacon shown on the starmap. \n\t30 second cooldown for changing the configurables.\n\n**Categories:** Electrical"
+    properties:
+      BeaconName:
+        description: The name of the beacon.
+        type: string
+      ShowOnMap:
+        description: Whether this beacon should be shown on StarMaps.
+        type: boolean
+  Bin:
+    description: "Stores solid items such as Aluminum, Iron, Faucets, etc. \nCan store up to 1000 items. When destroyed, every item inside will also be destroyed. \nThe value increases as more items are added to it.\n\nBins can also be used as crafting recipes, with the resources inside being used.\nYou can also configure a bin to prevent items from being crafted from it, allowing for bins to be strictly for machine storage.\n\t"
+    properties:
+      CanBeCraftedFrom:
+        description: Determines whether this bin can be used by nearby players to craft objects.
+        type: boolean
+  BlackBox:
+    description: "Records all activity in the region using very delicate instruments.\nActivates when locked and anchors to ensure accurate readings.\nONLINE = Listening for event/Sharing event data, DATA = New data the owner hasn't seen.\n\t\t\n"
+    methods:
+      GetLogs:
+        unknowntype: true
+  Boombox:
+    categories:
+    - Electrical
+    description: |-
+      Must be powered in order to play music. When clicked, it will toggle playing music and will play the song id you give it.
+
+      **Categories:** Electrical
+    properties:
+      Audio:
+        description: The audio asset ID to be played.
+        type: string
+  Button:
+    categories:
+    - Logic
+    description: |-
+      Sends trigger signals when clicked by a player.
+      When connected to a seat and the input key is configured/configureed, the player sitting in the seat can activate the button by pressing the corresponding key.
+      TriggerMode 0: Trigger on key down
+      TriggerMode 1: Trigger on key up
+      TriggerMode 2: Trigger on key down and key up
+
+      **Categories:** Logic
+    properties:
+      KeyInput:
+        description: The name of the key that will trigger this button when the key is pressed by players in connected seats.
+        type: string
+      TriggerMode:
+        description: |-
+          Determines the type of key event to trigger this button on.
+
+          **Range:** 0 to 2
+
+          **Default:** 1
+        type: number
+  Camera:
+    categories:
+    - Logic
+    description: |-
+      It's a camera.
+      When a camera has the same ID as a screen, that screen will display the camera view.
+      Clicking on a screen that is displaying the view of a camera will allow you to directly view what the camera is seeing.
+      No power is necessary.
+
+      **Categories:** Logic
+    properties:
+      VideoID:
+        description: |-
+          The ID to transmit the camera feed over, received by screens of the same ID.
+
+          **Range:** 0 to 10000000000
+
+          **Default:** 1
+        type: number
+  Constructor:
+    description: "Similar to an assembler, but constructs a model when triggered. However, the constructor must be supplied with the correct materials for a model.\nFor example, a car model requiring 50 iron and 3 a bin attached with 50 iron, a bin attached with 30 wires and 100 power.\n\t\t\nYou can find out how many materials you need through the model loader gui.\nHas a 60 second cool down or a minute cooldown to prevent model spamming."
+    properties:
+      Autolock:
+        description: Determines if the created model should be locked by the owner of the Constructor.
+        type: boolean
+      ModelCode:
+        description: The model data of the model to be created by the Constructor.
+        type: string
+      RelativeToConstructor:
+        description: Determines if the created model should be loaded in relative to the orientation of the Constructor.
+        type: boolean
+  ConveyorBelt:
+    categories:
+    - Electrical
+    description: |-
+      Moves objects ontop of it towards the front of the conveyor belt. Only moves when powered and anchored or attached to the ground.
+
+      **Categories:** Electrical
+    properties:
+      ConveyorBeltSpeed:
+        description: |-
+          Determines the speed at which the conveyor will move items on top of it.
+
+          **Range:** -30 to 30
+        type: number
+  Coupler:
+    description: "The coupler is a part that allows the coupling/connection of vehicles and objects when powered. Both couplers must be powered in order to couple together.\nWhen the coupler comes in contact with another coupler, the couplers will both connect to eachother, both holes facing eachother. \nTo ensure no weld complications, make sure the couplers' triangles are facing upwards. When the couplers connect, the white triangles will make a square.\nCouplers also only couple to other couples with the same CouplerID.\n"
+    properties:
+      CouplerID:
+        description: |-
+          The ID of this coupler.
+
+          **Range:** 0 to 10000000000
+
+          **Default:** 1
+        type: number
+  DelayWire:
+    categories:
+    - Logic
+    description: |-
+      Similar to a regular trigger wire, but depending on the configuration will wait x seconds before the trigger signal passes through.
+
+      **Categories:** Logic
+    properties:
+      DelayTime:
+        description: |-
+          The time in seconds that it takes for signals to pass through this wire.
+
+          **Range:** 0 to 360
+        type: number
+  Disk:
+    categories:
+    - Logic
+    description: |2-
+
+
+      **Categories:** Logic
+    methods:
+      ClearDisk:
+        unknowntype: true
+      Read:
+        unknowntype: true
+      ReadEntireDisk:
+        unknowntype: true
+      Write:
+        unknowntype: true
+  Dispenser:
+    description: |-
+      Dispenses items from attached bins, similar to a faucet.
+      Can also filter certain items from dispensing. Simply configure it to be a list of names. For example, "Copper Iron Wire"
+    methods:
+      Dispense:
+        unknowntype: true
+    properties:
+      Filter:
+        description: The name of the material allowed to be dispensed.
+        type: string
+  Door:
+    categories:
+    - Templates
+    description: |-
+      When triggered, it will open, and if triggered again will close.
+
+      **Categories:** Templates
+    properties:
+      DoorSwitch:
+        description: Determines if the door is open.
+        type: boolean
+  DriveBox:
+    description: "When connected to a motor or engine with a rod, it will spin the same speed the engine or motor is going.\n(You must click the drivebox first when creating a rod.) "
+    properties:
+      Ratio:
+        description: |-
+          The ratio of speed from 1 (1:100) to 100 (100:100) between this DriveBox and the source motor.
+
+          **Range:** 1 to 100
+
+          **Default:** 1
+        type: number
+      Reversal:
+        description: Determines whether the output should be reversed.
+        type: boolean
+  EnergyShield:
+    categories:
+    - Electrical
+    description: "Creates a bubble made of energy that protects it from energy based weapons such as Lasers and Plasma Cannons.\n\nAn EnergyShield has a few sets of properties that you can fine tune to create a balanced shield.\nShieldRadius - The size of the entire shield. This will exponentially consume more power the higher the radius is. \nRegenerationSpeed - On a scale from 1 to 10 on how fast the shield will regenerate.\nShieldStrength - Scale from 1 to 10 on how much the shield can endure.\n\nRegenerationSpeed and ShieldStrength both combined can't be over 11.\nFor example, a regeneration speed of 6 and a shield strength of 5 is possible.\nHowever, a regeneration speed of 10 and a shield strength of 10 isn't, as 10 + 10 > 11\nA regeneration speed of 1 and a shield strength of 10 however is possible, since 11 = 11.\n\nAnother benefit for energy shields is that it blocks all warhead explosions, whether inside the shield or outside.\n\n**Categories:** Electrical"
+    methods:
+      GetShieldHealth:
+        unknowntype: true
+    properties:
+      RegenerationSpeed:
+        description: |-
+          Determines how fast the shield regenerates after being hit.
+
+          **Range:** 1 to 10
+        type: number
+      ShieldRadius:
+        description: |-
+          The size of the entire shield. The shield exponentially consumes more power the higher this is.
+
+          **Range:** 50 to 1000
+        type: number
+      ShieldStrength:
+        description: |-
+          Determines how much damage the shield is able to endure.
+
+          **Range:** 1 to 10
+        type: number
+  Engine:
+    description: 'It acts similar to a motor, but is powered by gasoline instead of electricity. '
+    properties:
+      EngineSpeed:
+        description: |-
+          Determines the speed at which the engine is driven.
+
+          **Range:** -20 to 20
+        type: number
+  Extractor:
+    categories:
+    - Electrical
+    description: "Extracts and harvests materials from connected terrain such as mountains and ore deposits. \nFor example, to extract coal you attach it to the coal deposit, and configure the extractor to extract Coal.\n\nThe extractor must be powered in order to work. Will not work if there's another powered extractor 50 studs away.\nIf connected to a bin, it will supply that bin with the given material it is tasked to extract.\nTwo powered extractors cannot be on the same ore deposit, or else they both will not function. \n\nIf the materials can't be added to a bin, they will spawn in front of the hole on the front of the extractor.\nHowever, if the extractor is blocked by an object, it will not spew out any materials which prevents an increase on lag.\n\t\t\nWhen tasked to extract wood, it will extract any trees near it.\n\n**Categories:** Electrical"
+    properties:
+      MaterialToExtract:
+        description: Determines the material to extract from connected natural surfaces.
+        type: string
+  Faucet:
+    description: Releases liquids and gases from containers.
+    methods:
+      Dispense:
+        unknowntype: true
+    properties:
+      Filter:
+        description: The name of the material allowed to be dispensed.
+        type: string
+  Filter:
+    description: Similar to a chute and a pipe, but only lets certain materials pass through.
+    properties:
+      Filter:
+        description: The name of the material allowed to pass through.
+        type: string
+  GravityGenerator:
+    categories:
+    - Electrical
+    description: |-
+      Generates an artificial gravity field when powered on. The gravity field only affects players, not individual parts. The amount of gravity can also be configureed, but the more gravity the higher amount of power needed. Only works in space, not inside planets.
+
+      **Categories:** Electrical
+    properties:
+      Gravity:
+        description: |-
+          The amount of gravity within the influence of the GravityGenerator.
+
+          **Range:** 30 to 300
+        type: number
+  Gyro:
+    categories:
+    - Electrical
+    description: |-
+      Stabilizes vehicles and structures by pointing upwards. Useful for mechs or orientating structures to the correct rotation. The gyro can also be configured to seek objects and players.
+
+      When powered, the gyro will follow its seek commands that can be configured using hammer.
+      The gyro has commands that allow it to find and seek objects and players.
+
+      An example of gyro's seek configuration includes "Player1 Player2" which will seek and aim towards the nearest player.
+
+      Putting "Radar" at the beginning of the seek configuration will make it target parts instead. For example, "Radar Gold Copper" will find the nearest Gold or Copper deposit.
+
+      Putting "AllExcept" will make the seeker target everything except the given list, basically inverting it. For example, "AllExcept Player1 Player2" will target "Player3" or "Player"4 but not "Player1".
+
+      The commands "Min" and "Max" set the minimum or maximum distance the seeker will target. For example, "Min20 Max500" will make the seeker only target objects within 500 studs and more than 20 studs away.
+
+      TriggerWhenSeeked will trigger all connected parts every second when the Seek configurable is satisfied
+
+      "TrigMin" and "TrigMax" work the same as "Min" and "Max" but it's for the trigger signal, trigger signal will only be sent if the above property is true.
+
+      Putting "Sun" as part of the list will make the seeker automatically target the main stellar body in the system.
+
+      Gyros also have a property called MaxTorque. This allows you to control the max force on the gyro to stabilize it.
+
+      **Categories:** Electrical
+    methods:
+      PointAt:
+        description: Points the gyro towards the specified position.
+        parameters:
+        - - 'position: Vector3'
+          - The position for the gyro to look at.
+    properties:
+      DisableWhenUnpowered:
+        description: Determines whether this gyro should be disabled while it does not have power.
+        type: boolean
+      MaxTorque:
+        description: |-
+          The maximum force in each axis the gyro can exert.
+
+          **Range:** 0 to 10000000000
+        type: Vector3
+      Seek:
+        description: The seek commands.
+        type: string
+      TriggerWhenSeeked:
+        description: Determines whether to send out a trigger signal when the gyro detects something to seek as determined by the Seek configurable.
+        type: boolean
+  Handle:
+    categories:
+    - Tools
+    description: |-
+      A handle which can be equipped when a player touches it, turning all connected parts into an equipable tool.
+
+      **Categories:** Tools
+    properties:
+      Swing:
+        description: |-
+          The type of swinging for this tool. Swing 0: Doesn't swing on click; 1: Swck; 2: Follows the mouse cursor
+
+          **Range:** 0 to 2
+
+          **Default:** 1
+        type: number
+      ToolName:
+        description: The name of the tool.
+        type: string
+      TriggerMode:
+        description: |-
+          Determines when this Handle should send trigger signals. TriggerMode 0: Trigger on mouse down; 1: Trigger on mouse up; 2: Trigger on mouse down and mouse up. If TriggerMode is set to anything else, it will trigger when the key TriggerMode is set to is pressed.
+
+          **Range:** 0 to 2
+
+          **Default:** 1
+        type: number
+  Hatch:
+    categories:
+    - Logic
+    description: |-
+      Acts as a chute when active/gray, but when black or inactive it acts as a normal object.
+
+      **Categories:** Logic
+    properties:
+      SwitchValue:
+        description: Determines whether the switch is active or not.
+        type: boolean
+  Hologram:
+    categories:
+    - Electrical
+    description: |-
+      Using our brand new Multi-Dimensional Holographic Projection Technology™ you are able to create a stationary clone with only the ID of the user provided!.
+
+      **Categories:** Electrical
+    properties:
+      UserId:
+        description: |-
+          The UserId of the player for the Hologram to display.
+
+          **Range:** 1 to 10000000000
+
+          **Default:** 1
+        type: number
+  Hydroponic:
+    categories:
+    - Electrical
+    description: |-
+      Grows grass and wood from water, turning attached water bins into either wood, sticks or grass. Incredibly useful for space bases or bases in areas devoid of life.
+
+      **Categories:** Electrical
+    properties:
+      Grow:
+        description: The material to grow from the Hydroponic.
+        type: string
+  HyperDrive:
+    categories:
+    - Propulsion
+    description: "A device used to travel at faster than light speeds to other regions of the universe. \nSimply input the coordinates to your destination and have a sufficient amount of fuel, and you'll be on your way to your destination.\nTo initiate warping, power the hyperdrive and trigger it. When warping, the hyperdrive will be anchored to prevent any movement.\n\nThe power required for warping will be dependent on the distance travelled, as well as the size of the object being transported.\nThe amount of power required will be displayed in the hyper drive, shown in the red text. \n\nAll of the parts connected to the hyperdrive and every player sitting will be teleported, however any free floating parts or standing up players will be sucked into the vaccum of space, so be careful.\n\nThe red text at the bottom of the hyperdrive indicates how much power is needed to perform the jump.\n\nMake sure the numbers on the hyperdrive is facing up to ensure correct stud alignment.\n\n**Categories:** Propulsion"
+    methods:
+      GetRequiredPower:
+        unknowntype: true
+    properties:
+      Coordinates:
+        description: The coordinates to warp to.
+        type: string
+  Instrument:
+    categories:
+    - Logic
+    description: |-
+      A device used to measure special values such as current speed and temperature.
+
+      These are the types as follows:
+      Speed - Speed / velocity of the instrument
+      RotSpeed - Rotational speed of the instrument
+      Temperature - Temperature of the local environment
+      Time - Current time (relative to the region and scaled to earth time)
+      Power - Total amount of power in a wire system, for example attaching it to a powercell with 200 power will display 200 power.
+      Size - The dimensions of the part it is attached to.
+      Position - The position of the current instrument.
+      TemperatureF - Temperature but in Fahrenheit.
+
+      **Categories:** Logic
+    methods:
+      GetReading:
+        unknowntype: true
+    properties:
+      Type:
+        description: The type of instrument readout to display on the instrument.
+        type: InstrumentType
+  IonRocket:
+    categories:
+    - Electrical
+    description: "An IonRocket allows space flight. When powered, it will propel force dependent on the Propulsion setting, which you can configure with the hammer tool. \n\t\tThe arrow indicates the direction the ionrocket will propel to when powered.\n\n**Categories:** Electrical"
+    properties:
+      Propulsion:
+        description: |-
+          Determines the speed traveled at, 0 being standstill. Affects fuel consumption.
+
+          **Range:** 0 to 100
+        type: number
+  Keyboard:
+    categories:
+    - Logic
+    description: |-
+      Similar to a button, except is programmable to take more than one key input.
+      Can be attached to a vehicle seat or clicked by a player.
+
+      **Categories:** Logic
+    methods:
+      SimulateKeyPress:
+        unknowntype: true
+      SimulateTextInput:
+        unknowntype: true
+  Laser:
+    categories:
+    - Weapons
+    - Electrical
+    description: "Fires a concentraded beam of energy when powered, which can be used to damage and set objects on fire. \n\tHas a Range of 1000 studs.\n\tPrimarily used as a weapon in space combat situations.\n\tWhile it can damage objects effectively, it cannot damage energy shields.\n\n**Categories:** WeaponsElectrical"
+    properties:
+      DamageOnlyPlayers:
+        description: Determines if this laser is only allowed to damage players and not materials.
+        type: boolean
+  LifeSensor:
+    categories:
+    - Logic
+    description: "Senses and detects organic life up to a distnace of 2000 studs. Used mainly in programming, as is used in alien technology to hunt down organisms such as players.\nHas a special programmable event called 'GetReading()' which returns a table of all organisms, with their positions and names.\nExample:\n{\n\tPlayer1 = Vector3.new(5, 5, 5);\n}\n\n**Categories:** Logic"
+    methods:
+      GetReading:
+        unknowntype: true
+  Light:
+    categories:
+    - Electrical
+    description: |-
+      Emits light when powered with electricity. Can be colored in different ways, changing the light color
+
+      **Categories:** Electrical
+    properties:
+      Brightness:
+        description: |-
+          The brightness of the light.
+
+          **Range:** 0 to 2
+        type: number
+      LightRange:
+        description: |-
+          The range of the light.
+
+          **Range:** 1 to 60
+        type: number
+  Microcontroller:
+    categories:
+    - Logic
+    description: |-
+      Runs computer programs when triggered and powered.
+      When triggered by an activator polysilicon, it will run code.
+      When triggered by a deactivator polysilicon, it will stop running code.
+      For more information on pilot.lua or the game's programming system, visit the programming tutorial or visit the wiki for the game online.
+      Requires 5 power per second when running.
+
+      Microcontroller Globals:
+      void **Beep**(number Pitch) - default pitch 1, max 10 beeps playing concurrently
+      object **GetPort**(number PortID) - returns port configured with 'PortID'
+      object **GetPartFromPort/GetPartsFromPort**(object/number Port, string ClassName) - gets a part connected to port 'Port' with classname 'ClassName'
+      void **TriggerPort**(object/number Port) - sends a trigger signal from the port 'Port'
+
+      Globals also include all lua globals and all rbx.lua globals,
+      except for roblox script-related or game-related globals such as workspace, game, stats, time, etc.
+
+      **Categories:** Logic
+    methods:
+      Communicate:
+        unknowntype: true
+    properties:
+      Code:
+        description: The code to be executed on this microcontroller.
+        type: string
+  MiningLaser:
+    categories:
+    - Electrical
+    description: "Fires a concentraded beam of energy when powered, which is used to mine objects such as asteroids, mountains and ore deposits.\nThis works similar to an extractor, except it indirectly extracts power from other natural sources. \n\nWhen the laser hits an object, it will extract resources from that object and put it in attached bins.\nVery useful for creating mining vehicles to extract resources.\n\nUnlike the extractor however, this is far more efficient.\nThe MiningLaser outputs 2 resources per second, unlike the extractor which only does 2. This means the laser is 1.5x more efficient.\n\nHowever, the mining laser generates more heat than the extractor. Atleast 2 coolers are recommended per mining laser.\n\n**Categories:** Electrical"
+    properties:
+      MaterialToExtract:
+        description: Determines the material to extract from the laser beam.
+        type: string
+  Modem:
+    categories:
+    - Electrical
+    description: "A computer networking object that allows you to send, save and get messages cross-region.\nThis is an incredibly useful part to set up an internet of sorts and send data to other computers.\n\nThe modem has 5 programmable functions to it.\nSendMessage(Data, NetworkId defaults to 0) sends a message (specifically through messaging service) carrying data.\nMessageSent is a special event that can be connected to via Connect. Has one argument called Data which is the data received. \nPostRequest saves a string of data to the WoS internet ':PostRequest(Domain, Data)' (modem must be locked)\nGetRequest gets a string of data from the WoS internet ':GetRequest(Domain)'\nRealPostRequest send a POST request to the real www ':(Domain, DataPassed, AsyncBool, FuncToSendResultsTo, OptionalHeaders)'\n\n**Categories:** Electrical"
+    methods:
+      GetRequest:
+        unknowntype: true
+      PostRequest:
+        unknowntype: true
+      RealPostRequest:
+        unknowntype: true
+      SendMessage:
+        unknowntype: true
+    properties:
+      NetworkID:
+        description: |-
+          The ID of this modem used for communication between modems using SendMessage.
+
+          **Range:** 0 to 10000000000
+
+          **Default:** 1
+        type: number
+  Motor:
+    categories:
+    - Electrical
+    description: |-
+      Spins objects attached to the hinge at the front when powered.
+
+      **Categories:** Electrical
+    properties:
+      Power:
+        description: |-
+          Determines the amount of power used to drive the motor. This affects the torque and power consumption. Negative values are reverse.
+
+          **Range:** -1 to 1
+        type: number
+      Ratio:
+        description: |-
+          Determines the gear ratio applied to the motor in terms of the multiplier on the RPM. 0.1 means a 10:1 ratio, where the RPM is 1/10th and the torque is 10x the original RPM if the ratio were 1.
+
+          **Range:** 0.01 to 100
+        type: number
+  Polysilicon:
+    categories:
+    - Logic
+    description: |-
+      A special electronic material used to send special signals to certain objects.
+
+      Has a special configuration called Frequency which dictates how many times the polysilicon will repeat a trigger.
+      For example, if a polysilicon was attached to a pulley, having a frequency of 5 and triggered, the pulley will be activated 5 times.
+
+      **Categories:** Logic
+    properties:
+      Frequency:
+        description: |-
+          The amount of times to activate the Polysilicon from a single trigger.
+
+          **Range:** 1 to 10
+
+          **Default:** 1
+        type: number
+      PolysiliconMode:
+        description: The mode of the Polysilicon. Each mode results in different behaviors for objects.
+        type: PolysiliconMode
+  Port:
+    categories:
+    - Logic
+    description: |-
+      An object used primarily in programming. Allows a microcontroller and computers to interact with their surroundings.
+
+      **Categories:** Logic
+    properties:
+      PortID:
+        description: |-
+          The ID of this port used to utilize this port by connected microcontrollers.
+
+          **Range:** 0 to 10000000000
+
+          **Default:** 1
+        type: number
+  Prosthetic:
+    description: "An artificial part that can be attached to players in exchange for a limb.\nThe limb configuration can be configureed to be the limb you want to have for a prosthetic, for example configuring it to be \"Right Leg\" will have the prosthetic attach itself to your character.\nSimply touch the prosthetic, and it will automatically be attached to your body. This process is extremely unhealthy, however, and may result in short-term complications.\n\nParts can be attached to the prosthetic, allowing many uses for the prosthetic limb.\n\nProsthetic limbs are also electrically conductable, acting as a wire.\n\nHeavily damages the character once attached.\nProsthetics can't have more than 50 parts attached to them.\n \t"
+    properties:
+      Limb:
+        description: The name of the limb that this Prosthetic is for.
+        type: string
+  Pump:
+    categories:
+    - Electrical
+    description: |-
+      Pumps liquid from the environment into attached containers. For example, a pump located in the ocean will pump water when powered.
+
+      **Categories:** Electrical
+    properties:
+      LiquidToPump:
+        description: The name of the liquid to extract using the pump.
+        type: string
+  Rail:
+    description: "Slides and moves objects along its surface when powered and triggered. Useful for creating retractable pistons and actuators, for turrets or other retractable devices.\n\t\t\nRails will only move objects connected on the relative top surface of the rail.\n\t\t\nThe rail can only be activated through the use of polysilicons.\nMode 0 or activating polysilicons will set the rail to position1.\nMode 1 or deactivating polysilicons will set the rail to position2.\nMode 2 or flip flop polysilicons will act like a switch, setting to position2 if position1 and vice versa.\n\t\t\nHas 2 configurations, position1 and position2.\n\t\t\nBoth configurations should be between 0 and 100. These are percents of where the attached objects should slide to.\nFor example, if a rail was 50 studs long and position2 was 50 or 50%, the attached objects will slide to the middle or at 25 studs.\n\t\t\nDue to roblox physics, rails may act weirdly. To prevent this from happening, you should always place your rails first before anything else. It is recommended to attach objects on the rail after the rail is safely placed down.\n"
+    methods:
+      SetPosition:
+        unknowntype: true
+    properties:
+      Position1:
+        description: |-
+          Determines the position of the first state of the rail.
+
+          **Range:** 0 to 100
+        type: number
+      Position2:
+        description: |-
+          Determines the position of the second state of the rail.
+
+          **Range:** 0 to 100
+        type: number
+      TweenTime:
+        description: |-
+          Determines the time it takes for the rail to change positions.
+
+          **Range:** 0.5 to 60
+        type: number
+  Reactor:
+    description: |-
+      Generates steam using water and heat from radiation.
+      Up to 4 pieces of uranium can be inserted into the reactor as fuel.
+      If the temperature is above 400, it will begin to turn water into steam (rate dependent on temperature).
+      If the temperature exceeds 1200 F, a meltdown will occur.
+      The Reactor fuel status can be acquired through the :GetFuel() method with a microcontroller.
+      Polysilicon is used to control a reactor, and fuel must be ejected manually:
+
+      Activation lowers the control rods, decreasing reaction rate.
+      Deactivation raises the control rods, allowing fuel to react.
+      FlipFlop will eject fuel or waste from the fuel rod with the least fuel.
+    methods:
+      GetFuel:
+        unknowntype: true
+      GetTemp:
+        unknowntype: true
+    properties:
+      Alarm:
+        description: Determines whether the reactor alarm system is enabled for when the reactor is near meltdown temperature.
+        type: boolean
+  Relay:
+    description: "A powerful transmitter capable of transmitting trigger signals and resources/power between different regions.\nIt is a more powerful version of the antenna and transporter.\n\nUnlike the antenna, the relay has 2 modes, mode 0 and mode 1.\nMode 0 sends resources/power and trigger signals, while mode 1 receives it.\n\nUnlike the antenna, it can also transfer power in inactive regions or regions without players in them.\nThis means that you can connect a relay to your main base, warp away without anyone in the base, and still have the relay get the sufficient amount of power.\n\nHowever, you should have only one sending relay per coordinate, as conflicts can occur if there are 2 or more relays in the region/coordinates sending power or signalsith the same ID.\nOn the other hand, there can be an infinite number of receivers but the power/resources will be distributed evenly among them.\n\nFor example, let's say a relay network has a total output of 500 power and 25 iron. If there are 5 active receivers, each of them will get 100 power and 5 iron.\n\nWhen the relay is red, it means it not functioning. When it turns green, it is properly linked up to another relay or is sending signals.\n\t"
+    properties:
+      LinkerID:
+        description: |-
+          The ID of the relay, to send or take materials to or from other relays with the same ID.
+
+          **Range:** 1 to 10000000000
+
+          **Default:** 1
+        type: number
+      Mode:
+        description: The mode of the relay. Send outputs materials to other receiving relays; Receive receives materials from sending relays.
+        type: RelayMode
+  RemoteControl:
+    categories:
+    - Logic
+    description: |-
+      Similar to an antenna, but sends trigger signals forward wirelessly when triggered.
+
+      **Categories:** Logic
+    properties:
+      RemoteControlRange:
+        description: |-
+          The range in studs at which signals will be transmitted.
+
+          **Range:** 1 to 500
+        type: number
+  Rocket:
+    categories:
+    - Propulsion
+    description: |-
+      A propulsion device that consumes gasoline.
+
+      **Categories:** Propulsion
+    properties:
+      Propulsion:
+        description: |-
+          Determines the speed traveled at, 0 being standstill. Affects fuel consumption.
+
+          **Range:** 0 to 100
+        type: number
+  Screen:
+    categories:
+    - Logic
+    - Electrical
+    description: |-
+      A programmable object capable of showing text, buttons and images on an LED display. Very useful for creating custom programmable interfaces.
+
+      **Categories:** LogicElectrical
+    methods:
+      ClearElements:
+        unknowntype: true
+      CreateElement:
+        unknowntype: true
+      GetDimensions:
+        unknowntype: true
+    properties:
+      VideoID:
+        description: |-
+          The ID of the camera feed being to be viewed, or 0 for none.
+
+          **Range:** 0 to 10000000000
+
+          **Default:** 1
+        type: number
+  Servo:
+    categories:
+    - Electrical
+    description: "Spins objects attached to the hinge at the front when powered, to set angles.\n\tPolysilicon can be used to control its angle.\n\tActivate will increment the goal angle by the configured angle step (clockwise looking at its face)\n\tDeactivate will decrement the goal angle (counter-clockwise)\n\tFlipFlop will reset the angle to 0\n\tMicrocontrollers can also set a servo's angle with :SetAngle(Goal)\n\n**Categories:** Electrical"
+    methods:
+      SetAngle:
+        unknowntype: true
+    properties:
+      AngleStep:
+        description: |-
+          Determines the change in angle when a pulse is received by Polysilicon.
+
+          **Range:** -180 to 180
+        type: number
+      ServoSpeed:
+        description: |-
+          Determines the speed at which the servo is driven.
+
+          **Range:** 0 to 20
+        type: number
+  Sign:
+    description: 'Displays text or images. To display an image, configure it to id:imageid '
+    properties:
+      SignText:
+        description: The text to display on the front of the sign. Rich text is allowed.
+        type: string
+      TextColor:
+        description: The color of the text on the sign.
+        type: Color3
+      TextFont:
+        description: The font of the text on the sign.
+        type: Selection
+  Speaker:
+    categories:
+    - Electrical
+    description: |-
+      Plays audio of length up to 5 seconds, unless it is powered in which case it can play a full audio.
+      When clicked or triggered, it will toggle playing music and will play the song id you give it.
+      Speaker:LoadSound(SoundId) will return a Sound object
+      A Sound object can be modified using properties SoundId, Looped, PlaybackSpeed, Pitch, TimePositionand the methods Play, Pause, Stop, Destroy
+
+      **Categories:** Electrical
+    methods:
+      Chat:
+        unknowntype: true
+      ClearSounds:
+        unknowntype: true
+      LoadSound:
+        unknowntype: true
+      PlaySound:
+        unknowntype: true
+    properties:
+      Audio:
+        description: The audio asset ID to be played.
+        type: string
+      Pitch:
+        description: |-
+          The pitch at which to play the audio.
+
+          **Range:** 0 to 3
+        type: number
+  StarMap:
+    categories:
+    - Electrical
+    description: "Shows your current location in the universe and other nearby stars and celestial bodies.\nHas 2 modes, universe and solar.\nUniverse mode shows your location in the universe, and solar mode shows your location in the solar system if you are in one.\nRequires power in order to function. \n\t\nIt also has unique icons for every celestial body type. Clicking on a Icon will set a all connected HyperDrive/Telescope to those coordinates.\n\nWhen triggered with polysilicon, polysilicon 0 will set it to univesre mode, polysilicon 1 will set it to solar system mode, and polysilicon 2 will switch it.\n\nHas two iterative functions that can be used with the microcontroller 'GetBodies' and 'GetSystems', e.g. for key, val in StartMap:GetBodies() do\n\n**Categories:** Electrical"
+    methods:
+      GetBodies:
+        unknowntype: true
+      GetSystems:
+        unknowntype: true
+  SteamEngine:
+    description: 'It acts similar to a motor, but is powered by Steam instead of electricity. '
+    properties:
+      EngineSpeed:
+        description: |-
+          Determines the speed at which the engine is driven.
+
+          **Range:** -20 to 20
+        type: number
+  StorageSensor:
+    categories:
+    - Logic
+    description: |-
+      When the number of contents within connected storage objects is within a defined range, it will send trigger signals similar to a button.
+      This can be used to automate production of certain products when the stored quantity is low.
+
+      **Categories:** Logic
+    properties:
+      QuantityRange:
+        description: The range of item quantities within which this sensor will trigger.
+        type: string
+  Switch:
+    categories:
+    - Logic
+    - Electrical
+    description: |-
+      Acts as a wire when active/green, but when black or inactive it acts as a normal object. Must use a polysilicon to switch for trigger events.
+
+      **Categories:** LogicElectrical
+    properties:
+      SwitchValue:
+        description: Determines whether the switch is active or not.
+        type: boolean
+  Teleporter:
+    description: |
+      A device used to transport players across regions.
+      When powered and triggered, it will teleport all players in the beam to the given coordinates and teleporter id.
+      It will warp the player to a teleporter in the region with the given teleporter id.
+
+      When warping to a teleporter inside of a planet, set the last value to true. For example,
+      50, -50, 85, -75, true
+
+      Make sure you set the correct coordinates OR YOU WILL BE STRANDED!
+
+      Costs 1000 energy per teleport. Teleporter uses Energy regardless if a player is on the Teleporter at the moment it gets triggered.
+    properties:
+      Coordinates:
+        description: The coordinates to your Destination.
+        type: string
+      TeleporterID:
+        description: |-
+          The ID of the teleporter at the goal coordinates to teleport directly to.
+
+          **Range:** 1 to 999
+
+          **Default:** 1
+        type: number
+  Telescope:
+    categories:
+    - Electrical
+    description: |-
+      A device that allows you to look at celestial objects and regions of space from a far away distance.
+      Simply click the device and an interface will pop up on your screen allowing you to see details about a planet.
+      To view a specific coordinate, configure the telescope and set to the desired coordinates.
+
+      Can only see within 100 universe units, any farther will result in a blurry image.
+
+      Information such as resources on the planet, temperature, distance from its local sun, and planet type will be displayed as well.
+
+      Must be powered in order to view object's information.
+      Has a 1 minute delay between viewing different systems.
+
+      **Categories:** Electrical
+    methods:
+      GetCoordinate:
+        unknowntype: true
+      WhenRegionLoads:
+        unknowntype: true
+    properties:
+      ViewCoordinates:
+        description: The coordinates to view.
+        type: string
+  TemperatureSensor:
+    categories:
+    - Logic
+    description: "When the surrounding temperature is within a defined range, it will send trigger signals similar to a button.\n\nFor example, if the current temperature is 1100 and the temperature range is \"1000:inf\", then the sensor will send a signal.\n\t\nThis is very useful for creating smart cooling systems for a vehicle or reactor, preventing overheating from occuring.\n\nIf you want the temperature sensor to trigger outside of a certain range, take the inverse of the range.\nFor example, \"-inf:999\" would trigger when the temperature is within that range.\n\nConnecting the TemperatureSensor to a reactor will use the reactor's temperature instead of the surrounding temperature.\n\n**Categories:** Logic"
+    methods:
+      GetTemp:
+        unknowntype: true
+    properties:
+      TemperatureRange:
+        description: The range of temperatures within which this sensor will trigger.
+        type: string
+  Thruster:
+    categories:
+    - Propulsion
+    - Electrical
+    description: |-
+      A device that creates forward propulsion depending on its size when powered.
+      The size of the thruster will determine the max thrust speed it can have, with a larger thruster being capable of higher speeds.
+
+      The speed setting of the thruster can also be configured from -100 (full backward) to 100 (full forward).
+
+      The maximum speed of a thruster is dependent on its volume.
+      Thrusters will generate more heat the larger and more powerful the thruster is. A 10x10x10 thruster, for example, would need about 8 coolers to operate.
+      The power required by a thruster is proportional to its actual speed output.
+
+      Thrusters can be heated to a temperature of around <200 degrees before overheating and combusting.
+
+      **Categories:** PropulsionElectrical
+    properties:
+      Propulsion:
+        description: |-
+          Determines the speed traveled at, 0 being standstill. Affects fuel consumption.
+
+          **Range:** 0 to 100
+        type: number
+  TimeSensor:
+    categories:
+    - Logic
+    description: |-
+      When the current time matches the same time as the timesensor, it will trigger.
+
+      For example, if the world turns 7:15 it will activate.
+
+      This is useful for creating dynamic lights that turn on only during the night, saving energy.
+
+      The format should be hour:minute
+
+      **Categories:** Logic
+    properties:
+      Time:
+        description: The time at which this sensor will trigger.
+        type: string
+  TouchScreen:
+    categories:
+    - Logic
+    - Electrical
+    description: |-
+      A Screen, but with capabilities of handling player mouse input.
+      This is to be used with programming.
+
+      **Categories:** LogicElectrical
+    extends: Screen
+    methods:
+      GetCursor:
+        unknowntype: true
+      GetCursors:
+        unknowntype: true
+      GetDimensions:
+        unknowntype: true
+  Transformer:
+    categories:
+    - Logic
+    - Electrical
+    description: |-
+      Sends continuous trigger signals every second when powered.
+
+      **Categories:** LogicElectrical
+    properties:
+      LoopTime:
+        description: |-
+          The time in seconds between triggers.
+
+          **Range:** 0 to 360
+        type: number
+  Transporter:
+    description: "Acts as an antenna but for bins and objects containing materials such as liquids and solids. \nUseful for creating large factory bases with many extractors without using long chutes.\n\t"
+    properties:
+      TransporterID:
+        description: |-
+          The ID of this transformer, to transmit to others with the same ID.
+
+          **Range:** 1 to 999
+
+          **Default:** 1
+        type: number
+  TriggerSwitch:
+    categories:
+    - Logic
+    description: |-
+      Acts as a triggerwire when active/green, but when black or inactive it acts as a normal object.
+
+      **Categories:** Logic
+    properties:
+      SwitchValue:
+        description: Determines whether the switch is active or not.
+        type: boolean
+  Turbofan:
+    categories:
+    - Propulsion
+    description: |-
+      Generates thrust from crude Oil, similar to a Thruster.
+      If a motor is attached to the front, it instead acts like an engine and rotates it.
+
+      **Categories:** Propulsion
+    properties:
+      TurboFanSpeed:
+        description: |-
+          Determines the speed at which the turbofan is driven, or the speed at which it travels.
+
+          **Range:** 0 to 100
+        type: number
+  Valve:
+    categories:
+    - Logic
+    description: |-
+      Acts as a pipe when active/gray, but when black or inactive it acts as a normal object.
+
+      **Categories:** Logic
+    properties:
+      SwitchValue:
+        description: Determines whether the switch is active or not.
+        type: boolean
+  VehicleSeat:
+    description: "Allows players to control vehicles by rotating when sat on.\nIt is incredibly important to have when creating vehicles.\n\nAttaching buttons to the vehicleseat will allow the player sitting on it to trigger the button by pressing a key.\nSimply attach the button to the vehicle seat, configure it to the keybind you would like, and it will allow you to trigger that button by pressing the key when sitting down in the seat.\n\t"
+    properties:
+      Enabled:
+        description: Determines whether this seat should control its rotation. Turning this off results in a regular seat.
+        type: boolean
+      Mode:
+        description: 'The control mode of the seat. Horizontal: Rotate horizontally with A/D. Full: Rotate horizontally and vertically with W/A/S/D. Mouse: point towards the player''s mouse when holding click.'
+        type: VehicleSeatMode
+      Speed:
+        description: |-
+          The speed at which the seat will rotate.
+
+          **Range:** 0 to 10
+        type: number
+  Winch:
+    description: |
+      A special device used to control the length of constraints attached to it.
+      When attaching a constraint to the Winch, click the Winch first.
+      When triggered with polysilicon, it will increase (Activate) or decrease (Deactivate).
+    properties:
+      DeltaLength:
+        description: |-
+          The length change in studs when triggered by Polysilicon.
+
+          **Range:** 0 to 100
+        type: number
+      MaxLength:
+        description: |-
+          The maximum length in studs of the rope.
+
+          **Range:** 0 to 100
+        type: number
+      MinLength:
+        description: |-
+          The minimum length in studs of the rope.
+
+          **Range:** 0 to 100
+        type: number
+types:
+  Event<T, U...>:
+    Connect: '(self: Event<T, U...>, callback: T) -> EventConnection'
+    Once: '(self: Event<T, U...>, callback: T) -> EventConnection'
+    Wait: '(self: Event<T, U...>) -> U...'
+  JSON: '{ [JSONValue]: JSON } | JSONValue'
+  JSONValue: string | number | boolean | buffer
+  MethodParameter:
+    Description: string?
+    Name: string?
+    Type: string?
+  _GetPart<T, U>: '(object: T) -> U?'
+  _GetPartFromPort<T, U>: '(port: (number | Port)?, object: T) -> U?'
+  _GetParts<T, U>: '(object: T) -> { U }'
+  _GetPartsFromPort<T, U>: '(port: (number | Port)?, object: T) -> { U }'
+  primitive: 'string | number | boolean | { primitive } | { [primitive]: primitive }'
