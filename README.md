@@ -8,6 +8,8 @@ Install [lune](https://github.com/lune-org/lune), a luau runtime.
 
 Run these commands in order:
 ```
+git clone https://github.com/ArvidSilverlock/Pilot.lua-Luau-LSP.git
+cd Pilot.lua-Luau-LSP
 lune run pilot setup
 lune run pilot generate json
 ```
