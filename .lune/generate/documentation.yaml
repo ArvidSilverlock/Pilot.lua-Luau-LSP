@@ -11,24 +11,26 @@ globals:
       - number
     GetPart:
       description: Gets a part of the specified type from any connected ports.
+      generate: partgetters
       parameters:
-      - 'port: ( Port | number )?'
-      - 'part: string'
+      - 'part: string?'
     GetPartFromPort:
       description: Gets a part of the specified type from any port of the specified ID.
+      generate: partgetters
       parameters:
       - 'port: ( Port | number )?'
-      - 'part: string'
+      - 'part: string?'
     GetParts:
       description: Gets all the parts of the specified type from any connected ports.
+      generate: partgetters
       parameters:
-      - 'port: ( Port | number )?'
-      - 'part: string'
+      - 'part: string?'
     GetPartsFromPort:
       description: Gets all the parts of the specified type from any port of the specified ID.
+      generate: partgetters
       parameters:
       - 'port: ( Port | number )?'
-      - 'part: string'
+      - 'part: string?'
     GetPort:
       description: Gets the connected port of the specified ID.
       parameters:
@@ -513,10 +515,7 @@ objects:
   Antenna:
     categories:
     - Logic
-    description: |-
-      A wireless transmitter that can transmit electricity from wires and trigger signals from trigger wires and buttons.
-
-      **Categories:** Logic
+    description: A wireless transmitter that can transmit electricity from wires and trigger signals from trigger wires and buttons.
     properties:
       AntennaID:
         description: |-
@@ -541,10 +540,7 @@ objects:
   Assembler:
     categories:
     - Electrical
-    description: |-
-      Assembles items as configured when the structure is supplied with the required power and resources.
-
-      **Categories:** Electrical
+    description: Assembles items as configured when the structure is supplied with the required power and resources.
     properties:
       Assemble:
         description: The name of the object to be assembled.
@@ -573,7 +569,7 @@ objects:
   Beacon:
     categories:
     - Electrical
-    description: "Creates a small beacon of light when powered. \n\tWhen 'ShowOnMap\\' is enabled, it broadcasts a signal into the universe.\n\t\\'BeaconName\\' changes the name of the beacon shown on the starmap. \n\t30 second cooldown for changing the configurables.\n\n**Categories:** Electrical"
+    description: "Creates a small beacon of light when powered. \n\tWhen 'ShowOnMap\\' is enabled, it broadcasts a signal into the universe.\n\t\\'BeaconName\\' changes the name of the beacon shown on the starmap. \n\t30 second cooldown for changing the configurables."
     properties:
       BeaconName:
         description: The name of the beacon.
@@ -595,10 +591,7 @@ objects:
   Boombox:
     categories:
     - Electrical
-    description: |-
-      Must be powered in order to play music. When clicked, it will toggle playing music and will play the song id you give it.
-
-      **Categories:** Electrical
+    description: Must be powered in order to play music. When clicked, it will toggle playing music and will play the song id you give it.
     properties:
       Audio:
         description: The audio asset ID to be played.
@@ -612,8 +605,6 @@ objects:
       TriggerMode 0: Trigger on key down
       TriggerMode 1: Trigger on key up
       TriggerMode 2: Trigger on key down and key up
-
-      **Categories:** Logic
     properties:
       KeyInput:
         description: The name of the key that will trigger this button when the key is pressed by players in connected seats.
@@ -634,8 +625,6 @@ objects:
       When a camera has the same ID as a screen, that screen will display the camera view.
       Clicking on a screen that is displaying the view of a camera will allow you to directly view what the camera is seeing.
       No power is necessary.
-
-      **Categories:** Logic
     properties:
       VideoID:
         description: |-
@@ -660,10 +649,7 @@ objects:
   ConveyorBelt:
     categories:
     - Electrical
-    description: |-
-      Moves objects ontop of it towards the front of the conveyor belt. Only moves when powered and anchored or attached to the ground.
-
-      **Categories:** Electrical
+    description: Moves objects ontop of it towards the front of the conveyor belt. Only moves when powered and anchored or attached to the ground.
     properties:
       ConveyorBeltSpeed:
         description: |-
@@ -685,10 +671,7 @@ objects:
   DelayWire:
     categories:
     - Logic
-    description: |-
-      Similar to a regular trigger wire, but depending on the configuration will wait x seconds before the trigger signal passes through.
-
-      **Categories:** Logic
+    description: Similar to a regular trigger wire, but depending on the configuration will wait x seconds before the trigger signal passes through.
     properties:
       DelayTime:
         description: |-
@@ -699,10 +682,7 @@ objects:
   Disk:
     categories:
     - Logic
-    description: |2-
-
-
-      **Categories:** Logic
+    description: ''
     methods:
       ClearDisk:
         unknowntype: true
@@ -726,10 +706,7 @@ objects:
   Door:
     categories:
     - Templates
-    description: |-
-      When triggered, it will open, and if triggered again will close.
-
-      **Categories:** Templates
+    description: When triggered, it will open, and if triggered again will close.
     properties:
       DoorSwitch:
         description: Determines if the door is open.
@@ -751,7 +728,7 @@ objects:
   EnergyShield:
     categories:
     - Electrical
-    description: "Creates a bubble made of energy that protects it from energy based weapons such as Lasers and Plasma Cannons.\n\nAn EnergyShield has a few sets of properties that you can fine tune to create a balanced shield.\nShieldRadius - The size of the entire shield. This will exponentially consume more power the higher the radius is. \nRegenerationSpeed - On a scale from 1 to 10 on how fast the shield will regenerate.\nShieldStrength - Scale from 1 to 10 on how much the shield can endure.\n\nRegenerationSpeed and ShieldStrength both combined can't be over 11.\nFor example, a regeneration speed of 6 and a shield strength of 5 is possible.\nHowever, a regeneration speed of 10 and a shield strength of 10 isn't, as 10 + 10 > 11\nA regeneration speed of 1 and a shield strength of 10 however is possible, since 11 = 11.\n\nAnother benefit for energy shields is that it blocks all warhead explosions, whether inside the shield or outside.\n\n**Categories:** Electrical"
+    description: "Creates a bubble made of energy that protects it from energy based weapons such as Lasers and Plasma Cannons.\n\nAn EnergyShield has a few sets of properties that you can fine tune to create a balanced shield.\nShieldRadius - The size of the entire shield. This will exponentially consume more power the higher the radius is. \nRegenerationSpeed - On a scale from 1 to 10 on how fast the shield will regenerate.\nShieldStrength - Scale from 1 to 10 on how much the shield can endure.\n\nRegenerationSpeed and ShieldStrength both combined can't be over 11.\nFor example, a regeneration speed of 6 and a shield strength of 5 is possible.\nHowever, a regeneration speed of 10 and a shield strength of 10 isn't, as 10 + 10 > 11\nA regeneration speed of 1 and a shield strength of 10 however is possible, since 11 = 11.\n\nAnother benefit for energy shields is that it blocks all warhead explosions, whether inside the shield or outside."
     methods:
       GetShieldHealth:
         unknowntype: true
@@ -786,7 +763,7 @@ objects:
   Extractor:
     categories:
     - Electrical
-    description: "Extracts and harvests materials from connected terrain such as mountains and ore deposits. \nFor example, to extract coal you attach it to the coal deposit, and configure the extractor to extract Coal.\n\nThe extractor must be powered in order to work. Will not work if there's another powered extractor 50 studs away.\nIf connected to a bin, it will supply that bin with the given material it is tasked to extract.\nTwo powered extractors cannot be on the same ore deposit, or else they both will not function. \n\nIf the materials can't be added to a bin, they will spawn in front of the hole on the front of the extractor.\nHowever, if the extractor is blocked by an object, it will not spew out any materials which prevents an increase on lag.\n\t\t\nWhen tasked to extract wood, it will extract any trees near it.\n\n**Categories:** Electrical"
+    description: "Extracts and harvests materials from connected terrain such as mountains and ore deposits. \nFor example, to extract coal you attach it to the coal deposit, and configure the extractor to extract Coal.\n\nThe extractor must be powered in order to work. Will not work if there's another powered extractor 50 studs away.\nIf connected to a bin, it will supply that bin with the given material it is tasked to extract.\nTwo powered extractors cannot be on the same ore deposit, or else they both will not function. \n\nIf the materials can't be added to a bin, they will spawn in front of the hole on the front of the extractor.\nHowever, if the extractor is blocked by an object, it will not spew out any materials which prevents an increase on lag.\n\t\t\nWhen tasked to extract wood, it will extract any trees near it."
     properties:
       MaterialToExtract:
         description: Determines the material to extract from connected natural surfaces.
@@ -809,10 +786,7 @@ objects:
   GravityGenerator:
     categories:
     - Electrical
-    description: |-
-      Generates an artificial gravity field when powered on. The gravity field only affects players, not individual parts. The amount of gravity can also be configureed, but the more gravity the higher amount of power needed. Only works in space, not inside planets.
-
-      **Categories:** Electrical
+    description: Generates an artificial gravity field when powered on. The gravity field only affects players, not individual parts. The amount of gravity can also be configureed, but the more gravity the higher amount of power needed. Only works in space, not inside planets.
     properties:
       Gravity:
         description: |-
@@ -844,8 +818,6 @@ objects:
       Putting "Sun" as part of the list will make the seeker automatically target the main stellar body in the system.
 
       Gyros also have a property called MaxTorque. This allows you to control the max force on the gyro to stabilize it.
-
-      **Categories:** Electrical
     methods:
       PointAt:
         description: Points the gyro towards the specified position.
@@ -871,10 +843,7 @@ objects:
   Handle:
     categories:
     - Tools
-    description: |-
-      A handle which can be equipped when a player touches it, turning all connected parts into an equipable tool.
-
-      **Categories:** Tools
+    description: A handle which can be equipped when a player touches it, turning all connected parts into an equipable tool.
     properties:
       Swing:
         description: |-
@@ -898,10 +867,7 @@ objects:
   Hatch:
     categories:
     - Logic
-    description: |-
-      Acts as a chute when active/gray, but when black or inactive it acts as a normal object.
-
-      **Categories:** Logic
+    description: Acts as a chute when active/gray, but when black or inactive it acts as a normal object.
     properties:
       SwitchValue:
         description: Determines whether the switch is active or not.
@@ -909,10 +875,7 @@ objects:
   Hologram:
     categories:
     - Electrical
-    description: |-
-      Using our brand new Multi-Dimensional Holographic Projection Technology™ you are able to create a stationary clone with only the ID of the user provided!.
-
-      **Categories:** Electrical
+    description: Using our brand new Multi-Dimensional Holographic Projection Technology™ you are able to create a stationary clone with only the ID of the user provided!.
     properties:
       UserId:
         description: |-
@@ -925,10 +888,7 @@ objects:
   Hydroponic:
     categories:
     - Electrical
-    description: |-
-      Grows grass and wood from water, turning attached water bins into either wood, sticks or grass. Incredibly useful for space bases or bases in areas devoid of life.
-
-      **Categories:** Electrical
+    description: Grows grass and wood from water, turning attached water bins into either wood, sticks or grass. Incredibly useful for space bases or bases in areas devoid of life.
     properties:
       Grow:
         description: The material to grow from the Hydroponic.
@@ -936,7 +896,7 @@ objects:
   HyperDrive:
     categories:
     - Propulsion
-    description: "A device used to travel at faster than light speeds to other regions of the universe. \nSimply input the coordinates to your destination and have a sufficient amount of fuel, and you'll be on your way to your destination.\nTo initiate warping, power the hyperdrive and trigger it. When warping, the hyperdrive will be anchored to prevent any movement.\n\nThe power required for warping will be dependent on the distance travelled, as well as the size of the object being transported.\nThe amount of power required will be displayed in the hyper drive, shown in the red text. \n\nAll of the parts connected to the hyperdrive and every player sitting will be teleported, however any free floating parts or standing up players will be sucked into the vaccum of space, so be careful.\n\nThe red text at the bottom of the hyperdrive indicates how much power is needed to perform the jump.\n\nMake sure the numbers on the hyperdrive is facing up to ensure correct stud alignment.\n\n**Categories:** Propulsion"
+    description: "A device used to travel at faster than light speeds to other regions of the universe. \nSimply input the coordinates to your destination and have a sufficient amount of fuel, and you'll be on your way to your destination.\nTo initiate warping, power the hyperdrive and trigger it. When warping, the hyperdrive will be anchored to prevent any movement.\n\nThe power required for warping will be dependent on the distance travelled, as well as the size of the object being transported.\nThe amount of power required will be displayed in the hyper drive, shown in the red text. \n\nAll of the parts connected to the hyperdrive and every player sitting will be teleported, however any free floating parts or standing up players will be sucked into the vaccum of space, so be careful.\n\nThe red text at the bottom of the hyperdrive indicates how much power is needed to perform the jump.\n\nMake sure the numbers on the hyperdrive is facing up to ensure correct stud alignment."
     methods:
       GetRequiredPower:
         unknowntype: true
@@ -959,8 +919,6 @@ objects:
       Size - The dimensions of the part it is attached to.
       Position - The position of the current instrument.
       TemperatureF - Temperature but in Fahrenheit.
-
-      **Categories:** Logic
     methods:
       GetReading:
         unknowntype: true
@@ -971,7 +929,7 @@ objects:
   IonRocket:
     categories:
     - Electrical
-    description: "An IonRocket allows space flight. When powered, it will propel force dependent on the Propulsion setting, which you can configure with the hammer tool. \n\t\tThe arrow indicates the direction the ionrocket will propel to when powered.\n\n**Categories:** Electrical"
+    description: "An IonRocket allows space flight. When powered, it will propel force dependent on the Propulsion setting, which you can configure with the hammer tool. \n\t\tThe arrow indicates the direction the ionrocket will propel to when powered."
     properties:
       Propulsion:
         description: |-
@@ -985,8 +943,6 @@ objects:
     description: |-
       Similar to a button, except is programmable to take more than one key input.
       Can be attached to a vehicle seat or clicked by a player.
-
-      **Categories:** Logic
     methods:
       SimulateKeyPress:
         unknowntype: true
@@ -996,7 +952,7 @@ objects:
     categories:
     - Weapons
     - Electrical
-    description: "Fires a concentraded beam of energy when powered, which can be used to damage and set objects on fire. \n\tHas a Range of 1000 studs.\n\tPrimarily used as a weapon in space combat situations.\n\tWhile it can damage objects effectively, it cannot damage energy shields.\n\n**Categories:** WeaponsElectrical"
+    description: "Fires a concentraded beam of energy when powered, which can be used to damage and set objects on fire. \n\tHas a Range of 1000 studs.\n\tPrimarily used as a weapon in space combat situations.\n\tWhile it can damage objects effectively, it cannot damage energy shields."
     properties:
       DamageOnlyPlayers:
         description: Determines if this laser is only allowed to damage players and not materials.
@@ -1004,17 +960,14 @@ objects:
   LifeSensor:
     categories:
     - Logic
-    description: "Senses and detects organic life up to a distnace of 2000 studs. Used mainly in programming, as is used in alien technology to hunt down organisms such as players.\nHas a special programmable event called 'GetReading()' which returns a table of all organisms, with their positions and names.\nExample:\n{\n\tPlayer1 = Vector3.new(5, 5, 5);\n}\n\n**Categories:** Logic"
+    description: "Senses and detects organic life up to a distnace of 2000 studs. Used mainly in programming, as is used in alien technology to hunt down organisms such as players.\nHas a special programmable event called 'GetReading()' which returns a table of all organisms, with their positions and names.\nExample:\n{\n\tPlayer1 = Vector3.new(5, 5, 5);\n}"
     methods:
       GetReading:
         unknowntype: true
   Light:
     categories:
     - Electrical
-    description: |-
-      Emits light when powered with electricity. Can be colored in different ways, changing the light color
-
-      **Categories:** Electrical
+    description: Emits light when powered with electricity. Can be colored in different ways, changing the light color
     properties:
       Brightness:
         description: |-
@@ -1046,8 +999,6 @@ objects:
 
       Globals also include all lua globals and all rbx.lua globals,
       except for roblox script-related or game-related globals such as workspace, game, stats, time, etc.
-
-      **Categories:** Logic
     methods:
       Communicate:
         unknowntype: true
@@ -1058,7 +1009,7 @@ objects:
   MiningLaser:
     categories:
     - Electrical
-    description: "Fires a concentraded beam of energy when powered, which is used to mine objects such as asteroids, mountains and ore deposits.\nThis works similar to an extractor, except it indirectly extracts power from other natural sources. \n\nWhen the laser hits an object, it will extract resources from that object and put it in attached bins.\nVery useful for creating mining vehicles to extract resources.\n\nUnlike the extractor however, this is far more efficient.\nThe MiningLaser outputs 2 resources per second, unlike the extractor which only does 2. This means the laser is 1.5x more efficient.\n\nHowever, the mining laser generates more heat than the extractor. Atleast 2 coolers are recommended per mining laser.\n\n**Categories:** Electrical"
+    description: "Fires a concentraded beam of energy when powered, which is used to mine objects such as asteroids, mountains and ore deposits.\nThis works similar to an extractor, except it indirectly extracts power from other natural sources. \n\nWhen the laser hits an object, it will extract resources from that object and put it in attached bins.\nVery useful for creating mining vehicles to extract resources.\n\nUnlike the extractor however, this is far more efficient.\nThe MiningLaser outputs 2 resources per second, unlike the extractor which only does 2. This means the laser is 1.5x more efficient.\n\nHowever, the mining laser generates more heat than the extractor. Atleast 2 coolers are recommended per mining laser."
     properties:
       MaterialToExtract:
         description: Determines the material to extract from the laser beam.
@@ -1066,7 +1017,7 @@ objects:
   Modem:
     categories:
     - Electrical
-    description: "A computer networking object that allows you to send, save and get messages cross-region.\nThis is an incredibly useful part to set up an internet of sorts and send data to other computers.\n\nThe modem has 5 programmable functions to it.\nSendMessage(Data, NetworkId defaults to 0) sends a message (specifically through messaging service) carrying data.\nMessageSent is a special event that can be connected to via Connect. Has one argument called Data which is the data received. \nPostRequest saves a string of data to the WoS internet ':PostRequest(Domain, Data)' (modem must be locked)\nGetRequest gets a string of data from the WoS internet ':GetRequest(Domain)'\nRealPostRequest send a POST request to the real www ':(Domain, DataPassed, AsyncBool, FuncToSendResultsTo, OptionalHeaders)'\n\n**Categories:** Electrical"
+    description: "A computer networking object that allows you to send, save and get messages cross-region.\nThis is an incredibly useful part to set up an internet of sorts and send data to other computers.\n\nThe modem has 5 programmable functions to it.\nSendMessage(Data, NetworkId defaults to 0) sends a message (specifically through messaging service) carrying data.\nMessageSent is a special event that can be connected to via Connect. Has one argument called Data which is the data received. \nPostRequest saves a string of data to the WoS internet ':PostRequest(Domain, Data)' (modem must be locked)\nGetRequest gets a string of data from the WoS internet ':GetRequest(Domain)'\nRealPostRequest send a POST request to the real www ':(Domain, DataPassed, AsyncBool, FuncToSendResultsTo, OptionalHeaders)'"
     methods:
       GetRequest:
         unknowntype: true
@@ -1088,10 +1039,7 @@ objects:
   Motor:
     categories:
     - Electrical
-    description: |-
-      Spins objects attached to the hinge at the front when powered.
-
-      **Categories:** Electrical
+    description: Spins objects attached to the hinge at the front when powered.
     properties:
       Power:
         description: |-
@@ -1113,8 +1061,6 @@ objects:
 
       Has a special configuration called Frequency which dictates how many times the polysilicon will repeat a trigger.
       For example, if a polysilicon was attached to a pulley, having a frequency of 5 and triggered, the pulley will be activated 5 times.
-
-      **Categories:** Logic
     properties:
       Frequency:
         description: |-
@@ -1130,10 +1076,7 @@ objects:
   Port:
     categories:
     - Logic
-    description: |-
-      An object used primarily in programming. Allows a microcontroller and computers to interact with their surroundings.
-
-      **Categories:** Logic
+    description: An object used primarily in programming. Allows a microcontroller and computers to interact with their surroundings.
     properties:
       PortID:
         description: |-
@@ -1152,10 +1095,7 @@ objects:
   Pump:
     categories:
     - Electrical
-    description: |-
-      Pumps liquid from the environment into attached containers. For example, a pump located in the ocean will pump water when powered.
-
-      **Categories:** Electrical
+    description: Pumps liquid from the environment into attached containers. For example, a pump located in the ocean will pump water when powered.
     properties:
       LiquidToPump:
         description: The name of the liquid to extract using the pump.
@@ -1222,10 +1162,7 @@ objects:
   RemoteControl:
     categories:
     - Logic
-    description: |-
-      Similar to an antenna, but sends trigger signals forward wirelessly when triggered.
-
-      **Categories:** Logic
+    description: Similar to an antenna, but sends trigger signals forward wirelessly when triggered.
     properties:
       RemoteControlRange:
         description: |-
@@ -1236,10 +1173,7 @@ objects:
   Rocket:
     categories:
     - Propulsion
-    description: |-
-      A propulsion device that consumes gasoline.
-
-      **Categories:** Propulsion
+    description: A propulsion device that consumes gasoline.
     properties:
       Propulsion:
         description: |-
@@ -1251,17 +1185,18 @@ objects:
     categories:
     - Logic
     - Electrical
-    description: |-
-      A programmable object capable of showing text, buttons and images on an LED display. Very useful for creating custom programmable interfaces.
-
-      **Categories:** LogicElectrical
+    description: A programmable object capable of showing text, buttons and images on an LED display. Very useful for creating custom programmable interfaces.
     methods:
       ClearElements:
-        unknowntype: true
+        description: Clears all objects that are descendants of the screen.
       CreateElement:
-        unknowntype: true
+        description: Creates an element of the specified class name with the specified properties.
+        generate: screen
       GetDimensions:
-        unknowntype: true
+        description: Gets the size of the screen in pixels in the form of a <code>Vector2</code>
+        returns:
+        - - Vector2
+          - The size of the screen in pixels.
     properties:
       VideoID:
         description: |-
@@ -1274,7 +1209,7 @@ objects:
   Servo:
     categories:
     - Electrical
-    description: "Spins objects attached to the hinge at the front when powered, to set angles.\n\tPolysilicon can be used to control its angle.\n\tActivate will increment the goal angle by the configured angle step (clockwise looking at its face)\n\tDeactivate will decrement the goal angle (counter-clockwise)\n\tFlipFlop will reset the angle to 0\n\tMicrocontrollers can also set a servo's angle with :SetAngle(Goal)\n\n**Categories:** Electrical"
+    description: "Spins objects attached to the hinge at the front when powered, to set angles.\n\tPolysilicon can be used to control its angle.\n\tActivate will increment the goal angle by the configured angle step (clockwise looking at its face)\n\tDeactivate will decrement the goal angle (counter-clockwise)\n\tFlipFlop will reset the angle to 0\n\tMicrocontrollers can also set a servo's angle with :SetAngle(Goal)"
     methods:
       SetAngle:
         unknowntype: true
@@ -1311,8 +1246,6 @@ objects:
       When clicked or triggered, it will toggle playing music and will play the song id you give it.
       Speaker:LoadSound(SoundId) will return a Sound object
       A Sound object can be modified using properties SoundId, Looped, PlaybackSpeed, Pitch, TimePositionand the methods Play, Pause, Stop, Destroy
-
-      **Categories:** Electrical
     methods:
       Chat:
         unknowntype: true
@@ -1335,7 +1268,7 @@ objects:
   StarMap:
     categories:
     - Electrical
-    description: "Shows your current location in the universe and other nearby stars and celestial bodies.\nHas 2 modes, universe and solar.\nUniverse mode shows your location in the universe, and solar mode shows your location in the solar system if you are in one.\nRequires power in order to function. \n\t\nIt also has unique icons for every celestial body type. Clicking on a Icon will set a all connected HyperDrive/Telescope to those coordinates.\n\nWhen triggered with polysilicon, polysilicon 0 will set it to univesre mode, polysilicon 1 will set it to solar system mode, and polysilicon 2 will switch it.\n\nHas two iterative functions that can be used with the microcontroller 'GetBodies' and 'GetSystems', e.g. for key, val in StartMap:GetBodies() do\n\n**Categories:** Electrical"
+    description: "Shows your current location in the universe and other nearby stars and celestial bodies.\nHas 2 modes, universe and solar.\nUniverse mode shows your location in the universe, and solar mode shows your location in the solar system if you are in one.\nRequires power in order to function. \n\t\nIt also has unique icons for every celestial body type. Clicking on a Icon will set a all connected HyperDrive/Telescope to those coordinates.\n\nWhen triggered with polysilicon, polysilicon 0 will set it to univesre mode, polysilicon 1 will set it to solar system mode, and polysilicon 2 will switch it.\n\nHas two iterative functions that can be used with the microcontroller 'GetBodies' and 'GetSystems', e.g. for key, val in StartMap:GetBodies() do"
     methods:
       GetBodies:
         unknowntype: true
@@ -1356,8 +1289,6 @@ objects:
     description: |-
       When the number of contents within connected storage objects is within a defined range, it will send trigger signals similar to a button.
       This can be used to automate production of certain products when the stored quantity is low.
-
-      **Categories:** Logic
     properties:
       QuantityRange:
         description: The range of item quantities within which this sensor will trigger.
@@ -1366,10 +1297,7 @@ objects:
     categories:
     - Logic
     - Electrical
-    description: |-
-      Acts as a wire when active/green, but when black or inactive it acts as a normal object. Must use a polysilicon to switch for trigger events.
-
-      **Categories:** LogicElectrical
+    description: Acts as a wire when active/green, but when black or inactive it acts as a normal object. Must use a polysilicon to switch for trigger events.
     properties:
       SwitchValue:
         description: Determines whether the switch is active or not.
@@ -1412,8 +1340,6 @@ objects:
 
       Must be powered in order to view object's information.
       Has a 1 minute delay between viewing different systems.
-
-      **Categories:** Electrical
     methods:
       GetCoordinate:
         unknowntype: true
@@ -1426,7 +1352,7 @@ objects:
   TemperatureSensor:
     categories:
     - Logic
-    description: "When the surrounding temperature is within a defined range, it will send trigger signals similar to a button.\n\nFor example, if the current temperature is 1100 and the temperature range is \"1000:inf\", then the sensor will send a signal.\n\t\nThis is very useful for creating smart cooling systems for a vehicle or reactor, preventing overheating from occuring.\n\nIf you want the temperature sensor to trigger outside of a certain range, take the inverse of the range.\nFor example, \"-inf:999\" would trigger when the temperature is within that range.\n\nConnecting the TemperatureSensor to a reactor will use the reactor's temperature instead of the surrounding temperature.\n\n**Categories:** Logic"
+    description: "When the surrounding temperature is within a defined range, it will send trigger signals similar to a button.\n\nFor example, if the current temperature is 1100 and the temperature range is \"1000:inf\", then the sensor will send a signal.\n\t\nThis is very useful for creating smart cooling systems for a vehicle or reactor, preventing overheating from occuring.\n\nIf you want the temperature sensor to trigger outside of a certain range, take the inverse of the range.\nFor example, \"-inf:999\" would trigger when the temperature is within that range.\n\nConnecting the TemperatureSensor to a reactor will use the reactor's temperature instead of the surrounding temperature."
     methods:
       GetTemp:
         unknowntype: true
@@ -1449,8 +1375,6 @@ objects:
       The power required by a thruster is proportional to its actual speed output.
 
       Thrusters can be heated to a temperature of around <200 degrees before overheating and combusting.
-
-      **Categories:** PropulsionElectrical
     properties:
       Propulsion:
         description: |-
@@ -1469,8 +1393,6 @@ objects:
       This is useful for creating dynamic lights that turn on only during the night, saving energy.
 
       The format should be hour:minute
-
-      **Categories:** Logic
     properties:
       Time:
         description: The time at which this sensor will trigger.
@@ -1482,24 +1404,40 @@ objects:
     description: |-
       A Screen, but with capabilities of handling player mouse input.
       This is to be used with programming.
-
-      **Categories:** LogicElectrical
+    events:
+      CursorMoved:
+        description: Fired when a player moves their cursor on the screen.
+        parameters:
+        - - 'cursor: Cursor'
+          - The cursor that moved.
+      CursorPressed:
+        description: Fired when a player left clicks on the screen.
+        parameters:
+        - - 'cursor: Cursor'
+          - The cursor that started pressing left click.
+      CursorReleased:
+        description: Fired when a player releases the left click button on the screen.
+        parameters:
+        - - 'cursor: Cursor'
+          - The cursor that stopped pressing left click.
     extends: Screen
+    learnmore: https://github.com/iimurpyh/pilot-lua/wiki/TouchScreen
     methods:
       GetCursor:
-        unknowntype: true
+        description: Gets the specified player's cursor.
+        parameters:
+        - - 'username: string'
+          - The username of the player's cursor you want to get.
       GetCursors:
-        unknowntype: true
-      GetDimensions:
-        unknowntype: true
+        description: Gets a dictionary of player usernames to their cursors if their cursors are on the screen.
+        returns:
+        - - '{ [string]: Cursor }'
+          - A dictionary of player usernames to their cursors.
   Transformer:
     categories:
     - Logic
     - Electrical
-    description: |-
-      Sends continuous trigger signals every second when powered.
-
-      **Categories:** LogicElectrical
+    description: Sends continuous trigger signals every second when powered.
     properties:
       LoopTime:
         description: |-
@@ -1521,10 +1459,7 @@ objects:
   TriggerSwitch:
     categories:
     - Logic
-    description: |-
-      Acts as a triggerwire when active/green, but when black or inactive it acts as a normal object.
-
-      **Categories:** Logic
+    description: Acts as a triggerwire when active/green, but when black or inactive it acts as a normal object.
     properties:
       SwitchValue:
         description: Determines whether the switch is active or not.
@@ -1535,8 +1470,6 @@ objects:
     description: |-
       Generates thrust from crude Oil, similar to a Thruster.
       If a motor is attached to the front, it instead acts like an engine and rotates it.
-
-      **Categories:** Propulsion
     properties:
       TurboFanSpeed:
         description: |-
@@ -1547,10 +1480,7 @@ objects:
   Valve:
     categories:
     - Logic
-    description: |-
-      Acts as a pipe when active/gray, but when black or inactive it acts as a normal object.
-
-      **Categories:** Logic
+    description: Acts as a pipe when active/gray, but when black or inactive it acts as a normal object.
     properties:
       SwitchValue:
         description: Determines whether the switch is active or not.
@@ -1605,8 +1535,4 @@ types:
     Description: string?
     Name: string?
     Type: string?
-  _GetPart<T, U>: '(object: T) -> U?'
-  _GetPartFromPort<T, U>: '(port: (number | Port)?, object: T) -> U?'
-  _GetParts<T, U>: '(object: T) -> { U }'
-  _GetPartsFromPort<T, U>: '(port: (number | Port)?, object: T) -> { U }'
   primitive: 'string | number | boolean | { primitive } | { [primitive]: primitive }'
