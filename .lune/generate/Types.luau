@@ -1,0 +1,128 @@
+--!strict
+
+export type DocumentationParameter = {
+	name: string?,
+	documentation: string?,
+}
+
+export type DocumentationParameters = { DocumentationParameter }
+
+export type DocumentationObject = {
+	documentation: string?,
+	keys: { [string]: string }?,
+	params: DocumentationParameters?,
+	returns: { string }?,
+	learn_more_link: string?,
+	code_sample: string?,
+}
+
+export type Documentation = {
+	[string]: DocumentationObject,
+}
+
+export type Definition = { string }
+
+export type DocumentationDefinitionPair = {
+	documentation: Documentation,
+	definition: Definition,
+}
+
+export type Describable = {
+	deprecated: boolean?,
+	readonly: boolean?,
+	description: string?,
+}
+
+export type Typed = {
+	unknowntype: boolean?,
+	generate: string?,
+}
+
+export type Object = {
+	categories: { string }?,
+	methods: { [string]: FunctionObject }?,
+	properties: { [string]: PropertyObject }?,
+	events: { [string]: EventObject }?,
+	extends: string?,
+} & Describable & Typed
+
+export type FunctionObject = {
+	parameters: { string | { string } }?,
+	returns: { string | { string } }?,
+} & Describable & Typed
+
+export type PropertyObject = {
+	type: string?,
+} & Describable & Typed
+
+export type EventObject = {
+	parameters: { string | { string } }?,
+} & Describable & Typed
+
+export type Output = {
+	localTypes: {},
+	generatedTypes: { { string } },
+
+	globalTypes: {},
+	globalValues: {},
+	globalFunctions: { { string } },
+	generatedGlobals: { string },
+
+	pilotObjects: {},
+
+	documentation: Documentation,
+}
+
+export type Options = {
+	key: string?,
+	name: string,
+	within: string?,
+
+	output: Output,
+	documentationSubKeys: { [string]: string }?,
+}
+
+export type ObjectOptions = {
+	object: Object,
+	name: string,
+} & Options
+
+export type FunctionOptions = {
+	object: FunctionObject,
+	isMethod: boolean?,
+	standardLuauNotation: boolean?,
+} & Options
+
+export type ValueOptions = {
+	object: PropertyObject,
+} & Options
+
+export type EventOptions = {
+	object: EventObject,
+} & Options
+
+export type ObjectData = {
+	globals: {
+		functions: { [string]: FunctionObject },
+		types: { [string]: any },
+		values: { [string]: any },
+	},
+	objectbase: Object,
+	objects: { [string]: Object },
+	types: { [string]: any },
+}
+
+-- stylua: ignore
+export type Generator = {
+	parseObject: (ObjectOptions) -> DocumentationDefinitionPair,
+	parseFunction: (FunctionOptions) -> DocumentationDefinitionPair,
+	parseProperty: (ValueOptions) -> DocumentationDefinitionPair,
+	parseEvent: (EventOptions) -> DocumentationDefinitionPair,
+} | (
+	  ("Object", ObjectOptions) -> DocumentationDefinitionPair
+	& ("Function", FunctionOptions) -> DocumentationDefinitionPair
+	& ("Property", ValueOptions) -> DocumentationDefinitionPair
+	& ("Event", EventOptions) -> DocumentationDefinitionPair
+)
+
+return nil
