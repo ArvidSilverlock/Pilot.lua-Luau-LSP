@@ -506,6 +506,26 @@ objectbase:
       readonly: true
       type: number
 objects:
+  100k:
+    description: 100k visits special item
+  Aerogel:
+    description: An incredibly light material that is very fragile.
+  AirSupply:
+    categories:
+    - Electrical
+    description: Generates a 300 stud radius oxygen bubble when powered on. Very important part for space ships, as it acts as the oxygen supply for the ship.
+  AlienCore:
+    categories:
+    - Resources
+    description: |-
+      A mysterious piece of technology found within many robotic aliens.
+      Although its precise function is unknown, it manages to be extremely useful in advanced technologies.
+      It seems to emanate raw power on its own, but only these robotic constructions seem to know .
+      Generally, more powerful aliens will utilize more alien cores.
+  Aluminum:
+    categories:
+    - Resources
+    description: A light material useful for air transport. Isn't very durable.
   Anchor:
     description: 'When triggered or clicked, it is able to be anchored, a state in which it is immovable by physics, and applies to parts connected to it. '
     properties:
@@ -537,6 +557,15 @@ objects:
 
           **Range:** 0 to 1
         type: number
+  Artillery:
+    description: |-
+      Fires a fast-moving metal shell upon being triggered.
+      This metal shell generates a small explosion upon impact.
+      Costs 15 iron per shot.
+  Asphalt:
+    description: |-
+      A modern material useful for smooth road surfaces.
+      Its durability triples when anchored.
   Assembler:
     categories:
     - Electrical
@@ -545,6 +574,15 @@ objects:
       Assemble:
         description: The name of the object to be assembled.
         type: string
+  AutomaticLaser:
+    categories:
+    - Weapons
+    - Electrical
+    description: Fires a continous set of lasers when powered. Like most other energy/thermal weapons, it generates heat when powered. It generates up to 65 degrees of heat, meaning you will need atleast 2 or 3 coolers.
+  Ball:
+    categories:
+    - Templates
+    description: A ball shaped template object.
   BallastTank:
     description: 'Allows for variable ballast to be added to sea vehicles. Also prevents corrosion to attached parts underwater. '
     properties:
@@ -566,6 +604,8 @@ objects:
 
           **Range:** -10 to 10
         type: number
+  Battery:
+    description: A light part that contains 400 energy and is prefilled. Can be refilled.
   Beacon:
     categories:
     - Electrical
@@ -577,8 +617,19 @@ objects:
       ShowOnMap:
         description: Whether this beacon should be shown on StarMaps.
         type: boolean
+  Beryllium:
+    categories:
+    - Resources
+    description: A lightweight metal only found on Barren planets used for preventing plutonium cores from going supercritical until detonated.
   Bin:
     description: "Stores solid items such as Aluminum, Iron, Faucets, etc. \nCan store up to 1000 items. When destroyed, every item inside will also be destroyed. \nThe value increases as more items are added to it.\n\nBins can also be used as crafting recipes, with the resources inside being used.\nYou can also configure a bin to prevent items from being crafted from it, allowing for bins to be strictly for machine storage.\n\t"
+    methods:
+      GetAmount:
+        returns:
+        - number
+      GetResource:
+        returns:
+        - string
     properties:
       CanBeCraftedFrom:
         description: Determines whether this bin can be used by nearby players to craft objects.
@@ -587,7 +638,16 @@ objects:
     description: "Records all activity in the region using very delicate instruments.\nActivates when locked and anchors to ensure accurate readings.\nONLINE = Listening for event/Sharing event data, DATA = New data the owner hasn't seen.\n\t\t\n"
     methods:
       GetLogs:
-        unknowntype: true
+        returns:
+        - RegionLog
+  Blade:
+    categories:
+    - Templates
+    description: A sharp object that can pierce through objects if the material is durable and strong.
+  BlastingCap:
+    description: A component used in crafting recipes for more advanced explosive devices.
+  Boiler:
+    description: Turns water to steam when fueled with 2 water and 1 coal.
   Boombox:
     categories:
     - Electrical
@@ -596,6 +656,20 @@ objects:
       Audio:
         description: The audio asset ID to be played.
         type: string
+  Brick:
+    description: |-
+      A cheap material made from baked clay useful for building houses.
+      Its durability doubles when anchored on a planet.
+  BurnerGenerator:
+    categories:
+    - Electrical
+    description: Creates electricity when fueled with coal.
+  BurstLaser:
+    categories:
+    - Weapons
+    description: |-
+      Fires 5 rapid sets of concentrated laser beams. Each beam does a mediate amount of damage.
+      Costs 100 power for each beam fired, meaning the total power cost is 500 power.
   Button:
     categories:
     - Logic
@@ -634,6 +708,45 @@ objects:
 
           **Default:** 1
         type: number
+  Cannon:
+    categories:
+    - Weapons
+    description: |-
+      Fires a cannon ball when triggered or clicked.
+      Must be supplied with an ammo material.
+      Iron is prioritized, and results in one large cannonball being shot.
+      Copper results in grapeshot.
+  Cement:
+    description: A modern material useful for pavement.
+  Chute:
+    description: |-
+      Is able to transfer solid parts between objects such as bins and extractors.
+      **Contrary to popular belief, chutes can transfer more than one type of object.**
+      **This means you can mix assemblers and extractors into the same system, no need for different chutes for each object. You can just make one long chute and connect your factory to it.**
+  Cleat:
+    description: A textile resource similar to Rubber, except it has a high amount of friction and low bounciness. It can be used in physical machines such as the feet of mechs, etc.
+  CloningBay:
+    categories:
+    - Electrical
+    description: |-
+      Similar to a SpawnPoint, but allows players to respawn at the location from far away even at another region.
+      It is pretty much a cross region spawnpoint. However, you can only have one cloning bay at a time.
+      When powered, it will appear in your death menu when you die and you can click it to spawn at this location.
+      However, you should pair the CloningBay with a spawn point next to it to ensure you spawn at the cloning bay.
+  Cloth:
+    description: A soft thin fabric that can soak up liquids.
+  Coal:
+    categories:
+    - Resources
+    description: A natural resource found abundant in mountains, and is commonly used as a source of generating heat and energy. Can be placed in a BurnerGenerator to generate energy.
+  CombustionTurbine:
+    categories:
+    - Electrical
+    description: Creates electricity when fueled by gasoline.
+  Cone:
+    categories:
+    - Templates
+    description: A cone shaped template object.
   Constructor:
     description: "Similar to an assembler, but constructs a model when triggered. However, the constructor must be supplied with the correct materials for a model.\nFor example, a car model requiring 50 iron and 3 a bin attached with 50 iron, a bin attached with 30 wires and 100 power.\n\t\t\nYou can find out how many materials you need through the model loader gui.\nHas a 60 second cool down or a minute cooldown to prevent model spamming."
     properties:
@@ -646,6 +759,12 @@ objects:
       RelativeToConstructor:
         description: Determines if the created model should be loaded in relative to the orientation of the Constructor.
         type: boolean
+  Container:
+    description: Stores liquids and gases. When a liquid or gas touches the Container, the container will automatically store it.
+  Controller:
+    categories:
+    - Logic
+    description: "Alters the speed of attached Controllable objects which include: Engine, Motor, BallastTank, IonDrive, IonRocket, Thruster, Rocket. Must use a polysilicon between this controller and \n\tan object that emits a trigger signal(like a button) to use the same events as clicking the UI. For example, FlipFlop will set the speed of the Controllable objects to 0, Deactivate will subtract 5 from the current speed, etc."
   ConveyorBelt:
     categories:
     - Electrical
@@ -657,6 +776,30 @@ objects:
 
           **Range:** -30 to 30
         type: number
+  Cooler:
+    categories:
+    - Electrical
+    description: "Cools down the heat around a space when supplied with power. \nGlows blue while functioning. Can be used to provide a cool environment in hot areas. \nIs also useful for cooling down objects such as iondrives and engines.\nCooling amount is based on size -20 * X * Y * Z / 16"
+  Copper:
+    categories:
+    - Resources
+    description: A brown shiny metal, the forefather of electronics.
+  CornerRoundWedge:
+    categories:
+    - Templates
+    description: A rounded corner shaped template object.
+  CornerRoundWedge2:
+    categories:
+    - Templates
+    description: A corner shaped template object rounded inwards.
+  CornerTetra:
+    categories:
+    - Templates
+    description: A template which is a tetrahedron subtracted from a cube.
+  CornerWedge:
+    categories:
+    - Templates
+    description: A corner wedge shaped template object.
   Coupler:
     description: "The coupler is a part that allows the coupling/connection of vehicles and objects when powered. Both couplers must be powered in order to couple together.\nWhen the coupler comes in contact with another coupler, the couplers will both connect to eachother, both holes facing eachother. \nTo ensure no weld complications, make sure the couplers' triangles are facing upwards. When the couplers connect, the white triangles will make a square.\nCouplers also only couple to other couples with the same CouplerID.\n"
     properties:
@@ -668,6 +811,36 @@ objects:
 
           **Default:** 1
         type: number
+  CrudeWing:
+    description: |-
+      Creates lift from being pushed forward.
+      A worse version of a Wing.
+      Does not work in space or in non atmospheric planets.
+  Cylinder:
+    categories:
+    - Templates
+    description: A cylinder shaped template object.
+  DarkConverter:
+    categories:
+    - Electrical
+    description: Converts attached dark matter bins into energy. 1 unit of dark matter is equal to 1000 watts of power. However, this generates a ton of heat in the process, nearly up to 200 degrees when activated. This means you will need about 10 coolers to avoid combustion.
+  DarkMatter:
+    categories:
+    - Resources
+    description: "A very valuable material extracted from black holes and a few empty regions in space. \nUsed primarily for weapons, but can also be convertred into energy and for other ingredients via DarkConverter."
+  DarkReactor:
+    categories:
+    - Electrical
+    description: |-
+      Generates Dark Matter when powered and near a black hole.
+      The reactor is very unstable, and if the reactor overheats it will cause a huge explosion.
+
+      The DarkReactor generates up to 500 degrees of temperature, meaing you will need atleast 25 coolers to cool the reactor to make sure it does not overheat.
+  Decoupler:
+    description: |-
+      When triggered, it breaks welds and falls off of anything attached.
+      Can be used to separate things.
+      The trigger signals will pass through the decoupler as it is decoupled.
   DelayWire:
     categories:
     - Logic
@@ -679,26 +852,41 @@ objects:
 
           **Range:** 0 to 360
         type: number
+  DeleteSwitch:
+    categories:
+    - Logic
+    description: An object that deletes itself when triggered.
+  Diamond:
+    categories:
+    - Resources
+  Diode:
+    categories:
+    - Electrical
+    description: Allows electrical objects to interact with each other when connected by the diode, but only in its direction as depicted by an arrow.
   Disk:
     categories:
     - Logic
     description: ''
     methods:
-      ClearDisk:
-        unknowntype: true
+      ClearDisk: {}
       Read:
-        unknowntype: true
+        parameters:
+        - 'key: string'
+        returns:
+        - string
       ReadEntireDisk:
-        unknowntype: true
+        returns:
+        - '{ [string]: string }'
       Write:
-        unknowntype: true
+        parameters:
+        - 'key: string'
+        - 'data: string'
   Dispenser:
     description: |-
       Dispenses items from attached bins, similar to a faucet.
       Can also filter certain items from dispensing. Simply configure it to be a list of names. For example, "Copper Iron Wire"
     methods:
-      Dispense:
-        unknowntype: true
+      Dispense: {}
     properties:
       Filter:
         description: The name of the material allowed to be dispensed.
@@ -725,13 +913,33 @@ objects:
       Reversal:
         description: Determines whether the output should be reversed.
         type: boolean
+  ElectricFence:
+    categories:
+    - Electrical
+    description: |-
+      A special version of the fence which damages upon contact.
+      Requires power to electrocute.
+  Electromagnet:
+    categories:
+    - Logic
+    - Electrical
+    description: A powerful magnet.
+  EnergyBomb:
+    categories:
+    - Weapons
+    description: Causes a powerful explosion when triggered. Often used in space combat as a means of a powerful missile or torpedo.
+  EnergyGun:
+    categories:
+    - Weapons
+    description: Fires a powerful shot of energy when provided power and triggered.
   EnergyShield:
     categories:
     - Electrical
     description: "Creates a bubble made of energy that protects it from energy based weapons such as Lasers and Plasma Cannons.\n\nAn EnergyShield has a few sets of properties that you can fine tune to create a balanced shield.\nShieldRadius - The size of the entire shield. This will exponentially consume more power the higher the radius is. \nRegenerationSpeed - On a scale from 1 to 10 on how fast the shield will regenerate.\nShieldStrength - Scale from 1 to 10 on how much the shield can endure.\n\nRegenerationSpeed and ShieldStrength both combined can't be over 11.\nFor example, a regeneration speed of 6 and a shield strength of 5 is possible.\nHowever, a regeneration speed of 10 and a shield strength of 10 isn't, as 10 + 10 > 11\nA regeneration speed of 1 and a shield strength of 10 however is possible, since 11 = 11.\n\nAnother benefit for energy shields is that it blocks all warhead explosions, whether inside the shield or outside."
     methods:
       GetShieldHealth:
-        unknowntype: true
+        returns:
+        - number
     properties:
       RegenerationSpeed:
         description: |-
@@ -760,6 +968,18 @@ objects:
 
           **Range:** -20 to 20
         type: number
+  EthernetCable:
+    categories:
+    - Logic
+    description: Allows for the transfer of data between ports. Mostly utilized in programming.
+  ExoticMatter:
+    categories:
+    - Resources
+    description: ???
+  Explosive:
+    categories:
+    - Weapons
+    description: Causes an explosion when triggered. You can use a delay wire to make it explode after a few seconds and not immediately.
   Extractor:
     categories:
     - Electrical
@@ -770,19 +990,70 @@ objects:
         type: string
   Faucet:
     description: Releases liquids and gases from containers.
-    methods:
-      Dispense:
-        unknowntype: true
-    properties:
-      Filter:
-        description: The name of the material allowed to be dispensed.
-        type: string
+    extends: Dispenser
+  Fence:
+    description: A metal fence. Primarily used to set up walls and gaurd structures and bases.
   Filter:
     description: Similar to a chute and a pipe, but only lets certain materials pass through.
     properties:
       Filter:
         description: The name of the material allowed to pass through.
         type: string
+  FireWood:
+    description: A version of wood that is able to burn longer, allowing it to be an efficient fire burning device.
+  Fireworks:
+    categories:
+    - Weapons
+    description: Causes an explosion when triggered. You can use a delay wire to make it explode after a few seconds and not immediately.
+  Flamethrower:
+    description: Shoots a stream of flaming gasoline to ignite your foes.
+  Flint:
+    categories:
+    - Resources
+    description: |-
+      Useful for lighting up flammable materials.
+      Simply rub it against a flammable material and it will set it on fire.
+  FloatDevice:
+    categories:
+    - Electrical
+    description: Defies gravity when powered. Allows for vehicles such as space ships to float.
+  Food:
+    description: |-
+      A consumable item.
+      *Appears* to be meat.
+      Upon clicking it, it will heal the user's health depending on the size.
+  Framewire:
+    description: Enter the matrix.
+  Freezer:
+    categories:
+    - Electrical
+    description: Turns attached water bins into ice when powered.
+  Gasoline:
+    categories:
+    - Resources
+    description: A liquid used for fueling many devices such as rockets and engines.
+  Gear:
+    description: A mechanical component commonly used in crafting recipes for many objects.
+  GeigerCounter:
+    categories: {}
+  Generator:
+    categories:
+    - Electrical
+    description: Creates energy from rotation.
+  Glass:
+    categories:
+    - Resources
+    description: Created when sand is burned or set on fire. Can be broken by heavy impacts or by fist.
+  Gold:
+    categories:
+    - Resources
+    description: A very valuable and stretchable material.
+  Goo:
+    description: A sticky substance that can stick together to objects when touched.
+  Grass:
+    categories:
+    - Resources
+    description: An organic substance found in terra and forest planets. Often green, but can be other colors. Useful for planting seeds for agriculture.
   GravityGenerator:
     categories:
     - Electrical
@@ -794,6 +1065,13 @@ objects:
 
           **Range:** 30 to 300
         type: number
+  Gun:
+    categories:
+    - Weapons
+    description: |-
+      Fires a harmful bullet when triggered.
+      Must be supplied with ammo in order to function.
+      For example, you need an iron bin with 1 or more iron directly attached to it to work.
   Gyro:
     categories:
     - Electrical
@@ -840,6 +1118,10 @@ objects:
       TriggerWhenSeeked:
         description: Determines whether to send out a trigger signal when the gyro detects something to seek as determined by the Seek configurable.
         type: boolean
+  HalfSphere:
+    categories:
+    - Templates
+    description: A half sphere shaped template object.
   Handle:
     categories:
     - Tools
@@ -868,10 +1150,21 @@ objects:
     categories:
     - Logic
     description: Acts as a chute when active/gray, but when black or inactive it acts as a normal object.
-    properties:
-      SwitchValue:
-        description: Determines whether the switch is active or not.
-        type: boolean
+    extends: Switch
+  Heater:
+    categories:
+    - Electrical
+    description: |-
+      Generated heat when powered by electricity. Glows red hot while functioning.
+      Can be used as insulation in cold environments. Heat amount is based on size 10 * X * Y * Z / 16
+  Heatshield:
+    categories:
+    - Electrical
+    description: Generates a 300 stud radius area that protects all players and **only players** within the vicinity from temperature damage.
+  Helium:
+    categories:
+    - Resources
+    description: A light invisible odorless gas, floats up.
   Hologram:
     categories:
     - Electrical
@@ -885,6 +1178,14 @@ objects:
 
           **Default:** 1
         type: number
+  Hull:
+    categories:
+    - Templates
+    description: Is able to float in the water, as well as carry objects attached to it. Primarily used for creating boats and other water craft.
+  Hydrogen:
+    categories:
+    - Resources
+    description: A gas commonly found in stars and gas giants.
   Hydroponic:
     categories:
     - Electrical
@@ -904,6 +1205,18 @@ objects:
       Coordinates:
         description: The coordinates to warp to.
         type: string
+  Ice:
+    categories:
+    - Resources
+    description: A compact natural resource found in tundra planets and the top of a few mountains. It is a slippery material, and has very low friction which can be useful in some devices. Burning ice results in water.
+  Igniter:
+    categories:
+    - Logic
+    description: Sets alight parts within the immediate vicinity when triggered.
+  ImpulseCannon:
+    categories:
+    - Weapons
+    description: Blasts a harmless burst of energy which sends anything nearby soaring at a high velocity.
   Instrument:
     categories:
     - Logic
@@ -921,7 +1234,10 @@ objects:
       TemperatureF - Temperature but in Fahrenheit.
     methods:
       GetReading:
-        unknowntype: true
+        parameters:
+        - 'typeId: number'
+        returns:
+        - number | Vector3
     properties:
       Type:
         description: The type of instrument readout to display on the instrument.
@@ -930,13 +1246,14 @@ objects:
     categories:
     - Electrical
     description: "An IonRocket allows space flight. When powered, it will propel force dependent on the Propulsion setting, which you can configure with the hammer tool. \n\t\tThe arrow indicates the direction the ionrocket will propel to when powered."
-    properties:
-      Propulsion:
-        description: |-
-          Determines the speed traveled at, 0 being standstill. Affects fuel consumption.
-
-          **Range:** 0 to 100
-        type: number
+    extends: Thruster
+  Iron:
+    categories:
+    - Resources
+    description: A compact and durable material, commonly found in planets. It is used often in crafting, and is a very important resource to have.
+  Jade:
+    categories:
+    - Resources
   Keyboard:
     categories:
     - Logic
@@ -945,9 +1262,17 @@ objects:
       Can be attached to a vehicle seat or clicked by a player.
     methods:
       SimulateKeyPress:
-        unknowntype: true
+        parameters:
+        - 'key: string?'
+        - 'player: string'
       SimulateTextInput:
-        unknowntype: true
+        parameters:
+        - 'input: string?'
+        - 'player: string'
+  Kiln:
+    categories:
+    - Electrical
+    description: Turns attached sand bins into glass.
   Laser:
     categories:
     - Weapons
@@ -957,17 +1282,31 @@ objects:
       DamageOnlyPlayers:
         description: Determines if this laser is only allowed to damage players and not materials.
         type: boolean
+  Lava:
+    categories:
+    - Resources
+    description: A liquid used for fueling many devices such as rockets and engines.
+  Lead:
+    categories:
+    - Resources
+    description: An uncommon material used in protection against radiation and weapon manufacturing.
   LifeSensor:
     categories:
     - Logic
     description: "Senses and detects organic life up to a distnace of 2000 studs. Used mainly in programming, as is used in alien technology to hunt down organisms such as players.\nHas a special programmable event called 'GetReading()' which returns a table of all organisms, with their positions and names.\nExample:\n{\n\tPlayer1 = Vector3.new(5, 5, 5);\n}"
     methods:
       GetReading:
-        unknowntype: true
+        returns:
+        - - '{ [string]: Vector3 }'
+          - A dictionary of player usernames to their world positions.
   Light:
     categories:
     - Electrical
     description: Emits light when powered with electricity. Can be colored in different ways, changing the light color
+    methods:
+      SetColor:
+        parameters:
+        - 'color: Color3'
     properties:
       Brightness:
         description: |-
@@ -981,6 +1320,24 @@ objects:
 
           **Range:** 1 to 60
         type: number
+  LightBridge:
+    categories:
+    - Electrical
+    description: Fires a beam of solid light that can be walked on.
+  LightTube:
+    categories:
+    - Electrical
+    description: Emits light when powered with electricity. Can be colored in different ways, changing the light color
+  Magnesium:
+    categories:
+    - Resources
+    description: A shiny gray solid that is flammable, randomly ignites when touching stone.
+  Marble:
+    description: A compact and durable material. Primarily used as a building material for decorations.
+  Melter:
+    categories:
+    - Electrical
+    description: Turns attached ice bins into water when powered.
   Microcontroller:
     categories:
     - Logic
@@ -1006,27 +1363,42 @@ objects:
       Code:
         description: The code to be executed on this microcontroller.
         type: string
+  Microphone:
+    categories:
+    - Logic
+    description: Used in programming. Takes user's inputs.
   MiningLaser:
     categories:
     - Electrical
     description: "Fires a concentraded beam of energy when powered, which is used to mine objects such as asteroids, mountains and ore deposits.\nThis works similar to an extractor, except it indirectly extracts power from other natural sources. \n\nWhen the laser hits an object, it will extract resources from that object and put it in attached bins.\nVery useful for creating mining vehicles to extract resources.\n\nUnlike the extractor however, this is far more efficient.\nThe MiningLaser outputs 2 resources per second, unlike the extractor which only does 2. This means the laser is 1.5x more efficient.\n\nHowever, the mining laser generates more heat than the extractor. Atleast 2 coolers are recommended per mining laser."
-    properties:
-      MaterialToExtract:
-        description: Determines the material to extract from the laser beam.
-        type: string
+    extends: Extractor
   Modem:
     categories:
     - Electrical
     description: "A computer networking object that allows you to send, save and get messages cross-region.\nThis is an incredibly useful part to set up an internet of sorts and send data to other computers.\n\nThe modem has 5 programmable functions to it.\nSendMessage(Data, NetworkId defaults to 0) sends a message (specifically through messaging service) carrying data.\nMessageSent is a special event that can be connected to via Connect. Has one argument called Data which is the data received. \nPostRequest saves a string of data to the WoS internet ':PostRequest(Domain, Data)' (modem must be locked)\nGetRequest gets a string of data from the WoS internet ':GetRequest(Domain)'\nRealPostRequest send a POST request to the real www ':(Domain, DataPassed, AsyncBool, FuncToSendResultsTo, OptionalHeaders)'"
     methods:
       GetRequest:
-        unknowntype: true
+        parameters:
+        - 'domain: string'
+        returns:
+        - string
       PostRequest:
-        unknowntype: true
+        parameters:
+        - 'domain: string'
+        - 'data: string'
       RealPostRequest:
-        unknowntype: true
+        parameters:
+        - 'domain: string'
+        - 'data: string'
+        - 'asyncBool: boolean'
+        - 'transformFunction: (...any) -> ()'
+        - 'optionalHeaders: { [string]: any }?'
+        returns:
+        - '{ response: string, success: boolean }'
       SendMessage:
-        unknowntype: true
+        parameters:
+        - 'data: string'
+        - 'id: number'
     properties:
       NetworkID:
         description: |-
@@ -1053,6 +1425,62 @@ objects:
 
           **Range:** 0.01 to 100
         type: number
+  MustardGas:
+    description: A heavy chemical warfare weapon used to damage organisms. Gas Masks nullify the effects of this gas.
+  Neon:
+    description: A building decoration material that glows by itself without requiring power.
+  Neutronium:
+    categories:
+    - Resources
+    description: The most durable obtainable material in the game. It is a strange form of matter found from the crusts of neutron stars. Due to the nature of neutron stars, neutronium is the hardest known material as well as the densest known material in the universe.
+  NitrogenOxide:
+    categories:
+    - Resources
+    description: A light gas emitted from machines such as extractors and rockets. Inhaling can cause severe lung damage.
+  NuclearWaste:
+    categories:
+    - Resources
+    description: A highly radioactive material produced from spent Uranium in a reactor.
+  Obamium:
+    description: An ancient artifact left behind from an alternate reality.
+  Obelisk:
+    categories:
+    - Electrical
+    description: |-
+      An object designed to attract aliens to the region. Emits an ominous noise when powered.
+      Must be anchored and powered in order to function. Must also be open to the sky. Only one obelisk in a region can be powered at a time.
+      When active, it attracts an Alien every 300 seconds.
+      **Use at your own risk.**
+  Oil:
+    categories:
+    - Resources
+    description: A liquid used in refineries to produce Gasoline which can be used for fueling engines and rockets and Petroleum which can be used to make plastic.
+  Perfectium:
+    categories:
+    - Resources
+    description: The perfect material. Unbreakable, very stretchable, but is impossibly rare. The very sight of it makes you wonder the imperfections of human beings.
+  Petroleum:
+    categories:
+    - Resources
+    description: A gas used for creating plastic.
+  Pipe:
+    description: Is able to transfer liquids and gases between containers and other objects when connected by pipes.
+  Plasma:
+    categories:
+    - Resources
+    description: A gas found abundant in stars, and can be harvested from them. Used primarily for weapons, as well as electrical components.
+  PlasmaCannon:
+    categories:
+    - Weapons
+    description: |-
+      Fires an orb of unstable plasma out of the barrel exploding on impact.
+      Needs to be fueled with 500 power and 50 helium or 1 plasma to fire.
+  Plastic:
+    description: A cheap material made from petroleum and Coal through polymerisation inside assemblers.
+  Plutonium:
+    description: A highly radioactive compound used in manufacturing nuclear explosives.
+  PlutoniumCore:
+    description: A volatile core close to going supercritical used in recipes for Nuclear explosives.
   Polysilicon:
     categories:
     - Logic
@@ -1086,12 +1514,29 @@ objects:
 
           **Default:** 1
         type: number
+  PowerCell:
+    description: |-
+      Stores electricity, and is used to power many devices using wires or by directly attaching it.
+      Has a limit of 125000.
+  Primer:
+    description: A component used in crafting recipes for a few objects.
+  Propeller:
+    categories:
+    - Propulsion
+    description: |-
+      Propellers propel forward when spun.
+      Forward direction indicated by white spot.
+      Does not work in space or non atmospheric planets.
   Prosthetic:
     description: "An artificial part that can be attached to players in exchange for a limb.\nThe limb configuration can be configureed to be the limb you want to have for a prosthetic, for example configuring it to be \"Right Leg\" will have the prosthetic attach itself to your character.\nSimply touch the prosthetic, and it will automatically be attached to your body. This process is extremely unhealthy, however, and may result in short-term complications.\n\nParts can be attached to the prosthetic, allowing many uses for the prosthetic limb.\n\nProsthetic limbs are also electrically conductable, acting as a wire.\n\nHeavily damages the character once attached.\nProsthetics can't have more than 50 parts attached to them.\n \t"
     properties:
       Limb:
         description: The name of the limb that this Prosthetic is for.
         type: string
+  Pulverizer:
+    categories:
+    - Electrical
+    description: Turns attached stone bins into sand. Once powered, the pulverizer will pulverize any stone bins attached into sand.
   Pump:
     categories:
     - Electrical
@@ -1100,11 +1545,22 @@ objects:
       LiquidToPump:
         description: The name of the liquid to extract using the pump.
         type: string
+  Quartz:
+    categories:
+    - Resources
+    description: A translucent and malleable crystal useful for making durable windows.
+  RTG:
+    categories:
+    - Electrical
+    description: Creates electricity from decaying radioactive elements.
+  Radar:
+    description: An instrument that shows a 2D top-down representation of Earth.
   Rail:
     description: "Slides and moves objects along its surface when powered and triggered. Useful for creating retractable pistons and actuators, for turrets or other retractable devices.\n\t\t\nRails will only move objects connected on the relative top surface of the rail.\n\t\t\nThe rail can only be activated through the use of polysilicons.\nMode 0 or activating polysilicons will set the rail to position1.\nMode 1 or deactivating polysilicons will set the rail to position2.\nMode 2 or flip flop polysilicons will act like a switch, setting to position2 if position1 and vice versa.\n\t\t\nHas 2 configurations, position1 and position2.\n\t\t\nBoth configurations should be between 0 and 100. These are percents of where the attached objects should slide to.\nFor example, if a rail was 50 studs long and position2 was 50 or 50%, the attached objects will slide to the middle or at 25 studs.\n\t\t\nDue to roblox physics, rails may act weirdly. To prevent this from happening, you should always place your rails first before anything else. It is recommended to attach objects on the rail after the rail is safely placed down.\n"
     methods:
       SetPosition:
-        unknowntype: true
+        parameters:
+        - 'depth: number'
     properties:
       Position1:
         description: |-
@@ -1124,6 +1580,11 @@ objects:
 
           **Range:** 0.5 to 60
         type: number
+  Railgun:
+    categories:
+    - Weapons
+    - Electrical
+    description: "Fires a piercing rail at high speeds. A long range weapon. Requires rails and electricity for ammo. Damage increases for every 10 studs of length.pierce if the hit part is destroyed. Must be at least have a width and height of 6 and at least a length of 30 to function.\n\t\nWhile Railgun is similar to Artillery, the Railgun is nearly instant while Artillery is a projectile weapon.\n\nRequires to charge for one minute before it can fire. While charging and when charged, it creates large amount of heat. Charging status resets when this part is damaged.\n\nWhen it is finished charging, it will stop creating a sound. At that point, it must be triggered and supplied by a rail bin in order to fire."
   Reactor:
     description: |-
       Generates steam using water and heat from radiation.
@@ -1138,13 +1599,25 @@ objects:
       FlipFlop will eject fuel or waste from the fuel rod with the least fuel.
     methods:
       GetFuel:
-        unknowntype: true
+        returns:
+        - '{ [number]: number }'
       GetTemp:
-        unknowntype: true
+        returns:
+        - number
     properties:
       Alarm:
         description: Determines whether the reactor alarm system is enabled for when the reactor is near meltdown temperature.
         type: boolean
+  Refinery:
+    categories:
+    - Electrical
+    description: Turns oil into Petroleum and Gasoline.
+  RegionCloaker:
+    categories:
+    - Electrical
+    description: "Hides a certain region from players, making the coordinates not appear on their screen. \n\tRegion can only be un/cloaked every 25 seconds. So if you unpower the RegionCloaker(uncloaks), you must wait 25 seconds before powering it again to ensure the region gets cloaked."
+  ReinforcedGlass:
+    description: A stronger version of glass, however is less malleable.
   Relay:
     description: "A powerful transmitter capable of transmitting trigger signals and resources/power between different regions.\nIt is a more powerful version of the antenna and transporter.\n\nUnlike the antenna, the relay has 2 modes, mode 0 and mode 1.\nMode 0 sends resources/power and trigger signals, while mode 1 receives it.\n\nUnlike the antenna, it can also transfer power in inactive regions or regions without players in them.\nThis means that you can connect a relay to your main base, warp away without anyone in the base, and still have the relay get the sufficient amount of power.\n\nHowever, you should have only one sending relay per coordinate, as conflicts can occur if there are 2 or more relays in the region/coordinates sending power or signalsith the same ID.\nOn the other hand, there can be an infinite number of receivers but the power/resources will be distributed evenly among them.\n\nFor example, let's say a relay network has a total output of 500 power and 25 iron. If there are 5 active receivers, each of them will get 100 power and 5 iron.\n\nWhen the relay is red, it means it not functioning. When it turns green, it is properly linked up to another relay or is sending signals.\n\t"
     properties:
@@ -1174,13 +1647,40 @@ objects:
     categories:
     - Propulsion
     description: A propulsion device that consumes gasoline.
-    properties:
-      Propulsion:
-        description: |-
-          Determines the speed traveled at, 0 being standstill. Affects fuel consumption.
-
-          **Range:** 0 to 100
-        type: number
+    extends: Thruster
+  Rotor:
+    categories:
+    - Propulsion
+    description: |-
+      Provides vertical height when spun, and only works in oxygen planets.
+      The spin speed determines the height, and the tilt of the rotor determines the forward propulsion of the rotor.
+  RoundWedge:
+    categories:
+    - Templates
+    description: A block rounded on one edge, or 1/4 of a cylinder.
+  RoundWedge2:
+    categories:
+    - Templates
+    description: A block rounded inwards on one edge.
+  Rubber:
+    description: A textile resource used in manufacturing many industrial objects.
+  Ruby:
+    categories:
+    - Resources
+  RustedMetal:
+    categories:
+    - Resources
+    description: A weathered piece of metal.
+  Sail:
+    description: Utilizes the wind to move forward.
+  Sand:
+    categories:
+    - Resources
+    description: An abundant resource that can be found in the shores of terra and forest planets, the sea floors of ocean planets and in the dunes of desert planets. When burnt, the sand becomes glass.
+  Scrapper:
+    categories:
+    - Electrical
+    description: Scraps solid items provided through a dispenser into their crafting components when powered. It also destroys unanchored single parts when touched.
   Screen:
     categories:
     - Logic
@@ -1206,13 +1706,16 @@ objects:
 
           **Default:** 1
         type: number
+  Seat:
+    categories: {}
   Servo:
     categories:
     - Electrical
     description: "Spins objects attached to the hinge at the front when powered, to set angles.\n\tPolysilicon can be used to control its angle.\n\tActivate will increment the goal angle by the configured angle step (clockwise looking at its face)\n\tDeactivate will decrement the goal angle (counter-clockwise)\n\tFlipFlop will reset the angle to 0\n\tMicrocontrollers can also set a servo's angle with :SetAngle(Goal)"
     methods:
       SetAngle:
-        unknowntype: true
+        parameters:
+        - 'angle: number'
     properties:
       AngleStep:
         description: |-
@@ -1226,6 +1729,13 @@ objects:
 
           **Range:** 0 to 20
         type: number
+  Shotgun:
+    categories:
+    - Weapons
+    description: |-
+      Fires a shot of harmful pellets when triggered.
+      Must be supplied with ammo in order to function.
+      For example, you need an iron bin with 1 or more iron directly attached to it to work.
   Sign:
     description: 'Displays text or images. To display an image, configure it to id:imageid '
     properties:
@@ -1238,6 +1748,38 @@ objects:
       TextFont:
         description: The font of the text on the sign.
         type: Selection
+  Silicon:
+    categories:
+    - Resources
+    description: A metalloid that is very useful for electronics. Can commonly be found in cliffs and rocks
+  Snow:
+    categories:
+    - Resources
+    description: An abundant resource that can be found in terra biomes and tundra planets. When burnt, the snow turns into water.
+  SolarPanel:
+    categories:
+    - Electrical
+    description: "Generates electricity using solar energy from a local star. \nThe closer it is to a star, the more energy it generates. \nThe type of star also affects its energy generation, as well as the size of the solar panel. \n\nIf the solar panel is blocked by a part, it will not generate any energy. Glass however will work."
+  SolarScoop:
+    categories:
+    - Electrical
+    description: |-
+      Extracts materials from a star when powered and pointed at a star.
+      Depending on the class of the star, it will extract more materials.
+
+      Generates around 240 degrees of heat, meaning you will need atleast 12 coolers to cool it down.
+
+      Red stars generate 25 helium, 5 plasma and 10 hydrogen per second.
+      Orange stars generate 30 helium, 5 plasma and and 15 hydrogen per second.
+      Yellow stars generate 35 helium, 5 plasma and and 20 hydrogen per second.
+      Light blue stars generate 40 helium, 25 hydrogen, 10 plasma and and 10 iron per second.
+      Neutron stars generate 60 helium, 45 hydrogen, 15 plasma and and 20 iron per second. It also generates 1-2 neutronium every 2 minutes.
+
+      It is recommended to use a Filter to seperate the materials extracted by a solar scoop.
+  SoundMuffler:
+    description: A SoundMuffler will silences the sounds of machinery around it.
+  SpawnPoint:
+    description: Acts as a spawn location for the player who locked it.
   Speaker:
     categories:
     - Electrical
@@ -1248,13 +1790,14 @@ objects:
       A Sound object can be modified using properties SoundId, Looped, PlaybackSpeed, Pitch, TimePositionand the methods Play, Pause, Stop, Destroy
     methods:
       Chat:
-        unknowntype: true
-      ClearSounds:
-        unknowntype: true
+        parameters:
+        - 'message: string'
+      ClearSounds: {}
       LoadSound:
         unknowntype: true
       PlaySound:
-        unknowntype: true
+        parameters:
+        - 'soundId: number'
     properties:
       Audio:
         description: The audio asset ID to be played.
@@ -1265,15 +1808,32 @@ objects:
 
           **Range:** 0 to 3
         type: number
+  Spotlight:
+    categories:
+    - Electrical
+    description: Emits light in a cone when powered with electricity. Color emition can be changed by coloring it.
   StarMap:
     categories:
     - Electrical
     description: "Shows your current location in the universe and other nearby stars and celestial bodies.\nHas 2 modes, universe and solar.\nUniverse mode shows your location in the universe, and solar mode shows your location in the solar system if you are in one.\nRequires power in order to function. \n\t\nIt also has unique icons for every celestial body type. Clicking on a Icon will set a all connected HyperDrive/Telescope to those coordinates.\n\nWhen triggered with polysilicon, polysilicon 0 will set it to univesre mode, polysilicon 1 will set it to solar system mode, and polysilicon 2 will switch it.\n\nHas two iterative functions that can be used with the microcontroller 'GetBodies' and 'GetSystems', e.g. for key, val in StartMap:GetBodies() do"
     methods:
       GetBodies:
-        unknowntype: true
+        returns:
+        - () -> (string)
       GetSystems:
-        unknowntype: true
+        returns:
+        - () -> (string)
+  StasisField:
+    categories:
+    - Electrical
+    description: |-
+      Creates a 500 stud radius field that prevents any parts or objects around it from being dragged.
+      This can be used alongside with a RegionCloaker to create public infrastructure to avoid trolling and such.
+      However, in order to function, the shield must be anchored/grounded, and nothing must be blocking above it. The shield is also extremely fragile.
+  Steam:
+    categories:
+    - Resources
+    description: A result of water being heated up to high temperatures.
   SteamEngine:
     description: 'It acts similar to a motor, but is powered by Steam instead of electricity. '
     properties:
@@ -1283,6 +1843,18 @@ objects:
 
           **Range:** -20 to 20
         type: number
+  SteamTurbine:
+    categories:
+    - Electrical
+    description: Creates electricity when fueled by 2 boilers.
+  Stick:
+    categories:
+    - Resources
+    description: A natural resource found in trees and flora, often accompanied by wood. It is used for creating vital tools.
+  Stone:
+    categories:
+    - Resources
+    description: A resource found in nearly all planets. It is not recommended to use for structures, but is often used in crafting simple objects.
   StorageSensor:
     categories:
     - Logic
@@ -1293,6 +1865,24 @@ objects:
       QuantityRange:
         description: The range of item quantities within which this sensor will trigger.
         type: string
+  StudAligner:
+    categories:
+    - Electrical
+    description: |-
+      An integral part for creating vehicles, it aligns them to be viable for saving.
+      This is important due to a bug in roblox called 'part shift' in which precision of numbers is lost during saving.
+      As a result, parts will move a tiny bit, which results in dramatic changes to a vehicle.
+      This part solves that, by alligned the vehicle to a whole number position, allowing it to be saved properly.
+
+      Make sure the arrow is facing up.
+      To stud align your vehicle, make sure it is unanchored and simply trigger the stud alligner.
+      Once it aligns the vehicle, it will anchor all anchors attached.
+
+      Make sure to also allign at a viable and proper place to prevent any noclip glitches during alignment.
+  Sulfur:
+    categories:
+    - Resources
+    description: A yellow flammable solid. Being set on fire gives it a special blue fire.
   Switch:
     categories:
     - Logic
@@ -1342,9 +1932,11 @@ objects:
       Has a 1 minute delay between viewing different systems.
     methods:
       GetCoordinate:
-        unknowntype: true
+        returns:
+        - RegionInfo
       WhenRegionLoads:
-        unknowntype: true
+        parameters:
+        - 'callback: (regionData: RegionInfo) -> ()'
     properties:
       ViewCoordinates:
         description: The coordinates to view.
@@ -1360,6 +1952,10 @@ objects:
       TemperatureRange:
         description: The range of temperatures within which this sensor will trigger.
         type: string
+  Tetrahedron:
+    categories:
+    - Templates
+    description: A tetrahedron template made of 3 perpendicular right triangles.
   Thruster:
     categories:
     - Propulsion
@@ -1382,6 +1978,8 @@ objects:
 
           **Range:** 0 to 100
         type: number
+  Tile:
+    description: A cheap material made from baked clay useful for building houses.
   TimeSensor:
     categories:
     - Logic
@@ -1397,6 +1995,14 @@ objects:
       Time:
         description: The time at which this sensor will trigger.
         type: string
+  TintedGlass:
+    description: A material similar to Glass, but is tinted black on the front..
+  Tire:
+    description: A cylindrical shaped object used commonly in vehicles such as cars.
+  Titanium:
+    categories:
+    - Resources
+    description: A strong heavy material that is very useful for small scale constructs.
   TouchScreen:
     categories:
     - Logic
@@ -1433,6 +2039,10 @@ objects:
         returns:
         - - '{ [string]: Cursor }'
           - A dictionary of player usernames to their cursors.
+  TouchSensor:
+    categories:
+    - Logic
+    description: Sends trigger signals upon contact with another player or another object.
   Transformer:
     categories:
     - Logic
@@ -1456,14 +2066,23 @@ objects:
 
           **Default:** 1
         type: number
+  Treads:
+    categories:
+    - Electrical
+    description: When touching in contact with a solid surface, it will move forward. Must be connected to an engine or motor similar to a drivebox to function.
   TriggerSwitch:
     categories:
     - Logic
     description: Acts as a triggerwire when active/green, but when black or inactive it acts as a normal object.
-    properties:
-      SwitchValue:
-        description: Determines whether the switch is active or not.
-        type: boolean
+    extends: Switch
+  TriggerWire:
+    categories:
+    - Logic
+    description: Allows trigger objects to interact with each other when connected by triggerwires.
+  Truss:
+    categories:
+    - Templates
+    description: Used as a ladder.
   Turbofan:
     categories:
     - Propulsion
@@ -1477,14 +2096,17 @@ objects:
 
           **Range:** 0 to 100
         type: number
+  Uranium:
+    categories:
+    - Resources
+    description: |-
+      A radioactive material often found in deposits in planets, especially ones near stars.
+      Useful for energy generation from reactors or radiation generators.
   Valve:
     categories:
     - Logic
     description: Acts as a pipe when active/gray, but when black or inactive it acts as a normal object.
-    properties:
-      SwitchValue:
-        description: Determines whether the switch is active or not.
-        type: boolean
+    extends: Switch
   VehicleSeat:
     description: "Allows players to control vehicles by rotating when sat on.\nIt is incredibly important to have when creating vehicles.\n\nAttaching buttons to the vehicleseat will allow the player sitting on it to trigger the button by pressing a key.\nSimply attach the button to the vehicle seat, configure it to the keybind you would like, and it will allow you to trigger that button by pressing the key when sitting down in the seat.\n\t"
     properties:
@@ -1500,6 +2122,24 @@ objects:
 
           **Range:** 0 to 10
         type: number
+  Warhead:
+    categories:
+    - Weapons
+    description: |-
+      Causes a powerful explosion when triggered. You can use a delay wire to make it explode after a few seconds and not immediately.
+      The only down-side of the warhead is that it is blocked completely by energy shields.
+  Water:
+    categories:
+    - Resources
+    description: The basis of all life, and is a liquid found in terra, forest, ocean and certain tundras and rogue planets. Can be made from burning ice or snow.
+  WaterCooler:
+    categories:
+    - Electrical
+    description: Generates cold temperatures when given a supply of water. Useful for cooling down devices, and does not require power. Performs the same amount of cooling that five coolers would.
+  Wedge:
+    categories:
+    - Templates
+    description: A triangular shaped template object.
   Winch:
     description: |
       A special device used to control the length of constraints attached to it.
@@ -1524,6 +2164,31 @@ objects:
 
           **Range:** 0 to 100
         type: number
+  Wing:
+    description: |-
+      Creates lift from being pushed forward.
+      Works at higher altitudes and at better angles than a CrudeWing.
+      Does not work in space or in non atmospheric planets.
+  Wire:
+    categories:
+    - Electrical
+    description: Allows electrical objects to interact with each other when connected by wires. For example, attaching a wire between a powercell and a light will allow electricity to move through the wire, allowing the light to function causing a source of light to be created.
+  WirelessButton:
+    categories:
+    - Logic
+    description: Similar to a button, but can be clicked from infinite distances and cannot be used for keybinds.
+  Wood:
+    categories:
+    - Resources
+    description: '**A natural resource found in trees and flora.** It is a simple and yet effective material that is used for simple objects and structures. These can be mainly found in terra and forest planets, but can occasionally be found in temperate tundra and desert planets.'
+  ZapWire:
+    categories:
+    - Logic
+    - Weapons
+    - Electrical
+    description: |-
+      Allows electrical objects to interact with each other when connected by wires.
+      If a flammable object is touched, it will be lit on fire.
 types:
   Event<T, U...>:
     Connect: '(self: Event<T, U...>, callback: T) -> EventConnection'
