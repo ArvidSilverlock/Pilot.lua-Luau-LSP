@@ -36,7 +36,7 @@ return function()
 	else
 		local mergedSettings = serde.decode("json", fs.readFile("./workspace/.vscode/settings.json"))
 		for key, value in jsonSettings do
-			if type(value) == "table" and type((next(value))) == "number" then
+			if typeof(value) == "table" and typeof((next(value))) == "number" then
 				for _, subValue in value do
 					if not table.find(mergedSettings[key], subValue) then
 						table.insert(mergedSettings[key], subValue)
