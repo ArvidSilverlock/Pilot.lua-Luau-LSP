@@ -340,7 +340,8 @@ function Parse.parseObject(options: Types.ObjectOptions)
 	}
 
 	table.insert(
-		output.pilotObjects,
+		-- This will cause issues if there are ever multiple layers an inheritance chain.
+		if object.extends then output.extendedPilotObjects else output.pilotObjects,
 		if typeName == "PilotObject"
 			then table.concat({
 				`declare class {typeName}`,
@@ -354,7 +355,7 @@ function Parse.parseObject(options: Types.ObjectOptions)
 				table.concat(sections, "\n\n"),
 				`end`,
 			}, "\n")
-			else `declare class {typeName} extends {object.extends or "PilotObject"}\nClassName: {className}\nend`
+			else `declare class {typeName} extends {object.extends or "PilotObject"}\n\tClassName: {className}\nend`
 	)
 end
 

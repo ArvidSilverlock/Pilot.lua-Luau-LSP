@@ -39,6 +39,7 @@ return function(documentationFileType: "json" | "yaml")
 		generatedGlobals = {},
 
 		pilotObjects = {},
+		extendedPilotObjects = {},
 
 		documentation = {},
 	}
@@ -134,6 +135,7 @@ return function(documentationFileType: "json" | "yaml")
 			table.concat(output.globalFunctions[2], "\n\n"),
 			table.concat(output.generatedGlobals, "\n\n"),
 			table.concat(output.pilotObjects, "\n\n"),
+			table.concat(output.extendedPilotObjects, "\n\n"),
 		}, "\n\n")
 	)
 

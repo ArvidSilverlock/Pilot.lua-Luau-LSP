@@ -69,6 +69,7 @@ export type Output = {
 	generatedGlobals: { string },
 
 	pilotObjects: {},
+	extendedPilotObjects: {},
 
 	documentation: Documentation,
 }
