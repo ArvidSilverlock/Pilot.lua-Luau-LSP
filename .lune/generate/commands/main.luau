@@ -8,13 +8,6 @@ local Types = require("../Types")
 
 local GetPartData = require("../Data/PartData")
 
-local GET_PART_FUNCTIONS = {
-	GetPart = true,
-	GetPartFromPort = true,
-	GetParts = true,
-	GetPartsFromPort = true,
-}
-
 return function(documentationFileType: "json" | "yaml")
 	if not (fs.isDir("./workspace") and fs.isDir("./workspace/types")) then
 		stdio.ewrite("please run `setup` before `generate`")
