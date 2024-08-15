@@ -1,3 +1,20 @@
+events:
+  Configured:
+    description: Fires when the object is configured.
+    parameters:
+    - 'configurerId: number'
+  Loop:
+    description: Fires when the object is updated by the game loop.
+    parameters:
+    - 'deltaTime: number'
+  OnClick:
+    description: Fires when the object is clicked.
+    parameters:
+    - 'clickerId: number'
+  Triggered:
+    description: Fires when the object is triggered.
+    parameters:
+    - 'otherPart: PilotObject'
 globals:
   functions:
     Beep:
@@ -143,8 +160,13 @@ globals:
       Pressed: boolean
       X: number
       Y: number
+    Event<N = string, T = (...any) -> (), U... = ...any>:
+      Connect: '(self: Event<N, T, U...>, callback: T) -> EventConnection'
+      _eventName: N
     EventConnection:
+      Disconnect: '(self: EventConnection) -> ()'
       Unbind: '(self: EventConnection) -> ()'
+    EventConnection<N = string, T = (...any) -> ()>: 'typeof(setmetatable({} :: { Callback: T, _eventName: N }, {} :: EventConnectionMetatable))'
     EventData: '{ string }'
     FileAttributes:
       metadata: '{ [primitive]: primitive }?'
@@ -328,21 +350,9 @@ globals:
 objectbase:
   description: The object that all Waste of Space objects inherit from.
   events:
-    Configured:
-      description: Fires when the object is configured.
-      parameters:
-      - 'configurerId: number'
     Destroyed:
       description: Fires when the object is destroyed.
       unknowntype: true
-    OnClick:
-      description: Fires when the object is clicked.
-      parameters:
-      - 'clickerId: number'
-    Triggered:
-      description: Fires when the object is triggered.
-      parameters:
-      - 'otherPart: PilotObject'
   methods:
     CanInstallComponent:
       unknowntype: true
@@ -508,12 +518,30 @@ objectbase:
 objects:
   100k:
     description: 100k visits special item
-  Aerogel:
-    description: An incredibly light material that is very fragile.
+    events:
+      OnClick: true
+      Triggered: true
+  ARController:
+    events:
+      Configured: true
+      KeyPressed:
+        unknowntype: true
+      OnClick: true
+      UserInput:
+        unknowntype: true
+    extends: TouchScreen
+    methods:
+      ClearElements3D:
+        unknowntype: true
+      CreateElement3D:
+        unknowntype: true
+  Aerogel: An incredibly light material that is very fragile.
   AirSupply:
     categories:
     - Electrical
     description: Generates a 300 stud radius oxygen bubble when powered on. Very important part for space ships, as it acts as the oxygen supply for the ship.
+    events:
+      Loop: true
   AlienCore:
     categories:
     - Resources
@@ -528,6 +556,10 @@ objects:
     description: A light material useful for air transport. Isn't very durable.
   Anchor:
     description: 'When triggered or clicked, it is able to be anchored, a state in which it is immovable by physics, and applies to parts connected to it. '
+    events:
+      Configured: true
+      OnClick: true
+      Triggered: true
     properties:
       Anchored:
         description: Determines whether the anchor is active or not.
@@ -547,6 +579,10 @@ objects:
         type: number
   Apparel:
     description: "A piece of clothing that can be worn by other players. Parts can also be attached to the apparel, meaning you can create your own suits with the apprel.\nIt is similar to the prosthetic, except it can be taken off and does not cause damage. However, electricity does not trasmit throughout the apparel unlike prosthetics.\n\nApparel can also holds less parts than the prosthetic. It can only hold 25 parts, while Prosthetics can hold 50.\n\nApparel has another configuration to it called Transparency, which dictates how transparent it will become when worn. Ranges from 0-1 from non-transparent to transparent.\n\t"
+    events:
+      Configured: true
+      Loop: true
+      OnClick: true
     properties:
       Limb:
         description: The name of the limb that this Apparel is for.
@@ -562,14 +598,31 @@ objects:
       Fires a fast-moving metal shell upon being triggered.
       This metal shell generates a small explosion upon impact.
       Costs 15 iron per shot.
+    events:
+      OnClick: true
+      Triggered: true
   Asphalt:
     description: |-
       A modern material useful for smooth road surfaces.
       Its durability triples when anchored.
+    events:
+      Loop: true
   Assembler:
     categories:
     - Electrical
     description: Assembles items as configured when the structure is supplied with the required power and resources.
+    events:
+      Configured: true
+      Loop: true
+    methods:
+      CalculateCraftingRecipe:
+        unknowntype: true
+      CraftItems:
+        unknowntype: true
+      GetCraftCooldown:
+        unknowntype: true
+      GetInventory:
+        unknowntype: true
     properties:
       Assemble:
         description: The name of the object to be assembled.
@@ -579,12 +632,16 @@ objects:
     - Weapons
     - Electrical
     description: Fires a continous set of lasers when powered. Like most other energy/thermal weapons, it generates heat when powered. It generates up to 65 degrees of heat, meaning you will need atleast 2 or 3 coolers.
+    events:
+      Loop: true
   Ball:
     categories:
     - Templates
     description: A ball shaped template object.
   BallastTank:
     description: 'Allows for variable ballast to be added to sea vehicles. Also prevents corrosion to attached parts underwater. '
+    events:
+      Loop: true
     properties:
       Buoyancy:
         description: |-
@@ -597,6 +654,8 @@ objects:
       Levitates parts attached to it to a certain configurable height.
       However, it is easily poppable.
       Does not work in space, or no-atmosphere planets.
+    events:
+      Configured: true
     properties:
       Buoyancy:
         description: |-
@@ -606,10 +665,15 @@ objects:
         type: number
   Battery:
     description: A light part that contains 400 energy and is prefilled. Can be refilled.
+    events:
+      ContainerChanged:
+        unknowntype: true
   Beacon:
     categories:
     - Electrical
     description: "Creates a small beacon of light when powered. \n\tWhen 'ShowOnMap\\' is enabled, it broadcasts a signal into the universe.\n\t\\'BeaconName\\' changes the name of the beacon shown on the starmap. \n\t30 second cooldown for changing the configurables."
+    events:
+      Configured: true
     properties:
       BeaconName:
         description: The name of the beacon.
@@ -623,6 +687,10 @@ objects:
     description: A lightweight metal only found on Barren planets used for preventing plutonium cores from going supercritical until detonated.
   Bin:
     description: "Stores solid items such as Aluminum, Iron, Faucets, etc. \nCan store up to 1000 items. When destroyed, every item inside will also be destroyed. \nThe value increases as more items are added to it.\n\nBins can also be used as crafting recipes, with the resources inside being used.\nYou can also configure a bin to prevent items from being crafted from it, allowing for bins to be strictly for machine storage.\n\t"
+    events:
+      ContainerChanged:
+        unknowntype: true
+      OnClick: true
     methods:
       GetAmount:
         returns:
@@ -636,6 +704,9 @@ objects:
         type: boolean
   BlackBox:
     description: "Records all activity in the region using very delicate instruments.\nActivates when locked and anchors to ensure accurate readings.\nONLINE = Listening for event/Sharing event data, DATA = New data the owner hasn't seen.\n\t\t\n"
+    events:
+      Loop: true
+      OnClick: true
     methods:
       GetLogs:
         returns:
@@ -644,14 +715,19 @@ objects:
     categories:
     - Templates
     description: A sharp object that can pierce through objects if the material is durable and strong.
-  BlastingCap:
-    description: A component used in crafting recipes for more advanced explosive devices.
+  BlastingCap: A component used in crafting recipes for more advanced explosive devices.
   Boiler:
     description: Turns water to steam when fueled with 2 water and 1 coal.
+    events:
+      Loop: true
   Boombox:
     categories:
     - Electrical
     description: Must be powered in order to play music. When clicked, it will toggle playing music and will play the song id you give it.
+    events:
+      Loop: true
+      OnClick: true
+      Triggered: true
     properties:
       Audio:
         description: The audio asset ID to be played.
@@ -660,16 +736,23 @@ objects:
     description: |-
       A cheap material made from baked clay useful for building houses.
       Its durability doubles when anchored on a planet.
+    events:
+      Loop: true
   BurnerGenerator:
     categories:
     - Electrical
     description: Creates electricity when fueled with coal.
+    events:
+      Loop: true
   BurstLaser:
     categories:
     - Weapons
     description: |-
       Fires 5 rapid sets of concentrated laser beams. Each beam does a mediate amount of damage.
       Costs 100 power for each beam fired, meaning the total power cost is 500 power.
+    events:
+      OnClick: true
+      Triggered: true
   Button:
     categories:
     - Logic
@@ -699,6 +782,8 @@ objects:
       When a camera has the same ID as a screen, that screen will display the camera view.
       Clicking on a screen that is displaying the view of a camera will allow you to directly view what the camera is seeing.
       No power is necessary.
+    events:
+      Configured: true
     properties:
       VideoID:
         description: |-
@@ -716,15 +801,15 @@ objects:
       Must be supplied with an ammo material.
       Iron is prioritized, and results in one large cannonball being shot.
       Copper results in grapeshot.
-  Cement:
-    description: A modern material useful for pavement.
-  Chute:
-    description: |-
-      Is able to transfer solid parts between objects such as bins and extractors.
-      **Contrary to popular belief, chutes can transfer more than one type of object.**
-      **This means you can mix assemblers and extractors into the same system, no need for different chutes for each object. You can just make one long chute and connect your factory to it.**
-  Cleat:
-    description: A textile resource similar to Rubber, except it has a high amount of friction and low bounciness. It can be used in physical machines such as the feet of mechs, etc.
+    events:
+      OnClick: true
+      Triggered: true
+  Cement: A modern material useful for pavement.
+  Chute: |-
+    Is able to transfer solid parts between objects such as bins and extractors.
+    **Contrary to popular belief, chutes can transfer more than one type of object.**
+    **This means you can mix assemblers and extractors into the same system, no need for different chutes for each object. You can just make one long chute and connect your factory to it.**
+  Cleat: A textile resource similar to Rubber, except it has a high amount of friction and low bounciness. It can be used in physical machines such as the feet of mechs, etc.
   CloningBay:
     categories:
     - Electrical
@@ -733,8 +818,7 @@ objects:
       It is pretty much a cross region spawnpoint. However, you can only have one cloning bay at a time.
       When powered, it will appear in your death menu when you die and you can click it to spawn at this location.
       However, you should pair the CloningBay with a spawn point next to it to ensure you spawn at the cloning bay.
-  Cloth:
-    description: A soft thin fabric that can soak up liquids.
+  Cloth: A soft thin fabric that can soak up liquids.
   Coal:
     categories:
     - Resources
@@ -743,12 +827,20 @@ objects:
     categories:
     - Electrical
     description: Creates electricity when fueled by gasoline.
+    events:
+      Loop: true
   Cone:
     categories:
     - Templates
     description: A cone shaped template object.
   Constructor:
     description: "Similar to an assembler, but constructs a model when triggered. However, the constructor must be supplied with the correct materials for a model.\nFor example, a car model requiring 50 iron and 3 a bin attached with 50 iron, a bin attached with 30 wires and 100 power.\n\t\t\nYou can find out how many materials you need through the model loader gui.\nHas a 60 second cool down or a minute cooldown to prevent model spamming."
+    events:
+      Configured: true
+      Triggered: true
+    methods:
+      CalculateModelRecipe:
+        unknowntype: true
     properties:
       Autolock:
         description: Determines if the created model should be locked by the owner of the Constructor.
@@ -759,12 +851,14 @@ objects:
       RelativeToConstructor:
         description: Determines if the created model should be loaded in relative to the orientation of the Constructor.
         type: boolean
-  Container:
-    description: Stores liquids and gases. When a liquid or gas touches the Container, the container will automatically store it.
+  Container: Stores liquids and gases. When a liquid or gas touches the Container, the container will automatically store it.
   Controller:
     categories:
     - Logic
     description: "Alters the speed of attached Controllable objects which include: Engine, Motor, BallastTank, IonDrive, IonRocket, Thruster, Rocket. Must use a polysilicon between this controller and \n\tan object that emits a trigger signal(like a button) to use the same events as clicking the UI. For example, FlipFlop will set the speed of the Controllable objects to 0, Deactivate will subtract 5 from the current speed, etc."
+    events:
+      Loop: true
+      Triggered: true
   ConveyorBelt:
     categories:
     - Electrical
@@ -816,6 +910,8 @@ objects:
       Creates lift from being pushed forward.
       A worse version of a Wing.
       Does not work in space or in non atmospheric planets.
+    events:
+      Loop: true
   Cylinder:
     categories:
     - Templates
@@ -824,6 +920,8 @@ objects:
     categories:
     - Electrical
     description: Converts attached dark matter bins into energy. 1 unit of dark matter is equal to 1000 watts of power. However, this generates a ton of heat in the process, nearly up to 200 degrees when activated. This means you will need about 10 coolers to avoid combustion.
+    events:
+      Loop: true
   DarkMatter:
     categories:
     - Resources
@@ -836,11 +934,12 @@ objects:
       The reactor is very unstable, and if the reactor overheats it will cause a huge explosion.
 
       The DarkReactor generates up to 500 degrees of temperature, meaing you will need atleast 25 coolers to cool the reactor to make sure it does not overheat.
-  Decoupler:
-    description: |-
-      When triggered, it breaks welds and falls off of anything attached.
-      Can be used to separate things.
-      The trigger signals will pass through the decoupler as it is decoupled.
+    events:
+      Loop: true
+  Decoupler: |-
+    When triggered, it breaks welds and falls off of anything attached.
+    Can be used to separate things.
+    The trigger signals will pass through the decoupler as it is decoupled.
   DelayWire:
     categories:
     - Logic
@@ -856,6 +955,8 @@ objects:
     categories:
     - Logic
     description: An object that deletes itself when triggered.
+    events:
+      Triggered: true
   Diamond:
     categories:
     - Resources
@@ -867,13 +968,23 @@ objects:
     categories:
     - Logic
     description: ''
+    events:
+      Loop: true
     methods:
+      Clear:
+        unknowntype: true
       ClearDisk: {}
+      Compress:
+        unknowntype: true
+      Decompress:
+        unknowntype: true
       Read:
         parameters:
         - 'key: string'
         returns:
         - string
+      ReadAll:
+        unknowntype: true
       ReadEntireDisk:
         returns:
         - '{ [string]: string }'
@@ -881,10 +992,17 @@ objects:
         parameters:
         - 'key: string'
         - 'data: string'
+      WriteAll:
+        unknowntype: true
   Dispenser:
     description: |-
       Dispenses items from attached bins, similar to a faucet.
       Can also filter certain items from dispensing. Simply configure it to be a list of names. For example, "Copper Iron Wire"
+    events:
+      Configured: true
+      Loop: true
+      OnClick: true
+      Triggered: true
     methods:
       Dispense: {}
     properties:
@@ -901,6 +1019,8 @@ objects:
         type: boolean
   DriveBox:
     description: "When connected to a motor or engine with a rod, it will spin the same speed the engine or motor is going.\n(You must click the drivebox first when creating a rod.) "
+    events:
+      Loop: true
     properties:
       Ratio:
         description: |-
@@ -919,6 +1039,8 @@ objects:
     description: |-
       A special version of the fence which damages upon contact.
       Requires power to electrocute.
+    events:
+      Loop: true
   Electromagnet:
     categories:
     - Logic
@@ -928,6 +1050,10 @@ objects:
     categories:
     - Weapons
     description: Causes a powerful explosion when triggered. Often used in space combat as a means of a powerful missile or torpedo.
+    events:
+      Damaged:
+        unknowntype: true
+      Triggered: true
   EnergyGun:
     categories:
     - Weapons
@@ -936,7 +1062,12 @@ objects:
     categories:
     - Electrical
     description: "Creates a bubble made of energy that protects it from energy based weapons such as Lasers and Plasma Cannons.\n\nAn EnergyShield has a few sets of properties that you can fine tune to create a balanced shield.\nShieldRadius - The size of the entire shield. This will exponentially consume more power the higher the radius is. \nRegenerationSpeed - On a scale from 1 to 10 on how fast the shield will regenerate.\nShieldStrength - Scale from 1 to 10 on how much the shield can endure.\n\nRegenerationSpeed and ShieldStrength both combined can't be over 11.\nFor example, a regeneration speed of 6 and a shield strength of 5 is possible.\nHowever, a regeneration speed of 10 and a shield strength of 10 isn't, as 10 + 10 > 11\nA regeneration speed of 1 and a shield strength of 10 however is possible, since 11 = 11.\n\nAnother benefit for energy shields is that it blocks all warhead explosions, whether inside the shield or outside."
+    events:
+      Configured: true
+      Loop: true
     methods:
+      CalculateCost:
+        unknowntype: true
       GetShieldHealth:
         returns:
         - number
@@ -961,6 +1092,8 @@ objects:
         type: number
   Engine:
     description: 'It acts similar to a motor, but is powered by gasoline instead of electricity. '
+    events:
+      Configured: true
     properties:
       EngineSpeed:
         description: |-
@@ -980,33 +1113,53 @@ objects:
     categories:
     - Weapons
     description: Causes an explosion when triggered. You can use a delay wire to make it explode after a few seconds and not immediately.
+    events:
+      Damaged:
+        unknowntype: true
+      Triggered: true
   Extractor:
     categories:
     - Electrical
     description: "Extracts and harvests materials from connected terrain such as mountains and ore deposits. \nFor example, to extract coal you attach it to the coal deposit, and configure the extractor to extract Coal.\n\nThe extractor must be powered in order to work. Will not work if there's another powered extractor 50 studs away.\nIf connected to a bin, it will supply that bin with the given material it is tasked to extract.\nTwo powered extractors cannot be on the same ore deposit, or else they both will not function. \n\nIf the materials can't be added to a bin, they will spawn in front of the hole on the front of the extractor.\nHowever, if the extractor is blocked by an object, it will not spew out any materials which prevents an increase on lag.\n\t\t\nWhen tasked to extract wood, it will extract any trees near it."
+    events:
+      Loop: true
     properties:
       MaterialToExtract:
         description: Determines the material to extract from connected natural surfaces.
         type: string
   Faucet:
     description: Releases liquids and gases from containers.
+    events:
+      Configured: true
+      Loop: true
+      OnClick: true
+      Triggered: true
     extends: Dispenser
-  Fence:
-    description: A metal fence. Primarily used to set up walls and gaurd structures and bases.
+    methods:
+      Dispense:
+        unknowntype: true
+  Fence: A metal fence. Primarily used to set up walls and gaurd structures and bases.
   Filter:
     description: Similar to a chute and a pipe, but only lets certain materials pass through.
     properties:
       Filter:
         description: The name of the material allowed to pass through.
         type: string
-  FireWood:
-    description: A version of wood that is able to burn longer, allowing it to be an efficient fire burning device.
+  FireWood: A version of wood that is able to burn longer, allowing it to be an efficient fire burning device.
   Fireworks:
     categories:
     - Weapons
     description: Causes an explosion when triggered. You can use a delay wire to make it explode after a few seconds and not immediately.
+    events:
+      Damaged:
+        unknowntype: true
+      Triggered: true
   Flamethrower:
     description: Shoots a stream of flaming gasoline to ignite your foes.
+    events:
+      Loop: true
+      OnClick: true
+      Triggered: true
   Flint:
     categories:
     - Resources
@@ -1022,18 +1175,23 @@ objects:
       A consumable item.
       *Appears* to be meat.
       Upon clicking it, it will heal the user's health depending on the size.
-  Framewire:
-    description: Enter the matrix.
+    events:
+      OnClick: true
+  Framewire: Enter the matrix.
   Freezer:
     categories:
     - Electrical
     description: Turns attached water bins into ice when powered.
+    events:
+      Loop: true
+  Furnace:
+    events:
+      Loop: true
   Gasoline:
     categories:
     - Resources
     description: A liquid used for fueling many devices such as rockets and engines.
-  Gear:
-    description: A mechanical component commonly used in crafting recipes for many objects.
+  Gear: A mechanical component commonly used in crafting recipes for many objects.
   GeigerCounter:
     categories: {}
   Generator:
@@ -1048,8 +1206,7 @@ objects:
     categories:
     - Resources
     description: A very valuable and stretchable material.
-  Goo:
-    description: A sticky substance that can stick together to objects when touched.
+  Goo: A sticky substance that can stick together to objects when touched.
   Grass:
     categories:
     - Resources
@@ -1058,6 +1215,8 @@ objects:
     categories:
     - Electrical
     description: Generates an artificial gravity field when powered on. The gravity field only affects players, not individual parts. The amount of gravity can also be configureed, but the more gravity the higher amount of power needed. Only works in space, not inside planets.
+    events:
+      Loop: true
     properties:
       Gravity:
         description: |-
@@ -1096,6 +1255,9 @@ objects:
       Putting "Sun" as part of the list will make the seeker automatically target the main stellar body in the system.
 
       Gyros also have a property called MaxTorque. This allows you to control the max force on the gyro to stabilize it.
+    events:
+      Configured: true
+      Loop: true
     methods:
       PointAt:
         description: Points the gyro towards the specified position.
@@ -1150,7 +1312,18 @@ objects:
     categories:
     - Logic
     description: Acts as a chute when active/gray, but when black or inactive it acts as a normal object.
+    events:
+      Configured: true
+      OnClick: true
     extends: Switch
+  HeatPipe: ''
+  HeatPump:
+    events:
+      Loop: true
+  HeatValve:
+    events:
+      Configured: true
+      OnClick: true
   Heater:
     categories:
     - Electrical
@@ -1169,6 +1342,8 @@ objects:
     categories:
     - Electrical
     description: Using our brand new Multi-Dimensional Holographic Projection Technology™ you are able to create a stationary clone with only the ID of the user provided!.
+    events:
+      Configured: true
     properties:
       UserId:
         description: |-
@@ -1190,6 +1365,8 @@ objects:
     categories:
     - Electrical
     description: Grows grass and wood from water, turning attached water bins into either wood, sticks or grass. Incredibly useful for space bases or bases in areas devoid of life.
+    events:
+      Loop: true
     properties:
       Grow:
         description: The material to grow from the Hydroponic.
@@ -1198,8 +1375,12 @@ objects:
     categories:
     - Propulsion
     description: "A device used to travel at faster than light speeds to other regions of the universe. \nSimply input the coordinates to your destination and have a sufficient amount of fuel, and you'll be on your way to your destination.\nTo initiate warping, power the hyperdrive and trigger it. When warping, the hyperdrive will be anchored to prevent any movement.\n\nThe power required for warping will be dependent on the distance travelled, as well as the size of the object being transported.\nThe amount of power required will be displayed in the hyper drive, shown in the red text. \n\nAll of the parts connected to the hyperdrive and every player sitting will be teleported, however any free floating parts or standing up players will be sucked into the vaccum of space, so be careful.\n\nThe red text at the bottom of the hyperdrive indicates how much power is needed to perform the jump.\n\nMake sure the numbers on the hyperdrive is facing up to ensure correct stud alignment."
+    events:
+      Configured: true
+      Triggered: true
     methods:
       GetRequiredPower:
+        description: Returns the amount of power required for the warp.
         unknowntype: true
     properties:
       Coordinates:
@@ -1213,10 +1394,15 @@ objects:
     categories:
     - Logic
     description: Sets alight parts within the immediate vicinity when triggered.
+    events:
+      Triggered: true
   ImpulseCannon:
     categories:
     - Weapons
     description: Blasts a harmless burst of energy which sends anything nearby soaring at a high velocity.
+    events:
+      OnClick: true
+      Triggered: true
   Instrument:
     categories:
     - Logic
@@ -1232,6 +1418,8 @@ objects:
       Size - The dimensions of the part it is attached to.
       Position - The position of the current instrument.
       TemperatureF - Temperature but in Fahrenheit.
+    events:
+      Loop: true
     methods:
       GetReading:
         parameters:
@@ -1242,10 +1430,13 @@ objects:
       Type:
         description: The type of instrument readout to display on the instrument.
         type: InstrumentType
+  Insulation: ''
   IonRocket:
     categories:
     - Electrical
     description: "An IonRocket allows space flight. When powered, it will propel force dependent on the Propulsion setting, which you can configure with the hammer tool. \n\t\tThe arrow indicates the direction the ionrocket will propel to when powered."
+    events:
+      Configured: true
     extends: Thruster
   Iron:
     categories:
@@ -1260,6 +1451,13 @@ objects:
     description: |-
       Similar to a button, except is programmable to take more than one key input.
       Can be attached to a vehicle seat or clicked by a player.
+    events:
+      KeyPressed:
+        unknowntype: true
+      TextInputted:
+        unknowntype: true
+      UserInput:
+        unknowntype: true
     methods:
       SimulateKeyPress:
         parameters:
@@ -1269,15 +1467,21 @@ objects:
         parameters:
         - 'input: string?'
         - 'player: string'
+      SimulateUserInput:
+        unknowntype: true
   Kiln:
     categories:
     - Electrical
     description: Turns attached sand bins into glass.
+    events:
+      Loop: true
   Laser:
     categories:
     - Weapons
     - Electrical
     description: "Fires a concentraded beam of energy when powered, which can be used to damage and set objects on fire. \n\tHas a Range of 1000 studs.\n\tPrimarily used as a weapon in space combat situations.\n\tWhile it can damage objects effectively, it cannot damage energy shields."
+    events:
+      Loop: true
     properties:
       DamageOnlyPlayers:
         description: Determines if this laser is only allowed to damage players and not materials.
@@ -1295,14 +1499,23 @@ objects:
     - Logic
     description: "Senses and detects organic life up to a distnace of 2000 studs. Used mainly in programming, as is used in alien technology to hunt down organisms such as players.\nHas a special programmable event called 'GetReading()' which returns a table of all organisms, with their positions and names.\nExample:\n{\n\tPlayer1 = Vector3.new(5, 5, 5);\n}"
     methods:
+      GetPlayers:
+        description: Returns a table where the indexes are player names and the keys are player positions.
+        unknowntype: true
       GetReading:
+        description: Returns a table where the indexes are humanoid names and the keys are humanoid positions.
         returns:
         - - '{ [string]: Vector3 }'
           - A dictionary of player usernames to their world positions.
+      ListPlayers:
+        description: Returns an array of player UserIds.
+        unknowntype: true
   Light:
     categories:
     - Electrical
     description: Emits light when powered with electricity. Can be colored in different ways, changing the light color
+    events:
+      Configured: true
     methods:
       SetColor:
         parameters:
@@ -1324,20 +1537,27 @@ objects:
     categories:
     - Electrical
     description: Fires a beam of solid light that can be walked on.
+    events:
+      Configured: true
+      Loop: true
   LightTube:
     categories:
     - Electrical
     description: Emits light when powered with electricity. Can be colored in different ways, changing the light color
+    methods:
+      SetColor:
+        unknowntype: true
   Magnesium:
     categories:
     - Resources
     description: A shiny gray solid that is flammable, randomly ignites when touching stone.
-  Marble:
-    description: A compact and durable material. Primarily used as a building material for decorations.
+  Marble: A compact and durable material. Primarily used as a building material for decorations.
   Melter:
     categories:
     - Electrical
     description: Turns attached ice bins into water when powered.
+    events:
+      Loop: true
   Microcontroller:
     categories:
     - Logic
@@ -1356,8 +1576,21 @@ objects:
 
       Globals also include all lua globals and all rbx.lua globals,
       except for roblox script-related or game-related globals such as workspace, game, stats, time, etc.
+    events:
+      Configured: true
+      Loop: true
+      OnClick: true
     methods:
       Communicate:
+        unknowntype: true
+      Receive:
+        description: Waits for data to be received.
+        unknowntype: true
+      Send:
+        description: Sends the data you provide to a remote microcontroller. Parts you pass will be based on your microcontroller's context.
+        unknowntype: true
+      Shutdown:
+        description: Kills the microcontroller.
         unknowntype: true
     properties:
       Code:
@@ -1367,21 +1600,34 @@ objects:
     categories:
     - Logic
     description: Used in programming. Takes user's inputs.
+    events:
+      Chatted:
+        unknowntype: true
   MiningLaser:
     categories:
     - Electrical
     description: "Fires a concentraded beam of energy when powered, which is used to mine objects such as asteroids, mountains and ore deposits.\nThis works similar to an extractor, except it indirectly extracts power from other natural sources. \n\nWhen the laser hits an object, it will extract resources from that object and put it in attached bins.\nVery useful for creating mining vehicles to extract resources.\n\nUnlike the extractor however, this is far more efficient.\nThe MiningLaser outputs 2 resources per second, unlike the extractor which only does 2. This means the laser is 1.5x more efficient.\n\nHowever, the mining laser generates more heat than the extractor. Atleast 2 coolers are recommended per mining laser."
+    events:
+      Loop: true
     extends: Extractor
   Modem:
     categories:
     - Electrical
     description: "A computer networking object that allows you to send, save and get messages cross-region.\nThis is an incredibly useful part to set up an internet of sorts and send data to other computers.\n\nThe modem has 5 programmable functions to it.\nSendMessage(Data, NetworkId defaults to 0) sends a message (specifically through messaging service) carrying data.\nMessageSent is a special event that can be connected to via Connect. Has one argument called Data which is the data received. \nPostRequest saves a string of data to the WoS internet ':PostRequest(Domain, Data)' (modem must be locked)\nGetRequest gets a string of data from the WoS internet ':GetRequest(Domain)'\nRealPostRequest send a POST request to the real www ':(Domain, DataPassed, AsyncBool, FuncToSendResultsTo, OptionalHeaders)'"
+    events:
+      Loop: true
+      MessageSent:
+        unknowntype: true
     methods:
+      GetAsync:
+        unknowntype: true
       GetRequest:
         parameters:
         - 'domain: string'
         returns:
         - string
+      PostAsync:
+        unknowntype: true
       PostRequest:
         parameters:
         - 'domain: string'
@@ -1395,10 +1641,16 @@ objects:
         - 'optionalHeaders: { [string]: any }?'
         returns:
         - '{ response: string, success: boolean }'
+      RequestAsync:
+        unknowntype: true
+      SendLocalMessage:
+        unknowntype: true
       SendMessage:
         parameters:
         - 'data: string'
         - 'id: number'
+      UrlEncode:
+        unknowntype: true
     properties:
       NetworkID:
         description: |-
@@ -1412,6 +1664,8 @@ objects:
     categories:
     - Electrical
     description: Spins objects attached to the hinge at the front when powered.
+    events:
+      Configured: true
     properties:
       Power:
         description: |-
@@ -1425,10 +1679,8 @@ objects:
 
           **Range:** 0.01 to 100
         type: number
-  MustardGas:
-    description: A heavy chemical warfare weapon used to damage organisms. Gas Masks nullify the effects of this gas.
-  Neon:
-    description: A building decoration material that glows by itself without requiring power.
+  MustardGas: A heavy chemical warfare weapon used to damage organisms. Gas Masks nullify the effects of this gas.
+  Neon: A building decoration material that glows by itself without requiring power.
   Neutronium:
     categories:
     - Resources
@@ -1441,8 +1693,7 @@ objects:
     categories:
     - Resources
     description: A highly radioactive material produced from spent Uranium in a reactor.
-  Obamium:
-    description: An ancient artifact left behind from an alternate reality.
+  Obamium: An ancient artifact left behind from an alternate reality.
   Obelisk:
     categories:
     - Electrical
@@ -1451,6 +1702,14 @@ objects:
       Must be anchored and powered in order to function. Must also be open to the sky. Only one obelisk in a region can be powered at a time.
       When active, it attracts an Alien every 300 seconds.
       **Use at your own risk.**
+    events:
+      Loop: true
+  ObjectDetector:
+    methods:
+      GetLastHitData:
+        unknowntype: true
+      GetLastHitPart:
+        unknowntype: true
   Oil:
     categories:
     - Resources
@@ -1463,8 +1722,13 @@ objects:
     categories:
     - Resources
     description: A gas used for creating plastic.
-  Pipe:
-    description: Is able to transfer liquids and gases between containers and other objects when connected by pipes.
+  Pipe: Is able to transfer liquids and gases between containers and other objects when connected by pipes.
+  Piston:
+    events:
+      Configured: true
+    methods:
+      SetPosition:
+        unknowntype: true
   Plasma:
     categories:
     - Resources
@@ -1475,12 +1739,15 @@ objects:
     description: |-
       Fires an orb of unstable plasma out of the barrel exploding on impact.
       Needs to be fueled with 500 power and 50 helium or 1 plasma to fire.
+    events:
+      OnClick: true
+      Triggered: true
   Plastic:
     description: A cheap material made from petroleum and Coal through polymerisation inside assemblers.
-  Plutonium:
-    description: A highly radioactive compound used in manufacturing nuclear explosives.
-  PlutoniumCore:
-    description: A volatile core close to going supercritical used in recipes for Nuclear explosives.
+    events:
+      Loop: true
+  Plutonium: A highly radioactive compound used in manufacturing nuclear explosives.
+  PlutoniumCore: A volatile core close to going supercritical used in recipes for Nuclear explosives.
   Polysilicon:
     categories:
     - Logic
@@ -1489,6 +1756,8 @@ objects:
 
       Has a special configuration called Frequency which dictates how many times the polysilicon will repeat a trigger.
       For example, if a polysilicon was attached to a pulley, having a frequency of 5 and triggered, the pulley will be activated 5 times.
+    events:
+      Configured: true
     properties:
       Frequency:
         description: |-
@@ -1505,6 +1774,8 @@ objects:
     categories:
     - Logic
     description: An object used primarily in programming. Allows a microcontroller and computers to interact with their surroundings.
+    events:
+      Triggered: true
     properties:
       PortID:
         description: |-
@@ -1518,8 +1789,10 @@ objects:
     description: |-
       Stores electricity, and is used to power many devices using wires or by directly attaching it.
       Has a limit of 125000.
-  Primer:
-    description: A component used in crafting recipes for a few objects.
+    events:
+      ContainerChanged:
+        unknowntype: true
+  Primer: A component used in crafting recipes for a few objects.
   Propeller:
     categories:
     - Propulsion
@@ -1527,12 +1800,27 @@ objects:
       Propellers propel forward when spun.
       Forward direction indicated by white spot.
       Does not work in space or non atmospheric planets.
+    events:
+      Loop: true
   Prosthetic:
     description: "An artificial part that can be attached to players in exchange for a limb.\nThe limb configuration can be configureed to be the limb you want to have for a prosthetic, for example configuring it to be \"Right Leg\" will have the prosthetic attach itself to your character.\nSimply touch the prosthetic, and it will automatically be attached to your body. This process is extremely unhealthy, however, and may result in short-term complications.\n\nParts can be attached to the prosthetic, allowing many uses for the prosthetic limb.\n\nProsthetic limbs are also electrically conductable, acting as a wire.\n\nHeavily damages the character once attached.\nProsthetics can't have more than 50 parts attached to them.\n \t"
+    events:
+      Configured: true
     properties:
       Limb:
         description: The name of the limb that this Prosthetic is for.
         type: string
+  ProximityButton:
+    events:
+      Configured: true
+      PromptButtonHoldBegan:
+        unknowntype: true
+      PromptButtonHoldEnded:
+        unknowntype: true
+      PromptTriggerEnded:
+        unknowntype: true
+      PromptTriggered:
+        unknowntype: true
   Pulverizer:
     categories:
     - Electrical
@@ -1541,6 +1829,9 @@ objects:
     categories:
     - Electrical
     description: Pumps liquid from the environment into attached containers. For example, a pump located in the ocean will pump water when powered.
+    events:
+      Configured: true
+      Loop: true
     properties:
       LiquidToPump:
         description: The name of the liquid to extract using the pump.
@@ -1555,10 +1846,13 @@ objects:
     description: Creates electricity from decaying radioactive elements.
   Radar:
     description: An instrument that shows a 2D top-down representation of Earth.
+    events:
+      Loop: true
   Rail:
     description: "Slides and moves objects along its surface when powered and triggered. Useful for creating retractable pistons and actuators, for turrets or other retractable devices.\n\t\t\nRails will only move objects connected on the relative top surface of the rail.\n\t\t\nThe rail can only be activated through the use of polysilicons.\nMode 0 or activating polysilicons will set the rail to position1.\nMode 1 or deactivating polysilicons will set the rail to position2.\nMode 2 or flip flop polysilicons will act like a switch, setting to position2 if position1 and vice versa.\n\t\t\nHas 2 configurations, position1 and position2.\n\t\t\nBoth configurations should be between 0 and 100. These are percents of where the attached objects should slide to.\nFor example, if a rail was 50 studs long and position2 was 50 or 50%, the attached objects will slide to the middle or at 25 studs.\n\t\t\nDue to roblox physics, rails may act weirdly. To prevent this from happening, you should always place your rails first before anything else. It is recommended to attach objects on the rail after the rail is safely placed down.\n"
     methods:
       SetPosition:
+        description: Sets the position of the rail.
         parameters:
         - 'depth: number'
     properties:
@@ -1585,6 +1879,11 @@ objects:
     - Weapons
     - Electrical
     description: "Fires a piercing rail at high speeds. A long range weapon. Requires rails and electricity for ammo. Damage increases for every 10 studs of length.pierce if the hit part is destroyed. Must be at least have a width and height of 6 and at least a length of 30 to function.\n\t\nWhile Railgun is similar to Artillery, the Railgun is nearly instant while Artillery is a projectile weapon.\n\nRequires to charge for one minute before it can fire. While charging and when charged, it creates large amount of heat. Charging status resets when this part is damaged.\n\nWhen it is finished charging, it will stop creating a sound. At that point, it must be triggered and supplied by a rail bin in order to fire."
+    events:
+      Damaged:
+        unknowntype: true
+      Loop: true
+      Triggered: true
   Reactor:
     description: |-
       Generates steam using water and heat from radiation.
@@ -1612,12 +1911,13 @@ objects:
     categories:
     - Electrical
     description: Turns oil into Petroleum and Gasoline.
+    events:
+      Loop: true
   RegionCloaker:
     categories:
     - Electrical
     description: "Hides a certain region from players, making the coordinates not appear on their screen. \n\tRegion can only be un/cloaked every 25 seconds. So if you unpower the RegionCloaker(uncloaks), you must wait 25 seconds before powering it again to ensure the region gets cloaked."
-  ReinforcedGlass:
-    description: A stronger version of glass, however is less malleable.
+  ReinforcedGlass: A stronger version of glass, however is less malleable.
   Relay:
     description: "A powerful transmitter capable of transmitting trigger signals and resources/power between different regions.\nIt is a more powerful version of the antenna and transporter.\n\nUnlike the antenna, the relay has 2 modes, mode 0 and mode 1.\nMode 0 sends resources/power and trigger signals, while mode 1 receives it.\n\nUnlike the antenna, it can also transfer power in inactive regions or regions without players in them.\nThis means that you can connect a relay to your main base, warp away without anyone in the base, and still have the relay get the sufficient amount of power.\n\nHowever, you should have only one sending relay per coordinate, as conflicts can occur if there are 2 or more relays in the region/coordinates sending power or signalsith the same ID.\nOn the other hand, there can be an infinite number of receivers but the power/resources will be distributed evenly among them.\n\nFor example, let's say a relay network has a total output of 500 power and 25 iron. If there are 5 active receivers, each of them will get 100 power and 5 iron.\n\nWhen the relay is red, it means it not functioning. When it turns green, it is properly linked up to another relay or is sending signals.\n\t"
     properties:
@@ -1636,6 +1936,9 @@ objects:
     categories:
     - Logic
     description: Similar to an antenna, but sends trigger signals forward wirelessly when triggered.
+    events:
+      OnClick: true
+      Triggered: true
     properties:
       RemoteControlRange:
         description: |-
@@ -1654,6 +1957,8 @@ objects:
     description: |-
       Provides vertical height when spun, and only works in oxygen planets.
       The spin speed determines the height, and the tilt of the rotor determines the forward propulsion of the rotor.
+    events:
+      Loop: true
   RoundWedge:
     categories:
     - Templates
@@ -1662,8 +1967,8 @@ objects:
     categories:
     - Templates
     description: A block rounded inwards on one edge.
-  Rubber:
-    description: A textile resource used in manufacturing many industrial objects.
+  Router: ''
+  Rubber: A textile resource used in manufacturing many industrial objects.
   Ruby:
     categories:
     - Resources
@@ -1673,25 +1978,44 @@ objects:
     description: A weathered piece of metal.
   Sail:
     description: Utilizes the wind to move forward.
+    events:
+      Loop: true
+      OnClick: true
+      Triggered: true
   Sand:
     categories:
     - Resources
     description: An abundant resource that can be found in the shores of terra and forest planets, the sea floors of ocean planets and in the dunes of desert planets. When burnt, the sand becomes glass.
+  Scanner:
+    methods:
+      CalculateCost:
+        unknowntype: true
+      GetDistance:
+        unknowntype: true
+      GetPartsInRange:
+        unknowntype: true
+      Locate:
+        unknowntype: true
   Scrapper:
     categories:
     - Electrical
     description: Scraps solid items provided through a dispenser into their crafting components when powered. It also destroys unanchored single parts when touched.
+    events:
+      Loop: true
   Screen:
     categories:
     - Logic
     - Electrical
     description: A programmable object capable of showing text, buttons and images on an LED display. Very useful for creating custom programmable interfaces.
+    events:
+      Configured: true
     methods:
-      ClearElements:
-        description: Clears all objects that are descendants of the screen.
+      ClearElements: Clears all objects that are descendants of the screen.
       CreateElement:
         description: Creates an element of the specified class name with the specified properties.
         generate: screen
+      GetCanvas:
+        unknowntype: true
       GetDimensions:
         description: Gets the size of the screen in pixels in the form of a <code>Vector2</code>
         returns:
@@ -1712,6 +2036,8 @@ objects:
     categories:
     - Electrical
     description: "Spins objects attached to the hinge at the front when powered, to set angles.\n\tPolysilicon can be used to control its angle.\n\tActivate will increment the goal angle by the configured angle step (clockwise looking at its face)\n\tDeactivate will decrement the goal angle (counter-clockwise)\n\tFlipFlop will reset the angle to 0\n\tMicrocontrollers can also set a servo's angle with :SetAngle(Goal)"
+    events:
+      Configured: true
     methods:
       SetAngle:
         parameters:
@@ -1738,6 +2064,8 @@ objects:
       For example, you need an iron bin with 1 or more iron directly attached to it to work.
   Sign:
     description: 'Displays text or images. To display an image, configure it to id:imageid '
+    events:
+      Configured: true
     properties:
       SignText:
         description: The text to display on the front of the sign. Rich text is allowed.
@@ -1752,6 +2080,8 @@ objects:
     categories:
     - Resources
     description: A metalloid that is very useful for electronics. Can commonly be found in cliffs and rocks
+  SmoothGlass: ''
+  SmoothReinforcedGlass: ''
   Snow:
     categories:
     - Resources
@@ -1760,6 +2090,8 @@ objects:
     categories:
     - Electrical
     description: "Generates electricity using solar energy from a local star. \nThe closer it is to a star, the more energy it generates. \nThe type of star also affects its energy generation, as well as the size of the solar panel. \n\nIf the solar panel is blocked by a part, it will not generate any energy. Glass however will work."
+    events:
+      Loop: true
   SolarScoop:
     categories:
     - Electrical
@@ -1776,10 +2108,13 @@ objects:
       Neutron stars generate 60 helium, 45 hydrogen, 15 plasma and and 20 iron per second. It also generates 1-2 neutronium every 2 minutes.
 
       It is recommended to use a Filter to seperate the materials extracted by a solar scoop.
-  SoundMuffler:
-    description: A SoundMuffler will silences the sounds of machinery around it.
-  SpawnPoint:
-    description: Acts as a spawn location for the player who locked it.
+    events:
+      Loop: true
+  Sorter:
+    events:
+      Loop: true
+  SoundMuffler: A SoundMuffler will silences the sounds of machinery around it.
+  SpawnPoint: Acts as a spawn location for the player who locked it.
   Speaker:
     categories:
     - Electrical
@@ -1788,6 +2123,9 @@ objects:
       When clicked or triggered, it will toggle playing music and will play the song id you give it.
       Speaker:LoadSound(SoundId) will return a Sound object
       A Sound object can be modified using properties SoundId, Looped, PlaybackSpeed, Pitch, TimePositionand the methods Play, Pause, Stop, Destroy
+    events:
+      Configured: true
+      Triggered: true
     methods:
       Chat:
         parameters:
@@ -1812,6 +2150,10 @@ objects:
     categories:
     - Electrical
     description: Emits light in a cone when powered with electricity. Color emition can be changed by coloring it.
+    methods:
+      SetColor:
+        unknowntype: true
+  Stanlium: ''
   StarMap:
     categories:
     - Electrical
@@ -1830,12 +2172,16 @@ objects:
       Creates a 500 stud radius field that prevents any parts or objects around it from being dragged.
       This can be used alongside with a RegionCloaker to create public infrastructure to avoid trolling and such.
       However, in order to function, the shield must be anchored/grounded, and nothing must be blocking above it. The shield is also extremely fragile.
+    events:
+      Loop: true
   Steam:
     categories:
     - Resources
     description: A result of water being heated up to high temperatures.
   SteamEngine:
     description: 'It acts similar to a motor, but is powered by Steam instead of electricity. '
+    events:
+      Configured: true
     properties:
       EngineSpeed:
         description: |-
@@ -1847,6 +2193,8 @@ objects:
     categories:
     - Electrical
     description: Creates electricity when fueled by 2 boilers.
+    events:
+      Loop: true
   Stick:
     categories:
     - Resources
@@ -1861,6 +2209,8 @@ objects:
     description: |-
       When the number of contents within connected storage objects is within a defined range, it will send trigger signals similar to a button.
       This can be used to automate production of certain products when the stored quantity is low.
+    events:
+      Loop: true
     properties:
       QuantityRange:
         description: The range of item quantities within which this sensor will trigger.
@@ -1879,6 +2229,9 @@ objects:
       Once it aligns the vehicle, it will anchor all anchors attached.
 
       Make sure to also allign at a viable and proper place to prevent any noclip glitches during alignment.
+    events:
+      OnClick: true
+      Triggered: true
   Sulfur:
     categories:
     - Resources
@@ -1888,10 +2241,18 @@ objects:
     - Logic
     - Electrical
     description: Acts as a wire when active/green, but when black or inactive it acts as a normal object. Must use a polysilicon to switch for trigger events.
+    events:
+      Configured: true
+      OnClick: true
     properties:
       SwitchValue:
         description: Determines whether the switch is active or not.
         type: boolean
+  Tank:
+    events:
+      ContainerChanged:
+        unknowntype: true
+      OnClick: true
   Teleporter:
     description: |
       A device used to transport players across regions.
@@ -1904,6 +2265,8 @@ objects:
       Make sure you set the correct coordinates OR YOU WILL BE STRANDED!
 
       Costs 1000 energy per teleport. Teleporter uses Energy regardless if a player is on the Teleporter at the moment it gets triggered.
+    events:
+      Triggered: true
     properties:
       Coordinates:
         description: The coordinates to your Destination.
@@ -1930,10 +2293,18 @@ objects:
 
       Must be powered in order to view object's information.
       Has a 1 minute delay between viewing different systems.
+    events:
+      Configured: true
+      OnClick: true
+      Triggered: true
     methods:
       GetCoordinate:
+        description: Gets information about the configured region.
         returns:
         - RegionInfo
+      GetCurrentCoordinate:
+        description: Returns the current region coordinates.
+        unknowntype: true
       WhenRegionLoads:
         parameters:
         - 'callback: (regionData: RegionInfo) -> ()'
@@ -1941,10 +2312,22 @@ objects:
       ViewCoordinates:
         description: The coordinates to view.
         type: string
+  TemperatureGate:
+    events:
+      Configured: true
+    methods:
+      GetState:
+        unknowntype: true
+      GetTemp:
+        unknowntype: true
+      GetTemperature:
+        unknowntype: true
   TemperatureSensor:
     categories:
     - Logic
     description: "When the surrounding temperature is within a defined range, it will send trigger signals similar to a button.\n\nFor example, if the current temperature is 1100 and the temperature range is \"1000:inf\", then the sensor will send a signal.\n\t\nThis is very useful for creating smart cooling systems for a vehicle or reactor, preventing overheating from occuring.\n\nIf you want the temperature sensor to trigger outside of a certain range, take the inverse of the range.\nFor example, \"-inf:999\" would trigger when the temperature is within that range.\n\nConnecting the TemperatureSensor to a reactor will use the reactor's temperature instead of the surrounding temperature."
+    events:
+      Loop: true
     methods:
       GetTemp:
         unknowntype: true
@@ -1971,6 +2354,8 @@ objects:
       The power required by a thruster is proportional to its actual speed output.
 
       Thrusters can be heated to a temperature of around <200 degrees before overheating and combusting.
+    events:
+      Configured: true
     properties:
       Propulsion:
         description: |-
@@ -1978,8 +2363,7 @@ objects:
 
           **Range:** 0 to 100
         type: number
-  Tile:
-    description: A cheap material made from baked clay useful for building houses.
+  Tile: A cheap material made from baked clay useful for building houses.
   TimeSensor:
     categories:
     - Logic
@@ -1995,10 +2379,8 @@ objects:
       Time:
         description: The time at which this sensor will trigger.
         type: string
-  TintedGlass:
-    description: A material similar to Glass, but is tinted black on the front..
-  Tire:
-    description: A cylindrical shaped object used commonly in vehicles such as cars.
+  TintedGlass: A material similar to Glass, but is tinted black on the front..
+  Tire: A cylindrical shaped object used commonly in vehicles such as cars.
   Titanium:
     categories:
     - Resources
@@ -2011,6 +2393,7 @@ objects:
       A Screen, but with capabilities of handling player mouse input.
       This is to be used with programming.
     events:
+      Configured: true
       CursorMoved:
         description: Fired when a player moves their cursor on the screen.
         parameters:
@@ -2029,6 +2412,8 @@ objects:
     extends: Screen
     learnmore: https://github.com/iimurpyh/pilot-lua/wiki/TouchScreen
     methods:
+      GetCanvas:
+        unknowntype: true
       GetCursor:
         description: Gets the specified player's cursor.
         parameters:
@@ -2043,11 +2428,18 @@ objects:
     categories:
     - Logic
     description: Sends trigger signals upon contact with another player or another object.
+    events:
+      Touched:
+        unknowntype: true
+  TractorBeam: ''
   Transformer:
     categories:
     - Logic
     - Electrical
     description: Sends continuous trigger signals every second when powered.
+    events:
+      Loop: true
+      Triggered: true
     properties:
       LoopTime:
         description: |-
@@ -2055,6 +2447,10 @@ objects:
 
           **Range:** 0 to 360
         type: number
+  Transistor:
+    events:
+      Configured: true
+      OnClick: true
   Transporter:
     description: "Acts as an antenna but for bins and objects containing materials such as liquids and solids. \nUseful for creating large factory bases with many extractors without using long chutes.\n\t"
     properties:
@@ -2070,10 +2466,15 @@ objects:
     categories:
     - Electrical
     description: When touching in contact with a solid surface, it will move forward. Must be connected to an engine or motor similar to a drivebox to function.
+    events:
+      Loop: true
   TriggerSwitch:
     categories:
     - Logic
     description: Acts as a triggerwire when active/green, but when black or inactive it acts as a normal object.
+    events:
+      Configured: true
+      OnClick: true
     extends: Switch
   TriggerWire:
     categories:
@@ -2106,9 +2507,14 @@ objects:
     categories:
     - Logic
     description: Acts as a pipe when active/gray, but when black or inactive it acts as a normal object.
+    events:
+      Configured: true
+      OnClick: true
     extends: Switch
   VehicleSeat:
     description: "Allows players to control vehicles by rotating when sat on.\nIt is incredibly important to have when creating vehicles.\n\nAttaching buttons to the vehicleseat will allow the player sitting on it to trigger the button by pressing a key.\nSimply attach the button to the vehicle seat, configure it to the keybind you would like, and it will allow you to trigger that button by pressing the key when sitting down in the seat.\n\t"
+    events:
+      Configured: true
     properties:
       Enabled:
         description: Determines whether this seat should control its rotation. Turning this off results in a regular seat.
@@ -2128,6 +2534,10 @@ objects:
     description: |-
       Causes a powerful explosion when triggered. You can use a delay wire to make it explode after a few seconds and not immediately.
       The only down-side of the warhead is that it is blocked completely by energy shields.
+    events:
+      Damaged:
+        unknowntype: true
+      Triggered: true
   Water:
     categories:
     - Resources
@@ -2169,6 +2579,8 @@ objects:
       Creates lift from being pushed forward.
       Works at higher altitudes and at better angles than a CrudeWing.
       Does not work in space or in non atmospheric planets.
+    events:
+      Loop: true
   Wire:
     categories:
     - Electrical
@@ -2177,6 +2589,8 @@ objects:
     categories:
     - Logic
     description: Similar to a button, but can be clicked from infinite distances and cannot be used for keybinds.
+    events:
+      OnClick: true
   Wood:
     categories:
     - Resources
@@ -2190,10 +2604,11 @@ objects:
       Allows electrical objects to interact with each other when connected by wires.
       If a flammable object is touched, it will be lit on fire.
 types:
-  Event<T, U...>:
-    Connect: '(self: Event<T, U...>, callback: T) -> EventConnection'
-    Once: '(self: Event<T, U...>, callback: T) -> EventConnection'
-    Wait: '(self: Event<T, U...>) -> U...'
+  EventConnectionMetatable:
+    Disconnect: '(self: EventConnection) -> ()'
+    Unbind: '(self: EventConnection) -> ()'
+    __index: EventConnectionMetatable
+    __mode: v
   JSON: '{ [JSONValue]: JSON } | JSONValue'
   JSONValue: string | number | boolean | buffer
   MethodParameter:
