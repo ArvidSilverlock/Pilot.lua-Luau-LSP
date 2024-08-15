@@ -20,7 +20,7 @@ return function(valueType: "Function", options: Types.FunctionOptions)
 	local lines = { `declare {options.name}:` }
 
 	local index = 1
-	for objectName, _ in partData.objects do
+	for objectName, _ in partData.classes.objects do
 		local className = string.format("%q", objectName)
 		local typeName = Utility.sanitiseName(objectName)
 		table.insert(lines, `\t{if index == 1 then " " else "&"} _{options.name}<{className}, {typeName}>`)
