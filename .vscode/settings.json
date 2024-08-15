@@ -6,4 +6,7 @@
 	"luau-lsp.require.directoryAliases": {
 		"@lune/": "~/.lune/.typedefs/0.8.2/"
 	},
+
+	"prettier.tabWidth": 4,
+	"prettier.useTabs": true
 }
