@@ -28,6 +28,11 @@ return function(valueType: "Function", options: Types.FunctionOptions)
 	end
 	table.insert(lines, `\t& _{options.name}<string?, PilotObject>`)
 
-	table.insert(output.generatedTypes, BASE_TYPES[options.name])
+	if output.generatedTypes.partGetters then
+		table.insert(output.generatedTypes.partGetters, BASE_TYPES[options.name])
+	else
+		output.generatedTypes.partGetters = { BASE_TYPES[options.name] }
+	end
+
 	return table.concat(lines, "\n")
 end
