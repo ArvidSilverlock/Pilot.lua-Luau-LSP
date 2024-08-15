@@ -34,7 +34,6 @@ return function(documentationFileType: "json" | "yaml")
 		generatedGlobals = {},
 
 		pilotObjects = {},
-		extendedPilotObjects = {},
 
 		documentation = {},
 	}
@@ -45,12 +44,22 @@ return function(documentationFileType: "json" | "yaml")
 		output = output,
 	})
 
-	for objectName, objectData in partData.objects do
-		Parse.parseObject({
-			name = objectName,
-			object = objectData,
-			output = output,
-		})
+	local remainingObjects = table.clone(partData.objects)
+
+	local objectName, objectData = next(remainingObjects)
+	while objectName do
+		if objectData.extends and not remainingObjects[objectData.extends] or not objectData.extends then
+			Parse.parseObject({
+				name = objectName,
+				object = objectData,
+				output = output,
+			})
+
+			remainingObjects[objectName] = nil
+			objectName, objectData, remainingObjects[objectName] = nil
+		end
+
+		objectName, objectData = next(remainingObjects, objectName)
 	end
 
 	for typeName, type in partData.types do
@@ -130,7 +139,6 @@ return function(documentationFileType: "json" | "yaml")
 			table.concat(output.globalFunctions[2], "\n\n"),
 			table.concat(output.generatedGlobals, "\n\n"),
 			table.concat(output.pilotObjects, "\n\n"),
-			table.concat(output.extendedPilotObjects, "\n\n"),
 		}, "\n\n")
 	)
 
