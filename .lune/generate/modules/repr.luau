@@ -41,5 +41,5 @@ return function() end :: (
 		semicolons: boolean?,
 		spaces: number?,
 		sortKeys: boolean?,
-	}
+	}?
 ) -> string
