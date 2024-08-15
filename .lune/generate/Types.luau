@@ -38,13 +38,13 @@ export type Typed = {
 	generate: string?,
 }
 
-export type Object = {
+export type Object = ({
 	categories: { string }?,
 	methods: { [string]: FunctionObject }?,
 	properties: { [string]: PropertyObject }?,
 	events: { [string]: EventObject }?,
 	extends: string?,
-} & Describable & Typed
+} & Describable & Typed) | string
 
 export type FunctionObject = {
 	parameters: { string | { string } }?,
@@ -55,13 +55,13 @@ export type PropertyObject = {
 	type: string?,
 } & Describable & Typed
 
-export type EventObject = {
+export type EventObject = ({
 	parameters: { string | { string } }?,
-} & Describable & Typed
+} & Describable & Typed) | boolean
 
 export type Output = {
 	localTypes: {},
-	generatedTypes: { { string } },
+	generatedTypes: { { [any]: string } | string },
 
 	globalTypes: {},
 	globalValues: {},
@@ -111,6 +111,7 @@ export type ObjectData = {
 	objectbase: Object,
 	objects: { [string]: Object },
 	types: { [string]: any },
+	events: { [string]: EventObject },
 }
 
 -- stylua: ignore

@@ -2,11 +2,9 @@ local serde = require("@lune/serde")
 local fs = require("@lune/fs")
 local stdio = require("@lune/stdio")
 
-local Utility = require("../Utility")
-local Parse = require("../Parse")
-local Types = require("../Types")
-
 local GetPartData = require("../Data/PartData")
+
+local Types = require("../Types")
 
 return function(documentationFileType: "json" | "yaml")
 	if not (fs.isDir("./workspace") and fs.isDir("./workspace/types")) then
@@ -21,6 +19,10 @@ return function(documentationFileType: "json" | "yaml")
 
 	fs.writeFile(`.lune/generate/documentation.json`, serde.encode("json", partData, true))
 	fs.writeFile(`.lune/generate/documentation.yaml`, serde.encode("yaml", partData, true))
+
+	-- Have to require these later so `GetPartData` works
+	local Parse = require("../Parse")
+	local Utility = require("../Utility")
 
 	local output: Types.Output = {
 		localTypes = {},
