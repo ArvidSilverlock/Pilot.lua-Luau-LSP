@@ -161,9 +161,9 @@ globals:
       X: number
       Y: number
     Event<N = string, T = (...any) -> (), U... = ...any>:
-      Connect: '(self: Event<N, T, U...>, callback: T) -> EventConnection'
+      Connect: '(self: Event<N, T, U...>, callback: T) -> EventConnection<N, T>'
       _eventName: N
-    EventConnection<N = string, T = (...any) -> ()>: 'typeof(setmetatable({} :: { Callback: T, _eventName: N }, {} :: EventConnectionMetatable))'
+    EventConnection<N = string, T = (...any) -> ()>: 'typeof(setmetatable({} :: { Callback: T, _eventName: N }, {} :: EventConnectionMetatable<N, T>))'
     EventData: '{ string }'
     FileAttributes:
       metadata: '{ [primitive]: primitive }?'
@@ -2601,11 +2601,11 @@ objects:
       Allows electrical objects to interact with each other when connected by wires.
       If a flammable object is touched, it will be lit on fire.
 types:
-  EventConnectionMetatable:
-    Disconnect: '(self: EventConnection) -> ()'
-    Unbind: '(self: EventConnection) -> ()'
-    __index: EventConnectionMetatable
-    __mode: v
+  EventConnectionMetatable<N = string, T = (...any) -> ()>:
+    Disconnect: '(self: EventConnection<N, T>) -> ()'
+    Unbind: '(self: EventConnection<N, T>) -> ()'
+    __index: EventConnectionMetatable<N, T>
+    __mode: '"v"'
   JSON: '{ [JSONValue]: JSON } | JSONValue'
   JSONValue: string | number | boolean | buffer
   MethodParameter:
