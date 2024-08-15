@@ -1,6 +1,6 @@
 --!strict
 
-local fs = require("@lune/fs")
+local fs = require("@lune/fs") -- Gets the filesystem
 
 local Utility = require("./Utility")
 local Types = require("./Types")
