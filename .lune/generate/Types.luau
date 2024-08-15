@@ -31,6 +31,8 @@ export type Describable = {
 	deprecated: boolean?,
 	readonly: boolean?,
 	description: string?,
+	codesample: string?,
+	learnmore: string?,
 }
 
 export type Typed = {
@@ -50,6 +52,10 @@ export type FunctionObject = {
 	parameters: { string | { string } }?,
 	returns: { string | { string } }?,
 } & Describable & Typed
+
+export type FunctionDictionaryObject = {
+	keys: { [string]: FunctionObject },
+} & Describable
 
 export type PropertyObject = {
 	type: string?,
@@ -103,12 +109,15 @@ export type EventOptions = {
 
 export type ObjectData = {
 	globals: {
-		functions: { [string]: FunctionObject },
+		functions: { [string]: FunctionObject | FunctionDictionaryObject },
 		types: { [string]: any },
 		values: { [string]: any },
 	},
-	objectbase: Object,
-	objects: { [string]: Object },
+	classes: {
+		abstractclasses: { [string]: Object },
+		objects: { [string]: Object },
+		components: { string },
+	},
 	types: { [string]: any },
 	events: { [string]: EventObject },
 }

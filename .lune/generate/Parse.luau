@@ -9,7 +9,9 @@ local PartData = require("./data/PartData")()
 
 local Parse = {}
 
-function Parse.getDescription(data: Types.Describable)
+function Parse.constructDescription(data: Types.Describable, _output: { [string]: any }?)
+	local output: { [string]: any } = _output or {}
+
 	local description = {}
 
 	if data.deprecated then
@@ -31,7 +33,11 @@ function Parse.getDescription(data: Types.Describable)
 		table.insert(description, data.description)
 	end
 
-	return if #description > 0 then table.concat(description, "\n") else nil
+	output.description = if #description > 0 then table.concat(description, "\n") else nil
+	output.code_sample = data.codesample
+	output.learn_more_link = data.learnmore
+
+	return output
 end
 
 function Parse.parseLuauType(input: any): string
@@ -112,9 +118,7 @@ function Parse.parseFunction(options: Types.FunctionOptions)
 		options.documentationSubKeys[options.name] = key
 	end
 
-	output.documentation[key] = {
-		documentation = Parse.getDescription(object),
-	}
+	output.documentation[key] = Parse.constructDescription(object)
 
 	if object.generate then
 		return Parse.runGenerator("Function", options)
@@ -221,9 +225,7 @@ function Parse.parseValue(options: Types.ValueOptions): string
 	local output = options.output
 
 	local key = Parse.constructKey(options)
-	output.documentation[key] = {
-		documentation = Parse.getDescription(object),
-	}
+	output.documentation[key] = Parse.constructDescription(object)
 
 	if options.documentationSubKeys then
 		options.documentationSubKeys[options.name] = key
@@ -237,11 +239,7 @@ function Parse.parseEvent(options: Types.EventOptions): string
 	local output = options.output
 
 	local eventKey = Parse.constructKey(options)
-	if output.documentation then
-		output.documentation[eventKey] = {
-			documentation = Parse.getDescription(object),
-		}
-	end
+	output.documentation[eventKey] = Parse.constructDescription(object)
 
 	if object.generate then
 		return Parse.runGenerator("Event", options)
@@ -343,10 +341,9 @@ function Parse.parseObject(options: Types.ObjectOptions)
 		table.insert(sections, table.concat(events, "\n"))
 	end
 
-	output.documentation[`@roblox/globaltype/{typeName}`] = {
-		documentation = Parse.getDescription(object),
+	output.documentation[`@roblox/globaltype/{typeName}`] = Parse.constructDescription(object, {
 		keys = documentationSubKeys,
-	}
+	})
 
 	table.insert(
 		output.pilotObjects,
