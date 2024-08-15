@@ -3,6 +3,7 @@ local serde = require("@lune/serde")
 
 local jsonSettings = {
 	["luau-lsp.sourcemap.enabled"] = false,
+	["luau-lsp.completion.imports.suggestServices"] = false,
 	["luau-lsp.platform.type"] = "roblox",
 	["luau-lsp.types.definitionFiles"] = { "./types/global.d.luau" },
 	["luau-lsp.types.documentationFiles"] = { "./types/documentation.d.json" },
