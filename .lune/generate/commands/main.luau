@@ -1,3 +1,5 @@
+--!strict
+
 local serde = require("@lune/serde")
 local fs = require("@lune/fs")
 local stdio = require("@lune/stdio")
@@ -38,29 +40,32 @@ return function(documentationFileType: "json" | "yaml")
 		documentation = {},
 	}
 
-	Parse.parseObject({
-		name = "PilotObject",
-		object = partData.objectbase,
-		output = output,
-	})
+	local function implement(objects: { [string]: Types.Object })
+		local remainingObjects = table.clone(objects)
 
-	local remainingObjects = table.clone(partData.objects)
+		local objectName, objectData = next(remainingObjects)
+		while objectName do
+			if
+				typeof(objectData) == "string"
+				or objectData.extends and not remainingObjects[objectData.extends]
+				or not objectData.extends
+			then
+				Parse.parseObject({
+					name = objectName,
+					object = objectData,
+					output = output,
+				})
 
-	local objectName, objectData = next(remainingObjects)
-	while objectName do
-		if objectData.extends and not remainingObjects[objectData.extends] or not objectData.extends then
-			Parse.parseObject({
-				name = objectName,
-				object = objectData,
-				output = output,
-			})
+				remainingObjects[objectName] = nil
+				objectName, objectData, remainingObjects[objectName] = nil
+			end
 
-			remainingObjects[objectName] = nil
-			objectName, objectData, remainingObjects[objectName] = nil
+			objectName, objectData = next(remainingObjects, objectName)
 		end
-
-		objectName, objectData = next(remainingObjects, objectName)
 	end
+
+	implement(partData.classes.abstractclasses)
+	implement(partData.classes.objects)
 
 	for typeName, type in partData.types do
 		table.insert(output.localTypes, `type {typeName} = {Parse.parseLuauType(type)}`)
@@ -72,12 +77,10 @@ return function(documentationFileType: "json" | "yaml")
 
 	for valueName, data in partData.globals.values do
 		table.insert(output.globalValues, `declare {valueName}: {Parse.parseLuauType(data.type)}`)
-		output.documentation[`@roblox/global/{valueName}`] = {
-			documentation = Parse.getDescription(data),
-		}
+		output.documentation[`@roblox/global/{valueName}`] = Parse.constructDescription(data)
 	end
 
-	for typeName, data in partData.globals.functions do
+	for typeName, data: any in partData.globals.functions do
 		local key = `@roblox/global/{typeName}`
 		if data.keys then
 			local keys = {}
@@ -103,7 +106,7 @@ return function(documentationFileType: "json" | "yaml")
 
 			table.insert(output.globalFunctions[2], table.concat(definition, "\n"))
 			output.documentation[key] = {
-				documentation = data.documentation,
+				documentation = data.description,
 				keys = keys,
 			}
 		else
