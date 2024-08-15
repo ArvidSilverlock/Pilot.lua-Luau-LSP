@@ -163,9 +163,6 @@ globals:
     Event<N = string, T = (...any) -> (), U... = ...any>:
       Connect: '(self: Event<N, T, U...>, callback: T) -> EventConnection'
       _eventName: N
-    EventConnection:
-      Disconnect: '(self: EventConnection) -> ()'
-      Unbind: '(self: EventConnection) -> ()'
     EventConnection<N = string, T = (...any) -> ()>: 'typeof(setmetatable({} :: { Callback: T, _eventName: N }, {} :: EventConnectionMetatable))'
     EventData: '{ string }'
     FileAttributes:
