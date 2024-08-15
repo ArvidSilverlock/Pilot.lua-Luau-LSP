@@ -5,6 +5,8 @@ local fs = require("@lune/fs")
 local Utility = require("./Utility")
 local Types = require("./Types")
 
+local PartData = require("./data/PartData")()
+
 local Parse = {}
 
 function Parse.getDescription(data: Types.Describable)
@@ -69,8 +71,15 @@ function Parse.constructKey(options: Types.Options)
 		else `@roblox/global/{options.name}`
 end
 
-function Parse.runGenerator(source: string, options: { object: Types.Typed })
-	local object = options.object
+function Parse.getObject(source: string, options: { object: any, [string]: any })
+	return if source == "Object" and type(options.object) == "string"
+		then { description = options.object }
+		elseif source == "Event" and options.object == true then PartData.events[options.name]
+		else options.object
+end
+
+function Parse.runGenerator(source: string, options: { object: any })
+	local object = Parse.getObject(source, options)
 
 	local path = `.lune/generate/generators/{object.generate}.luau`
 
@@ -94,7 +103,7 @@ function Parse.runGenerator(source: string, options: { object: Types.Typed })
 end
 
 function Parse.parseFunction(options: Types.FunctionOptions)
-	local object = options.object
+	local object = Parse.getObject("Function", options)
 	local output = options.output
 
 	local key = Parse.constructKey(options)
@@ -208,7 +217,7 @@ function Parse.parseFunction(options: Types.FunctionOptions)
 end
 
 function Parse.parseValue(options: Types.ValueOptions): string
-	local object = options.object
+	local object = Parse.getObject("Value", options)
 	local output = options.output
 
 	local key = Parse.constructKey(options)
@@ -224,7 +233,7 @@ function Parse.parseValue(options: Types.ValueOptions): string
 end
 
 function Parse.parseEvent(options: Types.EventOptions): string
-	local object = options.object
+	local object = Parse.getObject("Event", options)
 	local output = options.output
 
 	local eventKey = Parse.constructKey(options)
@@ -245,16 +254,16 @@ function Parse.parseEvent(options: Types.EventOptions): string
 			table.insert(parameterTypes, luauType)
 		end
 
-		return `{options.name}: Event<({table.concat(namedParameters, ", ")}) -> (), {table.concat(parameterTypes, ", ")}>`
+		return `{options.name}: Event<{string.format("%q", options.name)}, ({table.concat(namedParameters, ", ")}) -> (), {table.concat(parameterTypes, ", ")}>`
 	elseif object.unknowntype then
-		return `{options.name}: Event<(...any) -> (), ...any>`
+		return `{options.name}: Event<{string.format("%q", options.name)}>`
 	else
-		return `{options.name}: Event<() -> ()>`
+		return `{options.name}: Event<{string.format("%q", options.name)}, () -> ()>`
 	end
 end
 
 function Parse.parseObject(options: Types.ObjectOptions)
-	local object = options.object
+	local object = Parse.getObject("Object", options)
 	local output = options.output
 
 	local typeName = Utility.sanitiseName(options.name)
