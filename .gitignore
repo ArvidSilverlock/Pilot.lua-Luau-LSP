@@ -1,1 +1,5 @@
+# the generated output
 workspace
+
+# local lune files if you are contributing and require some form of automation
+.lune/local
