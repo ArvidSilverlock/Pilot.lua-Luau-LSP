@@ -145,6 +145,13 @@ return function(documentationFileType: "json" | "yaml")
 		}, "\n\n")
 	)
 
+	-- cull empty definitions
+	for key, value in output.documentation do
+		if not next(value) then
+			output.documentation[key] = nil
+		end
+	end
+
 	fs.writeFile(
 		"workspace/types/documentation.d.json",
 		(
