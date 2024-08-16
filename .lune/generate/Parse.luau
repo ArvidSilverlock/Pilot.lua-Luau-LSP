@@ -33,7 +33,7 @@ function Parse.constructDescription(data: Types.Describable, _output: { [string]
 		table.insert(description, data.description)
 	end
 
-	output.description = if #description > 0 then table.concat(description, "\n") else nil
+	output.documentation = if #description > 0 then table.concat(description, "\n") else nil
 	output.code_sample = data.codesample
 	output.learn_more_link = data.learnmore
 
@@ -184,12 +184,9 @@ function Parse.parseFunction(options: Types.FunctionOptions)
 				local returnKey = `{key}/return/{index - 1}`
 				local luauType = if typeof(parameter) == "string" then parameter else parameter[1]
 
-				if typeof(parameter) == "table" then
-					table.insert(returns, returnKey)
-					output.documentation[returnKey] = { description = parameter[2] }
-				else
-					output.documentation[returnKey] = { description = "" }
-				end
+				table.insert(returns, returnKey)
+				output.documentation[returnKey] =
+					{ description = if typeof(parameter) == "table" then parameter[2] else "" }
 
 				table.insert(functionType, luauType)
 				if index < #object.returns then
