@@ -2345,56 +2345,86 @@ events:
 globals:
   functions:
     Beep:
+      codesample: |-
+        -- Beep!
+        Beep(1)
       description: Produces a beep sound using a triangle wave.
       parameters:
-      - 'frequency: number'
+      - 'frequency: number?'
     GetCPUTime:
       deprecated: Use `pilot.getCPUTime` instead.
       description: Returns the current elapsed CPU time.
       returns:
       - number
     GetPart:
+      codesample: |-
+        -- Get a `Screen` from any port
+        local screen = GetPart("Screen")
       description: Gets a part of the specified type from any connected ports.
       generate: partgetters
       parameters:
       - 'part: string?'
     GetPartFromPort:
+      codesample: |-
+        -- Get a `TouchScreen` from port 1
+        local touchScreen = GetPartFromPort(1, "TouchScreen")
       description: Gets a part of the specified type from any port of the specified ID.
       generate: partgetters
       parameters:
       - 'port: ( Port | number )?'
       - 'part: string?'
     GetParts:
+      codesample: |-
+        -- Get all `Switch`es connected to any port
+        local switches = GetParts("Switch")
       description: Gets all the parts of the specified type from any connected ports.
       generate: partgetters
       parameters:
       - 'part: string?'
     GetPartsFromPort:
+      codesample: |-
+        -- Get all `Lights` from port 1
+        local lights = GetPartsFromPort(1, "Light")
       description: Gets all the parts of the specified type from any port of the specified ID.
       generate: partgetters
       parameters:
       - 'port: ( Port | number )?'
       - 'part: string?'
     GetPort:
+      codesample: |-
+        -- Get port with an ID of 1
+        local port = GetPort(1)
       description: Gets the connected port of the specified ID.
       parameters:
-      - 'id: number'
+      - 'id: number?'
       returns:
       - Port?
     GetPorts:
+      codesample: |-
+        -- Get all ports, no matter the ID
+        local ports = GetPort()
       description: Gets all the connected ports of the specified ID.
       parameters:
-      - 'id: number'
+      - 'id: number?'
       returns:
       - '{ Port }'
     JSONDecode:
+      codesample: |-
+        -- Decode a JSON string
+        local jsonString = '{"name": "example", "value": 42}'
+        print(repr(JSONDecode(jsonString))) -- { name = "example", value = 42 }
       description: Decodes JSON.
+      learnmore: https://create.roblox.com/docs/reference/engine/classes/HttpService#JSONDecode
       parameters:
       - 'data: string'
       returns:
       - JSON
     JSONEncode:
-      description: Encodes JSON.
+      codesample: |-
+        local data = { name = "example", value = 42 }
+        print(JSONEncode(data)) -- {"name":"example","value":42}
+      description: Encodes JSON. Proxy for `HttpService:JSONEncode`
+      learnmore: https://create.roblox.com/docs/reference/engine/classes/HttpService#JSONEncode
       parameters:
       - 'data: JSON'
       returns:
