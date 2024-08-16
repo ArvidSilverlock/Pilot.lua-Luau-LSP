@@ -18,11 +18,22 @@ local function makeDirectory(dir)
 	end
 end
 
+local function replaceFile(from: string, to: string)
+	if fs.isFile(to) then
+		fs.removeFile(to)
+	end
+
+	fs.copy(from, to)
+end
+
 return function()
 	makeDirectory("./workspace")
 	makeDirectory("./workspace/.vscode")
 	makeDirectory("./workspace/types")
 	makeDirectory("./workspace/types/modules")
+
+	replaceFile(`.lune/generate/pilot.yml`, `./workspace/pilot.yml`)
+	replaceFile(`.lune/generate/selene.toml`, `./workspace/selene.toml`)
 
 	for _, module in fs.readDir("./.lune/generate/modules") do
 		if fs.isFile(`./workspace/types/modules/{module}`) then

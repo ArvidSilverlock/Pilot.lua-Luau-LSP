@@ -1,0 +1,37 @@
+Beep:
+  any: true
+FileSystem:
+  any: true
+GetCPUTime:
+  any: true
+GetPart:
+  any: true
+GetPartFromPort:
+  any: true
+GetParts:
+  any: true
+GetPartsFromPort:
+  any: true
+GetPort:
+  any: true
+GetPorts:
+  any: true
+JSONDecode:
+  any: true
+JSONEncode:
+  any: true
+Microcontroller:
+  any: true
+RawFileSystem:
+  any: true
+SandboxID:
+  any: true
+SandboxRunID:
+  any: true
+TriggerPort:
+  any: true
+base: roblox
+logError:
+  any: true
+pilot:
+  any: true
