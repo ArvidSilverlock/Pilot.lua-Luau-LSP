@@ -134,10 +134,9 @@ function Parse.parseFunction(options: Types.FunctionOptions)
 		local returns = {}
 
 		if options.isMethod then
-			local baseKey = key:match("^(.*)/.-$")
 			table.insert(parameters, {
 				name = "self",
-				documentation = `@roblox/globaltype/{baseKey}`,
+				documentation = `@roblox/globaltype/{options.within}`,
 			})
 		end
 
@@ -180,13 +179,23 @@ function Parse.parseFunction(options: Types.FunctionOptions)
 				end
 			end
 
+			local defineReturns = false
+			for index, parameter in object.returns do
+				if typeof(parameter) == "table" then
+					defineReturns = true
+					break
+				end
+			end
+
 			for index, parameter in object.returns do
 				local returnKey = `{key}/return/{index - 1}`
 				local luauType = if typeof(parameter) == "string" then parameter else parameter[1]
 
-				table.insert(returns, returnKey)
-				output.documentation[returnKey] =
-					{ description = if typeof(parameter) == "table" then parameter[2] else "" }
+				if defineReturns then
+					table.insert(returns, returnKey)
+					output.documentation[returnKey] =
+						{ documentation = if typeof(parameter) == "table" then parameter[2] else "" }
+				end
 
 				table.insert(functionType, luauType)
 				if index < #object.returns then
@@ -237,6 +246,10 @@ function Parse.parseEvent(options: Types.EventOptions): string
 
 	local eventKey = Parse.constructKey(options)
 	output.documentation[eventKey] = Parse.constructDescription(object)
+
+	if options.documentationSubKeys then
+		options.documentationSubKeys[options.name] = eventKey
+	end
 
 	if object.generate then
 		return Parse.runGenerator("Event", options)
@@ -339,7 +352,7 @@ function Parse.parseObject(options: Types.ObjectOptions)
 	end
 
 	output.documentation[`@roblox/globaltype/{typeName}`] = Parse.constructDescription(object, {
-		keys = documentationSubKeys,
+		keys = if next(documentationSubKeys) then documentationSubKeys else nil,
 	})
 
 	table.insert(
