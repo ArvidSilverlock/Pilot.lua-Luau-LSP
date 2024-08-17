@@ -17,7 +17,7 @@ local SELENE_SETTINGS = {
 }
 
 local function stripFileExtensione(filename)
-	return filename:match("^(.+)%.?.*$") or filename
+	return filename:match("^(.*)%..-$") or filename
 end
 
 local function makeDirectory(dir)
@@ -59,7 +59,7 @@ return function(options)
 			fs.removeFile(modulePath)
 		end
 
-		VSCODE_SETTINGS["luau-lsp.require.fileAliases"][stripFileExtensione(module)] = modulePath
+		VSCODE_SETTINGS["luau-lsp.require.fileAliases"][stripFileExtensione(module)] = `./types/modules/{module}`
 		fs.copy(`./.lune/generate/modules/{module}`, modulePath)
 	end
 
