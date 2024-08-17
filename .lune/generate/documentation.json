@@ -75,7 +75,7 @@
         "extends": "PilotObject",
         "methods": {
           "GetAmount": {
-            "deprecated": "Use `:GetResourceAmount` instead.",
+            "deprecated": "Use `ContainerObject:GetResourceAmount` instead.",
             "returns": [
               "number"
             ]
@@ -122,7 +122,7 @@
             "unknowntype": true
           },
           "GetColor": {
-            "deprecated": "Use `.Color` instead.",
+            "deprecated": "Use `PilotObject.Color` instead.",
             "description": "Gets the color of the object.",
             "returns": [
               [
@@ -143,7 +143,7 @@
             ]
           },
           "GetDurability": {
-            "deprecated": "Use `.Durability` instead.",
+            "deprecated": "Use `PilotObject.Durability` instead.",
             "description": "Gets the current durability of the object.",
             "returns": [
               [
@@ -185,7 +185,7 @@
             ]
           },
           "GetSize": {
-            "deprecated": "Use `.Size` instead.",
+            "deprecated": "Use `PilotObject.Size` instead.",
             "description": "Gets the size of the object.",
             "returns": [
               [
@@ -195,7 +195,7 @@
             ]
           },
           "GetTemperature": {
-            "deprecated": "Use `.Temperature` instead.",
+            "deprecated": "Use `PilotObject.Temperature` instead.",
             "description": "Gets the temperature of the object.",
             "returns": [
               [
@@ -297,13 +297,13 @@
             "type": "string"
           },
           "Health": {
-            "deprecated": "Use `.Durability` instead.",
+            "deprecated": "Use `PilotObject.Durability` instead.",
             "description": "The current health/durability of the object",
             "readonly": true,
             "type": "number"
           },
           "Heat": {
-            "deprecated": "Use `.Temperature` instead.",
+            "deprecated": "Use `PilotObject.Temperature` instead.",
             "description": "The current heat/temperature of the object.",
             "readonly": true,
             "type": "number"
@@ -433,7 +433,12 @@
         "description": "A wireless transmitter that can transmit electricity from wires and trigger signals from trigger wires and buttons.",
         "properties": {
           "AntennaID": {
-            "description": "The ID of this antenna, to transmit to others with the same ID.\n\n**Range:** 1 to 9999\n\n**Default:** 1",
+            "constraints": {
+              "default": 1,
+              "max": 9999,
+              "min": 1
+            },
+            "description": "The ID of this antenna, to transmit to others with the same ID.",
             "type": "number"
           }
         }
@@ -451,7 +456,11 @@
             "type": "string"
           },
           "Transparency": {
-            "description": "The transparency of this Apparel.\n\n**Range:** 0 to 1",
+            "constraints": {
+              "max": 1,
+              "min": 0
+            },
+            "description": "The transparency of this Apparel.",
             "type": "number"
           }
         }
@@ -522,7 +531,11 @@
         },
         "properties": {
           "Buoyancy": {
-            "description": "The buoyancy of this BallastTank, 0 being neutral.\n\n**Range:** -10 to 10",
+            "constraints": {
+              "max": 10,
+              "min": -10
+            },
+            "description": "The buoyancy of this BallastTank, 0 being neutral.",
             "type": "number"
           }
         }
@@ -534,7 +547,11 @@
         },
         "properties": {
           "Buoyancy": {
-            "description": "The buoyancy of this Balloon, 0 being neutral.\n\n**Range:** -10 to 10",
+            "constraints": {
+              "max": 10,
+              "min": -10
+            },
+            "description": "The buoyancy of this Balloon, 0 being neutral.",
             "type": "number"
           }
         }
@@ -661,7 +678,12 @@
             "type": "string"
           },
           "TriggerMode": {
-            "description": "Determines the type of key event to trigger this button on.\n\n**Range:** 0 to 2\n\n**Default:** 1",
+            "constraints": {
+              "default": 1,
+              "max": 2,
+              "min": 0
+            },
+            "description": "Determines the type of key event to trigger this button on.",
             "type": "number"
           }
         }
@@ -676,7 +698,12 @@
         },
         "properties": {
           "VideoID": {
-            "description": "The ID to transmit the camera feed over, received by screens of the same ID.\n\n**Range:** 0 to 10000000000\n\n**Default:** 1",
+            "constraints": {
+              "default": 1,
+              "max": 10000000000.0,
+              "min": 0
+            },
+            "description": "The ID to transmit the camera feed over, received by screens of the same ID.",
             "type": "number"
           }
         }
@@ -766,7 +793,11 @@
         "description": "Moves objects ontop of it towards the front of the conveyor belt. Only moves when powered and anchored or attached to the ground.",
         "properties": {
           "ConveyorBeltSpeed": {
-            "description": "Determines the speed at which the conveyor will move items on top of it.\n\n**Range:** -30 to 30",
+            "constraints": {
+              "max": 30,
+              "min": -30
+            },
+            "description": "Determines the speed at which the conveyor will move items on top of it.",
             "type": "number"
           }
         }
@@ -811,7 +842,12 @@
         "description": "The coupler is a part that allows the coupling/connection of vehicles and objects when powered. Both couplers must be powered in order to couple together.\nWhen the coupler comes in contact with another coupler, the couplers will both connect to eachother, both holes facing eachother. \nTo ensure no weld complications, make sure the couplers' triangles are facing upwards. When the couplers connect, the white triangles will make a square.\nCouplers also only couple to other couples with the same CouplerID.\n",
         "properties": {
           "CouplerID": {
-            "description": "The ID of this coupler.\n\n**Range:** 0 to 10000000000\n\n**Default:** 1",
+            "constraints": {
+              "default": 1,
+              "max": 10000000000.0,
+              "min": 0
+            },
+            "description": "The ID of this coupler.",
             "type": "number"
           }
         }
@@ -860,7 +896,11 @@
         "description": "Similar to a regular trigger wire, but depending on the configuration will wait x seconds before the trigger signal passes through.",
         "properties": {
           "DelayTime": {
-            "description": "The time in seconds that it takes for signals to pass through this wire.\n\n**Range:** 0 to 360",
+            "constraints": {
+              "max": 360,
+              "min": 0
+            },
+            "description": "The time in seconds that it takes for signals to pass through this wire.",
             "type": "number"
           }
         }
@@ -906,10 +946,10 @@
           },
           "Read": {
             "parameters": [
-              "key: string"
+              "key: any"
             ],
             "returns": [
-              "string"
+              "any"
             ]
           },
           "ReadAll": {
@@ -917,13 +957,13 @@
           },
           "ReadEntireDisk": {
             "returns": [
-              "{ [string]: string }"
+              "{ [any]: any }"
             ]
           },
           "Write": {
             "parameters": [
-              "key: string",
-              "data: string"
+              "key: any",
+              "data: any"
             ]
           },
           "WriteAll": {
@@ -968,7 +1008,12 @@
         },
         "properties": {
           "Ratio": {
-            "description": "The ratio of speed from 1 (1:100) to 100 (100:100) between this DriveBox and the source motor.\n\n**Range:** 1 to 100\n\n**Default:** 1",
+            "constraints": {
+              "default": 1,
+              "max": 100,
+              "min": 1
+            },
+            "description": "The ratio of speed from 1 (1:100) to 100 (100:100) between this DriveBox and the source motor.",
             "type": "number"
           },
           "Reversal": {
@@ -1032,15 +1077,27 @@
         },
         "properties": {
           "RegenerationSpeed": {
-            "description": "Determines how fast the shield regenerates after being hit.\n\n**Range:** 1 to 10",
+            "constraints": {
+              "max": 10,
+              "min": 1
+            },
+            "description": "Determines how fast the shield regenerates after being hit.",
             "type": "number"
           },
           "ShieldRadius": {
-            "description": "The size of the entire shield. The shield exponentially consumes more power the higher this is.\n\n**Range:** 50 to 1000",
+            "constraints": {
+              "max": 1000,
+              "min": 50
+            },
+            "description": "The size of the entire shield. The shield exponentially consumes more power the higher this is.",
             "type": "number"
           },
           "ShieldStrength": {
-            "description": "Determines how much damage the shield is able to endure.\n\n**Range:** 1 to 10",
+            "constraints": {
+              "max": 10,
+              "min": 1
+            },
+            "description": "Determines how much damage the shield is able to endure.",
             "type": "number"
           }
         }
@@ -1052,7 +1109,11 @@
         },
         "properties": {
           "EngineSpeed": {
-            "description": "Determines the speed at which the engine is driven.\n\n**Range:** -20 to 20",
+            "constraints": {
+              "max": 20,
+              "min": -20
+            },
+            "description": "Determines the speed at which the engine is driven.",
             "type": "number"
           }
         }
@@ -1220,7 +1281,11 @@
         },
         "properties": {
           "Gravity": {
-            "description": "The amount of gravity within the influence of the GravityGenerator.\n\n**Range:** 30 to 300",
+            "constraints": {
+              "max": 300,
+              "min": 30
+            },
+            "description": "The amount of gravity within the influence of the GravityGenerator.",
             "type": "number"
           }
         }
@@ -1257,7 +1322,11 @@
             "type": "boolean"
           },
           "MaxTorque": {
-            "description": "The maximum force in each axis the gyro can exert.\n\n**Range:** 0 to 10000000000",
+            "constraints": {
+              "max": 10000000000.0,
+              "min": 0
+            },
+            "description": "The maximum force in each axis the gyro can exert.",
             "type": "Vector3"
           },
           "Seek": {
@@ -1283,7 +1352,12 @@
         "description": "A handle which can be equipped when a player touches it, turning all connected parts into an equipable tool.",
         "properties": {
           "Swing": {
-            "description": "The type of swinging for this tool. Swing 0: Doesn't swing on click; 1: Swck; 2: Follows the mouse cursor\n\n**Range:** 0 to 2\n\n**Default:** 1",
+            "constraints": {
+              "default": 1,
+              "max": 2,
+              "min": 0
+            },
+            "description": "The type of swinging for this tool. Swing 0: Doesn't swing on click; 1: Swck; 2: Follows the mouse cursor",
             "type": "number"
           },
           "ToolName": {
@@ -1291,7 +1365,12 @@
             "type": "string"
           },
           "TriggerMode": {
-            "description": "Determines when this Handle should send trigger signals. TriggerMode 0: Trigger on mouse down; 1: Trigger on mouse up; 2: Trigger on mouse down and mouse up. If TriggerMode is set to anything else, it will trigger when the key TriggerMode is set to is pressed.\n\n**Range:** 0 to 2\n\n**Default:** 1",
+            "constraints": {
+              "default": 1,
+              "max": 2,
+              "min": 0
+            },
+            "description": "Determines when this Handle should send trigger signals. TriggerMode 0: Trigger on mouse down; 1: Trigger on mouse up; 2: Trigger on mouse down and mouse up. If TriggerMode is set to anything else, it will trigger when the key TriggerMode is set to is pressed.",
             "type": "number"
           }
         }
@@ -1301,10 +1380,6 @@
           "Logic"
         ],
         "description": "Acts as a chute when active/gray, but when black or inactive it acts as a normal object.",
-        "events": {
-          "Configured": true,
-          "OnClick": true
-        },
         "extends": "Switch"
       },
       "HeatPipe": "",
@@ -1347,7 +1422,12 @@
         },
         "properties": {
           "UserId": {
-            "description": "The UserId of the player for the Hologram to display.\n\n**Range:** 1 to 10000000000\n\n**Default:** 1",
+            "constraints": {
+              "default": 1,
+              "max": 10000000000.0,
+              "min": 1
+            },
+            "description": "The UserId of the player for the Hologram to display.",
             "type": "number"
           }
         }
@@ -1548,7 +1628,7 @@
         "categories": [
           "Logic"
         ],
-        "description": "Senses and detects organic life up to a distnace of 2000 studs. Used mainly in programming, as is used in alien technology to hunt down organisms such as players.\nHas a special programmable event called 'GetReading()' which returns a table of all organisms, with their positions and names.\nExample:\n{\n\tPlayer1 = Vector3.new(5, 5, 5);\n}",
+        "description": "Senses and detects organic life up to a distnace of 2000 studs. Used mainly in programming, as is used in alien technology to hunt down organisms such as players.\nHas a special programmable event called 'GetReading()' which returns a table of all organisms, with their positions and names.",
         "methods": {
           "GetPlayers": {
             "description": "Returns a table where the indexes are player names and the keys are player positions.",
@@ -1586,11 +1666,19 @@
         },
         "properties": {
           "Brightness": {
-            "description": "The brightness of the light.\n\n**Range:** 0 to 2",
+            "constraints": {
+              "max": 2,
+              "min": 0
+            },
+            "description": "The brightness of the light.",
             "type": "number"
           },
           "LightRange": {
-            "description": "The range of the light.\n\n**Range:** 1 to 60",
+            "constraints": {
+              "max": 60,
+              "min": 1
+            },
+            "description": "The range of the light.",
             "type": "number"
           }
         }
@@ -1749,7 +1837,12 @@
         },
         "properties": {
           "NetworkID": {
-            "description": "The ID of this modem used for communication between modems using SendMessage.\n\n**Range:** 0 to 10000000000\n\n**Default:** 1",
+            "constraints": {
+              "default": 1,
+              "max": 10000000000.0,
+              "min": 0
+            },
+            "description": "The ID of this modem used for communication between modems using SendMessage.",
             "type": "number"
           }
         }
@@ -1764,11 +1857,19 @@
         },
         "properties": {
           "Power": {
-            "description": "Determines the amount of power used to drive the motor. This affects the torque and power consumption. Negative values are reverse.\n\n**Range:** -1 to 1",
+            "constraints": {
+              "max": 1,
+              "min": -1
+            },
+            "description": "Determines the amount of power used to drive the motor. This affects the torque and power consumption. Negative values are reverse.",
             "type": "number"
           },
           "Ratio": {
-            "description": "Determines the gear ratio applied to the motor in terms of the multiplier on the RPM. 0.1 means a 10:1 ratio, where the RPM is 1/10th and the torque is 10x the original RPM if the ratio were 1.\n\n**Range:** 0.01 to 100",
+            "constraints": {
+              "max": 100,
+              "min": 0.01
+            },
+            "description": "Determines the gear ratio applied to the motor in terms of the multiplier on the RPM. 0.1 means a 10:1 ratio, where the RPM is 1/10th and the torque is 10x the original RPM if the ratio were 1.",
             "type": "number"
           }
         }
@@ -1876,7 +1977,12 @@
         },
         "properties": {
           "Frequency": {
-            "description": "The amount of times to activate the Polysilicon from a single trigger.\n\n**Range:** 1 to 10\n\n**Default:** 1",
+            "constraints": {
+              "default": 1,
+              "max": 10,
+              "min": 1
+            },
+            "description": "The amount of times to activate the Polysilicon from a single trigger.",
             "type": "number"
           },
           "PolysiliconMode": {
@@ -1895,7 +2001,12 @@
         },
         "properties": {
           "PortID": {
-            "description": "The ID of this port used to utilize this port by connected microcontrollers.\n\n**Range:** 0 to 10000000000\n\n**Default:** 1",
+            "constraints": {
+              "default": 1,
+              "max": 10000000000.0,
+              "min": 0
+            },
+            "description": "The ID of this port used to utilize this port by connected microcontrollers.",
             "type": "number"
           }
         }
@@ -1995,15 +2106,27 @@
         },
         "properties": {
           "Position1": {
-            "description": "Determines the position of the first state of the rail.\n\n**Range:** 0 to 100",
+            "constraints": {
+              "max": 100,
+              "min": 0
+            },
+            "description": "Determines the position of the first state of the rail.",
             "type": "number"
           },
           "Position2": {
-            "description": "Determines the position of the second state of the rail.\n\n**Range:** 0 to 100",
+            "constraints": {
+              "max": 100,
+              "min": 0
+            },
+            "description": "Determines the position of the second state of the rail.",
             "type": "number"
           },
           "TweenTime": {
-            "description": "Determines the time it takes for the rail to change positions.\n\n**Range:** 0.5 to 60",
+            "constraints": {
+              "max": 60,
+              "min": 0.5
+            },
+            "description": "Determines the time it takes for the rail to change positions.",
             "type": "number"
           }
         }
@@ -2063,7 +2186,12 @@
         "description": "A powerful transmitter capable of transmitting trigger signals and resources/power between different regions.\nIt is a more powerful version of the antenna and transporter.\n\nUnlike the antenna, the relay has 2 modes, mode 0 and mode 1.\nMode 0 sends resources/power and trigger signals, while mode 1 receives it.\n\nUnlike the antenna, it can also transfer power in inactive regions or regions without players in them.\nThis means that you can connect a relay to your main base, warp away without anyone in the base, and still have the relay get the sufficient amount of power.\n\nHowever, you should have only one sending relay per coordinate, as conflicts can occur if there are 2 or more relays in the region/coordinates sending power or signalsith the same ID.\nOn the other hand, there can be an infinite number of receivers but the power/resources will be distributed evenly among them.\n\nFor example, let's say a relay network has a total output of 500 power and 25 iron. If there are 5 active receivers, each of them will get 100 power and 5 iron.\n\nWhen the relay is red, it means it not functioning. When it turns green, it is properly linked up to another relay or is sending signals.\n\t",
         "properties": {
           "LinkerID": {
-            "description": "The ID of the relay, to send or take materials to or from other relays with the same ID.\n\n**Range:** 1 to 10000000000\n\n**Default:** 1",
+            "constraints": {
+              "default": 1,
+              "max": 10000000000.0,
+              "min": 1
+            },
+            "description": "The ID of the relay, to send or take materials to or from other relays with the same ID.",
             "type": "number"
           },
           "Mode": {
@@ -2083,7 +2211,11 @@
         },
         "properties": {
           "RemoteControlRange": {
-            "description": "The range in studs at which signals will be transmitted.\n\n**Range:** 1 to 500",
+            "constraints": {
+              "max": 500,
+              "min": 1
+            },
+            "description": "The range in studs at which signals will be transmitted.",
             "type": "number"
           }
         }
@@ -2198,7 +2330,12 @@
         },
         "properties": {
           "VideoID": {
-            "description": "The ID of the camera feed being to be viewed, or 0 for none.\n\n**Range:** 0 to 10000000000\n\n**Default:** 1",
+            "constraints": {
+              "default": 1,
+              "max": 10000000000.0,
+              "min": 0
+            },
+            "description": "The ID of the camera feed being to be viewed, or 0 for none.",
             "type": "number"
           }
         }
@@ -2223,11 +2360,19 @@
         },
         "properties": {
           "AngleStep": {
-            "description": "Determines the change in angle when a pulse is received by Polysilicon.\n\n**Range:** -180 to 180",
+            "constraints": {
+              "max": 180,
+              "min": -180
+            },
+            "description": "Determines the change in angle when a pulse is received by Polysilicon.",
             "type": "number"
           },
           "ServoSpeed": {
-            "description": "Determines the speed at which the servo is driven.\n\n**Range:** 0 to 20",
+            "constraints": {
+              "max": 20,
+              "min": 0
+            },
+            "description": "Determines the speed at which the servo is driven.",
             "type": "number"
           }
         }
@@ -2328,7 +2473,11 @@
             "type": "string"
           },
           "Pitch": {
-            "description": "The pitch at which to play the audio.\n\n**Range:** 0 to 3",
+            "constraints": {
+              "max": 3,
+              "min": 0
+            },
+            "description": "The pitch at which to play the audio.",
             "type": "number"
           }
         }
@@ -2385,7 +2534,11 @@
         },
         "properties": {
           "EngineSpeed": {
-            "description": "Determines the speed at which the engine is driven.\n\n**Range:** -20 to 20",
+            "constraints": {
+              "max": 20,
+              "min": -20
+            },
+            "description": "Determines the speed at which the engine is driven.",
             "type": "number"
           }
         }
@@ -2476,7 +2629,12 @@
             "type": "string"
           },
           "TeleporterID": {
-            "description": "The ID of the teleporter at the goal coordinates to teleport directly to.\n\n**Range:** 1 to 999\n\n**Default:** 1",
+            "constraints": {
+              "default": 1,
+              "max": 999,
+              "min": 1
+            },
+            "description": "The ID of the teleporter at the goal coordinates to teleport directly to.",
             "type": "number"
           }
         }
@@ -2568,7 +2726,11 @@
         },
         "properties": {
           "Propulsion": {
-            "description": "Determines the speed traveled at, 0 being standstill. Affects fuel consumption.\n\n**Range:** 0 to 100",
+            "constraints": {
+              "max": 100,
+              "min": 0
+            },
+            "description": "Determines the speed traveled at, 0 being standstill. Affects fuel consumption.",
             "type": "number"
           }
         }
@@ -2680,7 +2842,11 @@
         },
         "properties": {
           "LoopTime": {
-            "description": "The time in seconds between triggers.\n\n**Range:** 0 to 360",
+            "constraints": {
+              "max": 360,
+              "min": 0
+            },
+            "description": "The time in seconds between triggers.",
             "type": "number"
           }
         }
@@ -2695,7 +2861,12 @@
         "description": "Acts as an antenna but for bins and objects containing materials such as liquids and solids. \nUseful for creating large factory bases with many extractors without using long chutes.\n\t",
         "properties": {
           "TransporterID": {
-            "description": "The ID of this transformer, to transmit to others with the same ID.\n\n**Range:** 1 to 999\n\n**Default:** 1",
+            "constraints": {
+              "default": 1,
+              "max": 999,
+              "min": 1
+            },
+            "description": "The ID of this transformer, to transmit to others with the same ID.",
             "type": "number"
           }
         }
@@ -2714,10 +2885,6 @@
           "Logic"
         ],
         "description": "Acts as a triggerwire when active/green, but when black or inactive it acts as a normal object.",
-        "events": {
-          "Configured": true,
-          "OnClick": true
-        },
         "extends": "Switch"
       },
       "TriggerWire": {
@@ -2739,7 +2906,11 @@
         "description": "Generates thrust from crude Oil, similar to a Thruster.\nIf a motor is attached to the front, it instead acts like an engine and rotates it.",
         "properties": {
           "TurboFanSpeed": {
-            "description": "Determines the speed at which the turbofan is driven, or the speed at which it travels.\n\n**Range:** 0 to 100",
+            "constraints": {
+              "max": 100,
+              "min": 0
+            },
+            "description": "Determines the speed at which the turbofan is driven, or the speed at which it travels.",
             "type": "number"
           }
         }
@@ -2755,10 +2926,6 @@
           "Logic"
         ],
         "description": "Acts as a pipe when active/gray, but when black or inactive it acts as a normal object.",
-        "events": {
-          "Configured": true,
-          "OnClick": true
-        },
         "extends": "Switch"
       },
       "VehicleSeat": {
@@ -2776,7 +2943,11 @@
             "type": "VehicleSeatMode"
           },
           "Speed": {
-            "description": "The speed at which the seat will rotate.\n\n**Range:** 0 to 10",
+            "constraints": {
+              "max": 10,
+              "min": 0
+            },
+            "description": "The speed at which the seat will rotate.",
             "type": "number"
           }
         }
@@ -2815,15 +2986,27 @@
         "description": "A special device used to control the length of constraints attached to it.\nWhen attaching a constraint to the Winch, click the Winch first.\nWhen triggered with polysilicon, it will increase (Activate) or decrease (Deactivate).\n",
         "properties": {
           "DeltaLength": {
-            "description": "The length change in studs when triggered by Polysilicon.\n\n**Range:** 0 to 100",
+            "constraints": {
+              "max": 100,
+              "min": 0
+            },
+            "description": "The length change in studs when triggered by Polysilicon.",
             "type": "number"
           },
           "MaxLength": {
-            "description": "The maximum length in studs of the rope.\n\n**Range:** 0 to 100",
+            "constraints": {
+              "max": 100,
+              "min": 0
+            },
+            "description": "The maximum length in studs of the rope.",
             "type": "number"
           },
           "MinLength": {
-            "description": "The minimum length in studs of the rope.\n\n**Range:** 0 to 100",
+            "constraints": {
+              "max": 100,
+              "min": 0
+            },
+            "description": "The minimum length in studs of the rope.",
             "type": "number"
           }
         }
