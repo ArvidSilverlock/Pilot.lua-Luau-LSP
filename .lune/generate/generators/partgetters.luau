@@ -1,7 +1,7 @@
 local Utility = require("../Utility")
 local Types = require("../Types")
 
-local GetPartData = require("../Data/PartData")
+local GetPartData = require("../data/PartData")
 
 local BASE_TYPES = {
 	GetPart = "type _GetPart<T, U> = (object: T) -> U?",
