@@ -4,7 +4,7 @@ local serde = require("@lune/serde")
 local fs = require("@lune/fs")
 local stdio = require("@lune/stdio")
 
-local GetPartData = require("../Data/PartData")
+local GetPartData = require("../data/PartData")
 
 local Types = require("../Types")
 
