@@ -38,15 +38,16 @@ export type Describable = {
 export type Typed = {
 	unknowntype: boolean?,
 	generate: string?,
+	wikitype: string?,
 }
 
-export type Object = ({
+export type Object = {
 	categories: { string }?,
 	methods: { [string]: FunctionObject }?,
 	properties: { [string]: PropertyObject }?,
 	events: { [string]: EventObject }?,
 	extends: string?,
-} & Describable & Typed) | string
+} & Describable & Typed
 
 export type FunctionObject = {
 	parameters: { string | { string } }?,
@@ -59,6 +60,11 @@ export type FunctionDictionaryObject = {
 
 export type PropertyObject = {
 	type: string?,
+	constraints: {
+		min: number?,
+		max: number?,
+		default: any?,
+	},
 } & Describable & Typed
 
 export type EventObject = ({
@@ -89,8 +95,9 @@ export type Options = {
 }
 
 export type ObjectOptions = {
-	object: Object,
+	object: Object | string,
 	name: string,
+	type: "abstract" | "object" | "component",
 } & Options
 
 export type FunctionOptions = {
@@ -115,7 +122,7 @@ export type ObjectData = {
 	},
 	classes: {
 		abstractclasses: { [string]: Object },
-		objects: { [string]: Object },
+		objects: { [string]: Object | string },
 		components: { string },
 	},
 	types: { [string]: any },
