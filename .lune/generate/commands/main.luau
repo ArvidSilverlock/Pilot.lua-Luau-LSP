@@ -17,6 +17,14 @@ return function(documentationFileType: "json" | "yaml")
 		return 1
 	end
 
+	if not fs.isDir("./wiki/docs/Objects") then
+		fs.writeDir("./wiki/docs/Objects")
+	end
+
+	if not fs.isDir("./wiki/docs/Components") then
+		fs.writeDir("./wiki/docs/Components")
+	end
+
 	local partData = GetPartData(documentationFileType)
 
 	fs.writeFile(`.lune/generate/documentation.json`, serde.encode("json", partData, true))
@@ -25,6 +33,7 @@ return function(documentationFileType: "json" | "yaml")
 	-- Have to require these later so `GetPartData` works
 	local Parse = require("../Parse")
 	local Utility = require("../Utility")
+	local generateWikiPage = require("../Wiki")
 
 	local output: Types.Output = {
 		localTypes = {},
@@ -40,7 +49,7 @@ return function(documentationFileType: "json" | "yaml")
 		documentation = {},
 	}
 
-	local function implement(objects: { [string]: Types.Object }, objectType)
+	local function implement(objects: { [string]: Types.Object | string }, objectType)
 		local remainingObjects = table.clone(objects)
 
 		local objectName, objectData = next(remainingObjects)
@@ -50,12 +59,15 @@ return function(documentationFileType: "json" | "yaml")
 				or objectData.extends and not remainingObjects[objectData.extends]
 				or not objectData.extends
 			then
-				Parse.parseObject({
+				local options = {
 					name = objectName,
 					object = objectData,
 					type = objectType,
 					output = output,
-				})
+				}
+
+				Parse.parseObject(options)
+				generateWikiPage(options)
 
 				remainingObjects[objectName] = nil
 				objectName, objectData, remainingObjects[objectName] = nil
