@@ -1,5 +1,6 @@
 --!strict
 
+local serde = require("@lune/serde")
 local fs = require("@lune/fs")
 
 local Utility = require("./Utility")
@@ -8,6 +9,12 @@ local Types = require("./Types")
 local PartData = require("./data/PartData")()
 
 local Parse = {}
+
+function Parse.constructPlainDescription(data: Types.Describable): string?
+	return if data.description and not data.description:match("^%s*$")
+		then data.description:match("^%s*(.-)%s*$")
+		else nil
+end
 
 function Parse.constructDescription(data: Types.Describable, _output: { [string]: any }?)
 	local output: { [string]: any } = _output or {}
@@ -25,12 +32,13 @@ function Parse.constructDescription(data: Types.Describable, _output: { [string]
 		table.insert(description, "@readonly")
 	end
 
-	if data.description and not data.description:match("^%s*$") then
+	local plainDescription = Parse.constructPlainDescription(data)
+	if plainDescription then
 		if #description > 0 then
 			table.insert(description, "")
 		end
 
-		table.insert(description, data.description)
+		table.insert(description, plainDescription)
 	end
 
 	output.documentation = if #description > 0 then table.concat(description, "\n") else nil
@@ -226,7 +234,7 @@ function Parse.parseFunction(options: Types.FunctionOptions)
 	end
 end
 
-function Parse.parseValue(options: Types.ValueOptions): string
+function Parse.parseValue(options: Types.ValueOptions): (string, string)
 	local object = Parse.getObject("Value", options)
 	local output = options.output
 
@@ -237,7 +245,8 @@ function Parse.parseValue(options: Types.ValueOptions): string
 		options.documentationSubKeys[options.name] = key
 	end
 
-	return `{if not options.within then "declare " else ""}{options.name}: {if object.unknowntype then "any" else Parse.parseLuauType(object.type)}`
+	local luauType = if object.unknowntype then "any" else Parse.parseLuauType(object.type)
+	return `{if not options.within then "declare " else ""}{options.name}: {luauType}`, luauType
 end
 
 function Parse.parseEvent(options: Types.EventOptions): string
@@ -337,13 +346,14 @@ function Parse.parseObject(options: Types.ObjectOptions)
 		local events = {}
 
 		for eventName, eventData in object.events do
-			local eventType = Parse.parseEvent({
+			local eventConfig = {
 				name = eventName,
 				object = eventData,
 				output = output,
 				documentationSubKeys = documentationSubKeys,
 				within = typeName,
-			})
+			}
+			local eventType = Parse.parseEvent(eventConfig)
 
 			table.insert(events, `\t{eventType}`)
 		end

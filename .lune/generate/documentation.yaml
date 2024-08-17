@@ -50,7 +50,7 @@ classes:
       extends: PilotObject
       methods:
         GetAmount:
-          deprecated: Use `:GetResourceAmount` instead.
+          deprecated: Use `ContainerObject:GetResourceAmount` instead.
           returns:
           - number
         GetResource:
@@ -80,7 +80,7 @@ classes:
         Click:
           unknowntype: true
         GetColor:
-          deprecated: Use `.Color` instead.
+          deprecated: Use `PilotObject.Color` instead.
           description: Gets the color of the object.
           returns:
           - - Color3
@@ -93,7 +93,7 @@ classes:
           returns:
           - '{ [string]: ConfigurableData }'
         GetDurability:
-          deprecated: Use `.Durability` instead.
+          deprecated: Use `PilotObject.Durability` instead.
           description: Gets the current durability of the object.
           returns:
           - - number
@@ -119,13 +119,13 @@ classes:
           returns:
           - string?
         GetSize:
-          deprecated: Use `.Size` instead.
+          deprecated: Use `PilotObject.Size` instead.
           description: Gets the size of the object.
           returns:
           - - Vector3
             - The size of the part.
         GetTemperature:
-          deprecated: Use `.Temperature` instead.
+          deprecated: Use `PilotObject.Temperature` instead.
           description: Gets the temperature of the object.
           returns:
           - - number
@@ -200,12 +200,12 @@ classes:
           readonly: true
           type: string
         Health:
-          deprecated: Use `.Durability` instead.
+          deprecated: Use `PilotObject.Durability` instead.
           description: The current health/durability of the object
           readonly: true
           type: number
         Heat:
-          deprecated: Use `.Temperature` instead.
+          deprecated: Use `PilotObject.Temperature` instead.
           description: The current heat/temperature of the object.
           readonly: true
           type: number
@@ -305,12 +305,11 @@ classes:
       description: A wireless transmitter that can transmit electricity from wires and trigger signals from trigger wires and buttons.
       properties:
         AntennaID:
-          description: |-
-            The ID of this antenna, to transmit to others with the same ID.
-
-            **Range:** 1 to 9999
-
-            **Default:** 1
+          constraints:
+            default: 1
+            max: 9999
+            min: 1
+          description: The ID of this antenna, to transmit to others with the same ID.
           type: number
     Apparel:
       description: "A piece of clothing that can be worn by other players. Parts can also be attached to the apparel, meaning you can create your own suits with the apprel.\nIt is similar to the prosthetic, except it can be taken off and does not cause damage. However, electricity does not trasmit throughout the apparel unlike prosthetics.\n\nApparel can also holds less parts than the prosthetic. It can only hold 25 parts, while Prosthetics can hold 50.\n\nApparel has another configuration to it called Transparency, which dictates how transparent it will become when worn. Ranges from 0-1 from non-transparent to transparent.\n\t"
@@ -323,10 +322,10 @@ classes:
           description: The name of the limb that this Apparel is for.
           type: string
         Transparency:
-          description: |-
-            The transparency of this Apparel.
-
-            **Range:** 0 to 1
+          constraints:
+            max: 1
+            min: 0
+          description: The transparency of this Apparel.
           type: number
     Artillery:
       description: |-
@@ -379,10 +378,10 @@ classes:
         Loop: true
       properties:
         Buoyancy:
-          description: |-
-            The buoyancy of this BallastTank, 0 being neutral.
-
-            **Range:** -10 to 10
+          constraints:
+            max: 10
+            min: -10
+          description: The buoyancy of this BallastTank, 0 being neutral.
           type: number
     Balloon:
       description: |-
@@ -393,10 +392,10 @@ classes:
         Configured: true
       properties:
         Buoyancy:
-          description: |-
-            The buoyancy of this Balloon, 0 being neutral.
-
-            **Range:** -10 to 10
+          constraints:
+            max: 10
+            min: -10
+          description: The buoyancy of this Balloon, 0 being neutral.
           type: number
     Battery:
       description: A light part that contains 400 energy and is prefilled. Can be refilled.
@@ -492,12 +491,11 @@ classes:
           description: The name of the key that will trigger this button when the key is pressed by players in connected seats.
           type: string
         TriggerMode:
-          description: |-
-            Determines the type of key event to trigger this button on.
-
-            **Range:** 0 to 2
-
-            **Default:** 1
+          constraints:
+            default: 1
+            max: 2
+            min: 0
+          description: Determines the type of key event to trigger this button on.
           type: number
     Camera:
       categories:
@@ -511,12 +509,11 @@ classes:
         Configured: true
       properties:
         VideoID:
-          description: |-
-            The ID to transmit the camera feed over, received by screens of the same ID.
-
-            **Range:** 0 to 10000000000
-
-            **Default:** 1
+          constraints:
+            default: 1
+            max: 10000000000.0
+            min: 0
+          description: The ID to transmit the camera feed over, received by screens of the same ID.
           type: number
     Cannon:
       categories:
@@ -590,10 +587,10 @@ classes:
       description: Moves objects ontop of it towards the front of the conveyor belt. Only moves when powered and anchored or attached to the ground.
       properties:
         ConveyorBeltSpeed:
-          description: |-
-            Determines the speed at which the conveyor will move items on top of it.
-
-            **Range:** -30 to 30
+          constraints:
+            max: 30
+            min: -30
+          description: Determines the speed at which the conveyor will move items on top of it.
           type: number
     Cooler:
       categories:
@@ -623,12 +620,11 @@ classes:
       description: "The coupler is a part that allows the coupling/connection of vehicles and objects when powered. Both couplers must be powered in order to couple together.\nWhen the coupler comes in contact with another coupler, the couplers will both connect to eachother, both holes facing eachother. \nTo ensure no weld complications, make sure the couplers' triangles are facing upwards. When the couplers connect, the white triangles will make a square.\nCouplers also only couple to other couples with the same CouplerID.\n"
       properties:
         CouplerID:
-          description: |-
-            The ID of this coupler.
-
-            **Range:** 0 to 10000000000
-
-            **Default:** 1
+          constraints:
+            default: 1
+            max: 10000000000.0
+            min: 0
+          description: The ID of this coupler.
           type: number
     CrudeWing:
       description: |-
@@ -671,10 +667,10 @@ classes:
       description: Similar to a regular trigger wire, but depending on the configuration will wait x seconds before the trigger signal passes through.
       properties:
         DelayTime:
-          description: |-
-            The time in seconds that it takes for signals to pass through this wire.
-
-            **Range:** 0 to 360
+          constraints:
+            max: 360
+            min: 0
+          description: The time in seconds that it takes for signals to pass through this wire.
           type: number
     DeleteSwitch:
       categories:
@@ -705,18 +701,18 @@ classes:
           unknowntype: true
         Read:
           parameters:
-          - 'key: string'
+          - 'key: any'
           returns:
-          - string
+          - any
         ReadAll:
           unknowntype: true
         ReadEntireDisk:
           returns:
-          - '{ [string]: string }'
+          - '{ [any]: any }'
         Write:
           parameters:
-          - 'key: string'
-          - 'data: string'
+          - 'key: any'
+          - 'data: any'
         WriteAll:
           unknowntype: true
     Dispenser:
@@ -748,12 +744,11 @@ classes:
         Loop: true
       properties:
         Ratio:
-          description: |-
-            The ratio of speed from 1 (1:100) to 100 (100:100) between this DriveBox and the source motor.
-
-            **Range:** 1 to 100
-
-            **Default:** 1
+          constraints:
+            default: 1
+            max: 100
+            min: 1
+          description: The ratio of speed from 1 (1:100) to 100 (100:100) between this DriveBox and the source motor.
           type: number
         Reversal:
           description: Determines whether the output should be reversed.
@@ -798,22 +793,22 @@ classes:
           - number
       properties:
         RegenerationSpeed:
-          description: |-
-            Determines how fast the shield regenerates after being hit.
-
-            **Range:** 1 to 10
+          constraints:
+            max: 10
+            min: 1
+          description: Determines how fast the shield regenerates after being hit.
           type: number
         ShieldRadius:
-          description: |-
-            The size of the entire shield. The shield exponentially consumes more power the higher this is.
-
-            **Range:** 50 to 1000
+          constraints:
+            max: 1000
+            min: 50
+          description: The size of the entire shield. The shield exponentially consumes more power the higher this is.
           type: number
         ShieldStrength:
-          description: |-
-            Determines how much damage the shield is able to endure.
-
-            **Range:** 1 to 10
+          constraints:
+            max: 10
+            min: 1
+          description: Determines how much damage the shield is able to endure.
           type: number
     Engine:
       description: 'It acts similar to a motor, but is powered by gasoline instead of electricity. '
@@ -821,10 +816,10 @@ classes:
         Configured: true
       properties:
         EngineSpeed:
-          description: |-
-            Determines the speed at which the engine is driven.
-
-            **Range:** -20 to 20
+          constraints:
+            max: 20
+            min: -20
+          description: Determines the speed at which the engine is driven.
           type: number
     EthernetCable:
       categories:
@@ -944,10 +939,10 @@ classes:
         Loop: true
       properties:
         Gravity:
-          description: |-
-            The amount of gravity within the influence of the GravityGenerator.
-
-            **Range:** 30 to 300
+          constraints:
+            max: 300
+            min: 30
+          description: The amount of gravity within the influence of the GravityGenerator.
           type: number
     Gun:
       categories:
@@ -994,10 +989,10 @@ classes:
           description: Determines whether this gyro should be disabled while it does not have power.
           type: boolean
         MaxTorque:
-          description: |-
-            The maximum force in each axis the gyro can exert.
-
-            **Range:** 0 to 10000000000
+          constraints:
+            max: 10000000000.0
+            min: 0
+          description: The maximum force in each axis the gyro can exert.
           type: Vector3
         Seek:
           description: The seek commands.
@@ -1015,31 +1010,26 @@ classes:
       description: A handle which can be equipped when a player touches it, turning all connected parts into an equipable tool.
       properties:
         Swing:
-          description: |-
-            The type of swinging for this tool. Swing 0: Doesn't swing on click; 1: Swck; 2: Follows the mouse cursor
-
-            **Range:** 0 to 2
-
-            **Default:** 1
+          constraints:
+            default: 1
+            max: 2
+            min: 0
+          description: 'The type of swinging for this tool. Swing 0: Doesn''t swing on click; 1: Swck; 2: Follows the mouse cursor'
           type: number
         ToolName:
           description: The name of the tool.
           type: string
         TriggerMode:
-          description: |-
-            Determines when this Handle should send trigger signals. TriggerMode 0: Trigger on mouse down; 1: Trigger on mouse up; 2: Trigger on mouse down and mouse up. If TriggerMode is set to anything else, it will trigger when the key TriggerMode is set to is pressed.
-
-            **Range:** 0 to 2
-
-            **Default:** 1
+          constraints:
+            default: 1
+            max: 2
+            min: 0
+          description: 'Determines when this Handle should send trigger signals. TriggerMode 0: Trigger on mouse down; 1: Trigger on mouse up; 2: Trigger on mouse down and mouse up. If TriggerMode is set to anything else, it will trigger when the key TriggerMode is set to is pressed.'
           type: number
     Hatch:
       categories:
       - Logic
       description: Acts as a chute when active/gray, but when black or inactive it acts as a normal object.
-      events:
-        Configured: true
-        OnClick: true
       extends: Switch
     HeatPipe: ''
     HeatPump:
@@ -1071,12 +1061,11 @@ classes:
         Configured: true
       properties:
         UserId:
-          description: |-
-            The UserId of the player for the Hologram to display.
-
-            **Range:** 1 to 10000000000
-
-            **Default:** 1
+          constraints:
+            default: 1
+            max: 10000000000.0
+            min: 1
+          description: The UserId of the player for the Hologram to display.
           type: number
     Hull:
       categories:
@@ -1222,7 +1211,9 @@ classes:
     LifeSensor:
       categories:
       - Logic
-      description: "Senses and detects organic life up to a distnace of 2000 studs. Used mainly in programming, as is used in alien technology to hunt down organisms such as players.\nHas a special programmable event called 'GetReading()' which returns a table of all organisms, with their positions and names.\nExample:\n{\n\tPlayer1 = Vector3.new(5, 5, 5);\n}"
+      description: |-
+        Senses and detects organic life up to a distnace of 2000 studs. Used mainly in programming, as is used in alien technology to hunt down organisms such as players.
+        Has a special programmable event called 'GetReading()' which returns a table of all organisms, with their positions and names.
       methods:
         GetPlayers:
           description: Returns a table where the indexes are player names and the keys are player positions.
@@ -1247,16 +1238,16 @@ classes:
           - 'color: Color3'
       properties:
         Brightness:
-          description: |-
-            The brightness of the light.
-
-            **Range:** 0 to 2
+          constraints:
+            max: 2
+            min: 0
+          description: The brightness of the light.
           type: number
         LightRange:
-          description: |-
-            The range of the light.
-
-            **Range:** 1 to 60
+          constraints:
+            max: 60
+            min: 1
+          description: The range of the light.
           type: number
     LightBridge:
       categories:
@@ -1378,12 +1369,11 @@ classes:
           unknowntype: true
       properties:
         NetworkID:
-          description: |-
-            The ID of this modem used for communication between modems using SendMessage.
-
-            **Range:** 0 to 10000000000
-
-            **Default:** 1
+          constraints:
+            default: 1
+            max: 10000000000.0
+            min: 0
+          description: The ID of this modem used for communication between modems using SendMessage.
           type: number
     Motor:
       categories:
@@ -1393,16 +1383,16 @@ classes:
         Configured: true
       properties:
         Power:
-          description: |-
-            Determines the amount of power used to drive the motor. This affects the torque and power consumption. Negative values are reverse.
-
-            **Range:** -1 to 1
+          constraints:
+            max: 1
+            min: -1
+          description: Determines the amount of power used to drive the motor. This affects the torque and power consumption. Negative values are reverse.
           type: number
         Ratio:
-          description: |-
-            Determines the gear ratio applied to the motor in terms of the multiplier on the RPM. 0.1 means a 10:1 ratio, where the RPM is 1/10th and the torque is 10x the original RPM if the ratio were 1.
-
-            **Range:** 0.01 to 100
+          constraints:
+            max: 100
+            min: 0.01
+          description: Determines the gear ratio applied to the motor in terms of the multiplier on the RPM. 0.1 means a 10:1 ratio, where the RPM is 1/10th and the torque is 10x the original RPM if the ratio were 1.
           type: number
     MustardGas: A heavy chemical warfare weapon used to damage organisms. Gas Masks nullify the effects of this gas.
     Neon: A building decoration material that glows by itself without requiring power.
@@ -1485,12 +1475,11 @@ classes:
         Configured: true
       properties:
         Frequency:
-          description: |-
-            The amount of times to activate the Polysilicon from a single trigger.
-
-            **Range:** 1 to 10
-
-            **Default:** 1
+          constraints:
+            default: 1
+            max: 10
+            min: 1
+          description: The amount of times to activate the Polysilicon from a single trigger.
           type: number
         PolysiliconMode:
           description: The mode of the Polysilicon. Each mode results in different behaviors for objects.
@@ -1503,12 +1492,11 @@ classes:
         Triggered: true
       properties:
         PortID:
-          description: |-
-            The ID of this port used to utilize this port by connected microcontrollers.
-
-            **Range:** 0 to 10000000000
-
-            **Default:** 1
+          constraints:
+            default: 1
+            max: 10000000000.0
+            min: 0
+          description: The ID of this port used to utilize this port by connected microcontrollers.
           type: number
     PowerCell:
       description: |-
@@ -1580,22 +1568,22 @@ classes:
           - 'depth: number'
       properties:
         Position1:
-          description: |-
-            Determines the position of the first state of the rail.
-
-            **Range:** 0 to 100
+          constraints:
+            max: 100
+            min: 0
+          description: Determines the position of the first state of the rail.
           type: number
         Position2:
-          description: |-
-            Determines the position of the second state of the rail.
-
-            **Range:** 0 to 100
+          constraints:
+            max: 100
+            min: 0
+          description: Determines the position of the second state of the rail.
           type: number
         TweenTime:
-          description: |-
-            Determines the time it takes for the rail to change positions.
-
-            **Range:** 0.5 to 60
+          constraints:
+            max: 60
+            min: 0.5
+          description: Determines the time it takes for the rail to change positions.
           type: number
     Railgun:
       categories:
@@ -1645,12 +1633,11 @@ classes:
       description: "A powerful transmitter capable of transmitting trigger signals and resources/power between different regions.\nIt is a more powerful version of the antenna and transporter.\n\nUnlike the antenna, the relay has 2 modes, mode 0 and mode 1.\nMode 0 sends resources/power and trigger signals, while mode 1 receives it.\n\nUnlike the antenna, it can also transfer power in inactive regions or regions without players in them.\nThis means that you can connect a relay to your main base, warp away without anyone in the base, and still have the relay get the sufficient amount of power.\n\nHowever, you should have only one sending relay per coordinate, as conflicts can occur if there are 2 or more relays in the region/coordinates sending power or signalsith the same ID.\nOn the other hand, there can be an infinite number of receivers but the power/resources will be distributed evenly among them.\n\nFor example, let's say a relay network has a total output of 500 power and 25 iron. If there are 5 active receivers, each of them will get 100 power and 5 iron.\n\nWhen the relay is red, it means it not functioning. When it turns green, it is properly linked up to another relay or is sending signals.\n\t"
       properties:
         LinkerID:
-          description: |-
-            The ID of the relay, to send or take materials to or from other relays with the same ID.
-
-            **Range:** 1 to 10000000000
-
-            **Default:** 1
+          constraints:
+            default: 1
+            max: 10000000000.0
+            min: 1
+          description: The ID of the relay, to send or take materials to or from other relays with the same ID.
           type: number
         Mode:
           description: The mode of the relay. Send outputs materials to other receiving relays; Receive receives materials from sending relays.
@@ -1664,10 +1651,10 @@ classes:
         Triggered: true
       properties:
         RemoteControlRange:
-          description: |-
-            The range in studs at which signals will be transmitted.
-
-            **Range:** 1 to 500
+          constraints:
+            max: 500
+            min: 1
+          description: The range in studs at which signals will be transmitted.
           type: number
     Rocket:
       categories:
@@ -1746,12 +1733,11 @@ classes:
             - The size of the screen in pixels.
       properties:
         VideoID:
-          description: |-
-            The ID of the camera feed being to be viewed, or 0 for none.
-
-            **Range:** 0 to 10000000000
-
-            **Default:** 1
+          constraints:
+            default: 1
+            max: 10000000000.0
+            min: 0
+          description: The ID of the camera feed being to be viewed, or 0 for none.
           type: number
     Seat:
       categories: {}
@@ -1767,16 +1753,16 @@ classes:
           - 'angle: number'
       properties:
         AngleStep:
-          description: |-
-            Determines the change in angle when a pulse is received by Polysilicon.
-
-            **Range:** -180 to 180
+          constraints:
+            max: 180
+            min: -180
+          description: Determines the change in angle when a pulse is received by Polysilicon.
           type: number
         ServoSpeed:
-          description: |-
-            Determines the speed at which the servo is driven.
-
-            **Range:** 0 to 20
+          constraints:
+            max: 20
+            min: 0
+          description: Determines the speed at which the servo is driven.
           type: number
     Shotgun:
       categories:
@@ -1864,10 +1850,10 @@ classes:
           description: The audio asset ID to be played.
           type: string
         Pitch:
-          description: |-
-            The pitch at which to play the audio.
-
-            **Range:** 0 to 3
+          constraints:
+            max: 3
+            min: 0
+          description: The pitch at which to play the audio.
           type: number
     Spotlight:
       categories:
@@ -1907,10 +1893,10 @@ classes:
         Configured: true
       properties:
         EngineSpeed:
-          description: |-
-            Determines the speed at which the engine is driven.
-
-            **Range:** -20 to 20
+          constraints:
+            max: 20
+            min: -20
+          description: Determines the speed at which the engine is driven.
           type: number
     SteamTurbine:
       categories:
@@ -1994,12 +1980,11 @@ classes:
           description: The coordinates to your Destination.
           type: string
         TeleporterID:
-          description: |-
-            The ID of the teleporter at the goal coordinates to teleport directly to.
-
-            **Range:** 1 to 999
-
-            **Default:** 1
+          constraints:
+            default: 1
+            max: 999
+            min: 1
+          description: The ID of the teleporter at the goal coordinates to teleport directly to.
           type: number
     Telescope:
       categories:
@@ -2080,10 +2065,10 @@ classes:
         Configured: true
       properties:
         Propulsion:
-          description: |-
-            Determines the speed traveled at, 0 being standstill. Affects fuel consumption.
-
-            **Range:** 0 to 100
+          constraints:
+            max: 100
+            min: 0
+          description: Determines the speed traveled at, 0 being standstill. Affects fuel consumption.
           type: number
     Tile: A cheap material made from baked clay useful for building houses.
     TimeSensor:
@@ -2164,10 +2149,10 @@ classes:
         Triggered: true
       properties:
         LoopTime:
-          description: |-
-            The time in seconds between triggers.
-
-            **Range:** 0 to 360
+          constraints:
+            max: 360
+            min: 0
+          description: The time in seconds between triggers.
           type: number
     Transistor:
       events:
@@ -2177,12 +2162,11 @@ classes:
       description: "Acts as an antenna but for bins and objects containing materials such as liquids and solids. \nUseful for creating large factory bases with many extractors without using long chutes.\n\t"
       properties:
         TransporterID:
-          description: |-
-            The ID of this transformer, to transmit to others with the same ID.
-
-            **Range:** 1 to 999
-
-            **Default:** 1
+          constraints:
+            default: 1
+            max: 999
+            min: 1
+          description: The ID of this transformer, to transmit to others with the same ID.
           type: number
     Treads:
       categories:
@@ -2194,9 +2178,6 @@ classes:
       categories:
       - Logic
       description: Acts as a triggerwire when active/green, but when black or inactive it acts as a normal object.
-      events:
-        Configured: true
-        OnClick: true
       extends: Switch
     TriggerWire:
       categories:
@@ -2214,10 +2195,10 @@ classes:
         If a motor is attached to the front, it instead acts like an engine and rotates it.
       properties:
         TurboFanSpeed:
-          description: |-
-            Determines the speed at which the turbofan is driven, or the speed at which it travels.
-
-            **Range:** 0 to 100
+          constraints:
+            max: 100
+            min: 0
+          description: Determines the speed at which the turbofan is driven, or the speed at which it travels.
           type: number
     Uranium:
       categories:
@@ -2229,9 +2210,6 @@ classes:
       categories:
       - Logic
       description: Acts as a pipe when active/gray, but when black or inactive it acts as a normal object.
-      events:
-        Configured: true
-        OnClick: true
       extends: Switch
     VehicleSeat:
       description: "Allows players to control vehicles by rotating when sat on.\nIt is incredibly important to have when creating vehicles.\n\nAttaching buttons to the vehicleseat will allow the player sitting on it to trigger the button by pressing a key.\nSimply attach the button to the vehicle seat, configure it to the keybind you would like, and it will allow you to trigger that button by pressing the key when sitting down in the seat.\n\t"
@@ -2245,10 +2223,10 @@ classes:
           description: 'The control mode of the seat. Horizontal: Rotate horizontally with A/D. Full: Rotate horizontally and vertically with W/A/S/D. Mouse: point towards the player''s mouse when holding click.'
           type: VehicleSeatMode
         Speed:
-          description: |-
-            The speed at which the seat will rotate.
-
-            **Range:** 0 to 10
+          constraints:
+            max: 10
+            min: 0
+          description: The speed at which the seat will rotate.
           type: number
     Warhead:
       categories:
@@ -2279,22 +2257,22 @@ classes:
         When triggered with polysilicon, it will increase (Activate) or decrease (Deactivate).
       properties:
         DeltaLength:
-          description: |-
-            The length change in studs when triggered by Polysilicon.
-
-            **Range:** 0 to 100
+          constraints:
+            max: 100
+            min: 0
+          description: The length change in studs when triggered by Polysilicon.
           type: number
         MaxLength:
-          description: |-
-            The maximum length in studs of the rope.
-
-            **Range:** 0 to 100
+          constraints:
+            max: 100
+            min: 0
+          description: The maximum length in studs of the rope.
           type: number
         MinLength:
-          description: |-
-            The minimum length in studs of the rope.
-
-            **Range:** 0 to 100
+          constraints:
+            max: 100
+            min: 0
+          description: The minimum length in studs of the rope.
           type: number
     Wing:
       description: |-
