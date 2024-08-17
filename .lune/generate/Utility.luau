@@ -24,7 +24,9 @@ end
 function Utility.mergeTables(from: { [any]: any }, into: { [any]: any })
 	for key, value in from do
 		if typeof(key) == "number" then
-			table.insert(into, value)
+			if not table.find(into, value) then
+				table.insert(into, value)
+			end
 		elseif typeof(value) == "table" and not into[key] then
 			into[key] = value
 		elseif typeof(value) == "table" and typeof(into[key]) == "table" then
