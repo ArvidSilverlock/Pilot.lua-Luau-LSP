@@ -21,4 +21,12 @@ function Utility.sanitiseName(name: string): string
 	return if name:match("^%d") then "_" .. name else name
 end
 
+function Utility.escapeMarkdown(input: string): string
+	return (input:gsub("<", "\\<"):gsub("{", "\\{"))
+end
+
+function Utility.markdownDropdown(dropdown: string, content: string): string
+	return `<details>\n\t<summary>{dropdown}</summary>\n{Utility.indent(content)}\n</details>`
+end
+
 return Utility
