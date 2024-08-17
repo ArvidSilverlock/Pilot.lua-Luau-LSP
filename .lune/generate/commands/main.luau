@@ -22,6 +22,24 @@ return function(documentationFileType: "json" | "yaml")
 	fs.writeFile(`.lune/generate/documentation.json`, serde.encode("json", partData, true))
 	fs.writeFile(`.lune/generate/documentation.yaml`, serde.encode("yaml", partData, true))
 
+	local std = {
+		base = "roblox",
+	}
+
+	for functionName in partData.globals.functions do
+		std[functionName] = {
+			any = true,
+		}
+	end
+
+	for global in partData.globals.values do
+		std[global] = {
+			any = true,
+		}
+	end
+
+	fs.writeFile(".lune/generate/pilot.yml", serde.encode("yaml", std, true))
+
 	-- Have to require these later so `GetPartData` works
 	local Parse = require("../Parse")
 	local Utility = require("../Utility")
