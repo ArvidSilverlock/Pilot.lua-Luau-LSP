@@ -1,1 +1,1 @@
-std = "luau+pilot"
+std = "luau+types/pilot"
