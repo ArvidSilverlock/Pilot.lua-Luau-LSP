@@ -7,10 +7,16 @@ local jsonSettings = {
 	["luau-lsp.platform.type"] = "roblox",
 	["luau-lsp.types.definitionFiles"] = { "./types/global.d.luau" },
 	["luau-lsp.types.documentationFiles"] = { "./types/documentation.d.json" },
-	["luau-lsp.require.directoryAliases"] = {
-		[""] = "./types/modules",
-	},
+	["luau-lsp.require.fileAliases"] = {},
 }
+
+local function basename(filename)
+	return filename:match("(.+)%..+") or filename
+end
+
+for _, module in fs.readDir("./.lune/generate/modules") do
+	jsonSettings["luau-lsp.require.fileAliases"][basename(module)] = `./types/modules/{module}`
+end
 
 local function makeDirectory(dir)
 	if not fs.isDir(dir) then
