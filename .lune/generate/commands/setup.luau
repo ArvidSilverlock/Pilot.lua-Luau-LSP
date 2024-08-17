@@ -32,7 +32,7 @@ return function()
 	makeDirectory("./workspace/types")
 	makeDirectory("./workspace/types/modules")
 
-	replaceFile(`.lune/generate/pilot.yml`, `./workspace/pilot.yml`)
+	replaceFile(`.lune/generate/pilot.yml`, `./workspace/types/pilot.yml`)
 	replaceFile(`.lune/generate/selene.toml`, `./workspace/selene.toml`)
 
 	for _, module in fs.readDir("./.lune/generate/modules") do
