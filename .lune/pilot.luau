@@ -10,6 +10,7 @@ local runMain = require("./generate/operations/main")
 local options = Utility.mergeTables(Utility.parseArguments(process.args, "o"), {
 	source = "json",
 	o = "./workspace",
+	types = "types",
 })
 
 if options.source ~= "json" and options.source ~= "yaml" then

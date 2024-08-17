@@ -3,20 +3,7 @@ local serde = require("@lune/serde")
 
 local Utility = require("../Utility")
 
-local VSCODE_SETTINGS = {
-	["luau-lsp.sourcemap.enabled"] = false,
-	["luau-lsp.completion.imports.suggestServices"] = false,
-	["luau-lsp.platform.type"] = "roblox",
-	["luau-lsp.types.definitionFiles"] = { "./types/global.d.luau" },
-	["luau-lsp.types.documentationFiles"] = { "./types/documentation.d.json" },
-	["luau-lsp.require.fileAliases"] = {},
-}
-
-local SELENE_SETTINGS = {
-	std = "luau+types/pilot",
-}
-
-local function stripFileExtensione(filename)
+local function stripFileExtension(filename)
 	return filename:match("^(.*)%..-$") or filename
 end
 
@@ -47,24 +34,36 @@ end
 
 return function(options)
 	local path = pathJoiner(options.o)
+	local typesPath = pathJoiner(path(options.types))
 
 	makeDirectory(path())
 	makeDirectory(path(".vscode"))
-	makeDirectory(path("types"))
-	makeDirectory(path("types/modules"))
+	makeDirectory(typesPath())
+	makeDirectory(typesPath("modules"))
 
+	local fileRequireAliases = {}
 	for _, module in fs.readDir("./.lune/generate/modules") do
-		local modulePath = path(`types/modules/{module}`)
+		local modulePath = typesPath(`modules/{module}`)
 		if fs.isFile(modulePath) then
 			fs.removeFile(modulePath)
 		end
 
-		VSCODE_SETTINGS["luau-lsp.require.fileAliases"][stripFileExtensione(module)] = `./types/modules/{module}`
+		fileRequireAliases[stripFileExtension(module)] = `./{options.types}/modules/{module}`
 		fs.copy(`./.lune/generate/modules/{module}`, modulePath)
 	end
 
-	writeConfigurationFile(path("selene.toml"), "toml", SELENE_SETTINGS)
-	writeConfigurationFile(path(".vscode/settings.json"), "json", VSCODE_SETTINGS)
+	writeConfigurationFile(path("selene.toml"), "toml", {
+		std = `luau+{options.types}/pilot`,
+	})
+
+	writeConfigurationFile(path(".vscode/settings.json"), "json", {
+		["luau-lsp.sourcemap.enabled"] = false,
+		["luau-lsp.completion.imports.suggestServices"] = false,
+		["luau-lsp.platform.type"] = "roblox",
+		["luau-lsp.types.definitionFiles"] = { `./{options.types}/global.d.luau` },
+		["luau-lsp.types.documentationFiles"] = { `./{options.types}/documentation.d.json` },
+		["luau-lsp.require.fileAliases"] = fileRequireAliases,
+	})
 
 	return 0
 end
