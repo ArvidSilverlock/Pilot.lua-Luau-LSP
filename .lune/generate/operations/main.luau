@@ -4,51 +4,28 @@ local serde = require("@lune/serde")
 local fs = require("@lune/fs")
 local stdio = require("@lune/stdio")
 
-local GetPartData = require("../data/PartData")
-
 local Types = require("../Types")
 
-return function(documentationFileType: "json" | "yaml")
-	if not (fs.isDir("./workspace") and fs.isDir("./workspace/types")) then
-		stdio.ewrite("please run `setup` before `generate`")
-		return 1
-	elseif documentationFileType ~= "json" and documentationFileType ~= "yaml" then
-		stdio.ewrite("the parameter passed to `setup` must be `json` or `yaml` (case-sensitive)")
-		return 1
-	end
+local GetPartData = require("../data/PartData")
 
-	if not fs.isDir("./wiki/docs/Objects") then
-		fs.writeDir("./wiki/docs/Objects")
-	end
+return function(options)
+	local partData = GetPartData(options.source)
 
-	if not fs.isDir("./wiki/docs/Components") then
-		fs.writeDir("./wiki/docs/Components")
-	end
-
-	local partData = GetPartData(documentationFileType)
-
+	-- Sync `json` and `yaml`. Has the added benefit of keeping the format.
 	fs.writeFile(`.lune/generate/documentation.json`, serde.encode("json", partData, true))
 	fs.writeFile(`.lune/generate/documentation.yaml`, serde.encode("yaml", partData, true))
 
-	local std = {
-		base = "roblox",
-	}
+	if options.wiki then
+		if not fs.isDir("./wiki/docs/Objects") then
+			fs.writeDir("./wiki/docs/Objects")
+		end
 
-	for functionName in partData.globals.functions do
-		std[functionName] = {
-			any = true,
-		}
+		if not fs.isDir("./wiki/docs/Components") then
+			fs.writeDir("./wiki/docs/Components")
+		end
 	end
 
-	for global in partData.globals.values do
-		std[global] = {
-			any = true,
-		}
-	end
-
-	fs.writeFile(".lune/generate/pilot.yml", serde.encode("yaml", std, true))
-
-	-- Have to require these later so `GetPartData` works
+	-- Have to require these later so `GetPartData` works with no parameters
 	local Parse = require("../Parse")
 	local Utility = require("../Utility")
 	local generateWikiPage = require("../Wiki")
@@ -65,6 +42,7 @@ return function(documentationFileType: "json" | "yaml")
 		pilotObjects = {},
 
 		documentation = {},
+		selene = {},
 	}
 
 	local function implement(objects: { [string]: Types.Object | string }, objectType)
@@ -77,15 +55,17 @@ return function(documentationFileType: "json" | "yaml")
 				or objectData.extends and not remainingObjects[objectData.extends]
 				or not objectData.extends
 			then
-				local options = {
+				local objectOptions = {
 					name = objectName,
 					object = objectData,
 					type = objectType,
 					output = output,
 				}
 
-				Parse.parseObject(options)
-				generateWikiPage(options)
+				Parse.parseObject(objectOptions)
+				if options.wiki then
+					generateWikiPage(objectOptions)
+				end
 
 				remainingObjects[objectName] = nil
 				objectName, objectData, remainingObjects[objectName] = nil
@@ -107,11 +87,15 @@ return function(documentationFileType: "json" | "yaml")
 	end
 
 	for valueName, data in partData.globals.values do
+		output.selene[valueName] = { any = true }
+
 		table.insert(output.globalValues, `declare {valueName}: {Parse.parseLuauType(data.type)}`)
 		output.documentation[`@roblox/global/{valueName}`] = Parse.constructDescription(data)
 	end
 
 	for typeName, data: any in partData.globals.functions do
+		output.selene[typeName] = { any = true }
+
 		local key = `@roblox/global/{typeName}`
 		if data.keys then
 			local keys = {}
@@ -162,8 +146,15 @@ return function(documentationFileType: "json" | "yaml")
 		)
 	end
 
+	-- cull empty definitions
+	for key, value in output.documentation do
+		if not next(value) then
+			output.documentation[key] = nil
+		end
+	end
+
 	fs.writeFile(
-		"workspace/types/global.d.luau",
+		Utility.joinPath(options.o, `{options.types}/global.d.luau`),
 		table.concat({
 			table.concat(output.localTypes, "\n"),
 			table.concat(generatedTypes, "\n\n"),
@@ -176,21 +167,16 @@ return function(documentationFileType: "json" | "yaml")
 		}, "\n\n")
 	)
 
-	-- cull empty definitions
-	for key, value in output.documentation do
-		if not next(value) then
-			output.documentation[key] = nil
-		end
-	end
-
 	fs.writeFile(
-		"workspace/types/documentation.d.json",
+		Utility.joinPath(options.o, `{options.types}/documentation.d.json`),
 		(
 			serde.encode("json", output.documentation, true):gsub("\n( +)", function(whitespace)
 				return "\n" .. string.rep("\t", #whitespace / 2)
 			end)
 		)
 	)
+
+	fs.writeFile(Utility.joinPath(options.o, `{options.types}/pilot.yml`), serde.encode("yaml", output.selene, true))
 
 	stdio.write(stdio.color("green"))
 	stdio.write(stdio.style("bold"))
