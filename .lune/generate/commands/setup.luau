@@ -10,12 +10,12 @@ local jsonSettings = {
 	["luau-lsp.require.fileAliases"] = {},
 }
 
-local function basename(filename)
-	return filename:match("(.+)%..+") or filename
+local function stripFileExtensione(filename)
+	return filename:match("^(.+)%.?.*$") or filename
 end
 
-for _, module in fs.readDir("./.lune/generate/modules") do
-	jsonSettings["luau-lsp.require.fileAliases"][basename(module)] = `./types/modules/{module}`
+for _, moduleName in fs.readDir("./.lune/generate/modules") do
+	jsonSettings["luau-lsp.require.fileAliases"][stripFileExtensione(moduleName)] = `./types/modules/{moduleName}`
 end
 
 local function makeDirectory(dir)
