@@ -40,7 +40,7 @@ return function(documentationFileType: "json" | "yaml")
 		documentation = {},
 	}
 
-	local function implement(objects: { [string]: Types.Object })
+	local function implement(objects: { [string]: Types.Object }, objectType)
 		local remainingObjects = table.clone(objects)
 
 		local objectName, objectData = next(remainingObjects)
@@ -53,6 +53,7 @@ return function(documentationFileType: "json" | "yaml")
 				Parse.parseObject({
 					name = objectName,
 					object = objectData,
+					type = objectType,
 					output = output,
 				})
 
@@ -64,8 +65,8 @@ return function(documentationFileType: "json" | "yaml")
 		end
 	end
 
-	implement(partData.classes.abstractclasses)
-	implement(partData.classes.objects)
+	implement(partData.classes.abstractclasses, "abstract")
+	implement(partData.classes.objects, "object")
 
 	for typeName, type in partData.types do
 		table.insert(output.localTypes, `type {typeName} = {Parse.parseLuauType(type)}`)
