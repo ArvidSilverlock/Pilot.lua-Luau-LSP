@@ -8,8 +8,6 @@ local Types = require("./Types")
 
 local PartData = require("./data/PartData")()
 
-local markdownDocumentation = {}
-
 local Parse = {}
 
 function Parse.constructPlainDescription(data: Types.Describable): string?
@@ -290,25 +288,17 @@ function Parse.parseObject(options: Types.ObjectOptions)
 
 	local sections = {}
 
-	local markdownUndocumented = {}
-	local markdownSections = {}
-
 	local documentationSubKeys = {}
 
 	if object.properties then
 		local properties = {}
 		local configure = {}
 
-		local markdownProperties = {
-			readonly = { deprecated = {}, normal = {} },
-			normal = { deprecated = {}, normal = {} },
-		}
-
 		table.insert(configure, `\tfunction Configure(self, properties: \{`)
 		documentationSubKeys.Configure = "@roblox/globaltype/PilotObject.Configure"
 
 		for propertyName, propertyData in object.properties do
-			local property, luauType = Parse.parseValue({
+			local property = Parse.parseValue({
 				name = propertyName,
 				object = propertyData,
 				documentationSubKeys = documentationSubKeys,
@@ -320,49 +310,6 @@ function Parse.parseObject(options: Types.ObjectOptions)
 				table.insert(configure, `\t\t{property}?,`)
 			end
 			table.insert(properties, `\t{property}`)
-
-			local description = Parse.constructPlainDescription(propertyData)
-			if description then
-				description = Utility.escapeMarkdown(description)
-			end
-
-			if propertyData.unknowntype then
-				table.insert(
-					markdownUndocumented,
-					`{if propertyData.readonly then "property" else "configurable"} **{propertyName}**{if description then ` - {description}` else ""}`
-				)
-			else
-				local outputTable = {
-					`- **{propertyName}:** *{luauType}*{if description then ` - {description}` else ""}`,
-				}
-
-				local constraints = propertyData.constraints
-				if constraints then
-					if constraints.min and constraints.max then
-						table.insert(outputTable, `  - **Range:** {constraints.min} to {constraints.max}`)
-					elseif constraints.min then
-						table.insert(outputTable, `  - **Minimum:** {constraints.min}`)
-					elseif constraints.max then
-						table.insert(outputTable, `  - **Maximum:** {constraints.max}`)
-					end
-
-					if constraints.default then
-						table.insert(outputTable, `  - **Default:** {constraints.default}`)
-					end
-				end
-
-				if typeof(propertyData.deprecated) == "string" then
-					table.insert(outputTable, `  - {propertyData.deprecated}`)
-				end
-
-				-- stylua: ignore
-				table.insert(
-					markdownProperties
-						[if propertyData.readonly then "readonly" else "normal"]
-						[if propertyData.deprecated then "deprecated" else "normal"],
-					table.concat(outputTable, "\n")
-				)
-			end
 		end
 
 		if options.name == "PilotObject" then
@@ -373,17 +320,10 @@ function Parse.parseObject(options: Types.ObjectOptions)
 
 		table.insert(sections, table.concat(configure, "\n"))
 		table.insert(sections, 1, table.concat(properties, "\n"))
-
-		markdownSections.properties = markdownProperties.readonly.normal
-		markdownSections.configurables = markdownProperties.normal.normal
-		markdownSections.deprecatedProperties = markdownProperties.readonly.deprecated
-		markdownSections.deprecatedConfigurables = markdownProperties.normal.deprecated
 	end
 
 	if object.methods then
 		local methods = {}
-
-		local markdownMethods = { deprecated = {}, normal = {} }
 
 		for methodName, methodData in object.methods do
 			local method = Parse.parseFunction({
@@ -397,44 +337,13 @@ function Parse.parseObject(options: Types.ObjectOptions)
 			})
 
 			table.insert(methods, Utility.indent(method))
-
-			local plainDescription = Parse.constructPlainDescription(methodData)
-			if plainDescription then
-				plainDescription = Utility.escapeMarkdown(plainDescription)
-			end
-
-			if methodData.unknowntype then
-				table.insert(
-					markdownUndocumented,
-					`- **function {methodName}** {if plainDescription then ` - {plainDescription}` else ""}`
-				)
-			else
-				local formatted = Utility.escapeMarkdown(
-					method
-						:gsub("^function ", "")
-						:gsub("^([_%a][_%w]*%b()):(.*)", "%1 →%2")
-						:gsub("^([_%a][_%w]*%()self", "%1*self*")
-						:gsub("%->", "→")
-						:gsub("^[_%a][_%w]*", "**%1**")
-				)
-
-				table.insert(
-					if methodData.deprecated then markdownMethods.deprecated else markdownMethods.normal,
-					`- {formatted}{if plainDescription then `\n  - {plainDescription}` else ""}{if typeof(methodData.deprecated) == "string" then `\n  - {methodData.deprecated}` else ""}`
-				)
-			end
 		end
 
 		table.insert(sections, table.concat(methods, "\n"))
-
-		markdownSections.deprecatedMethods = markdownMethods.deprecated
-		markdownSections.methods = markdownMethods.normal
 	end
 
 	if object.events then
 		local events = {}
-
-		local markdownEvents = { deprecated = {}, normal = {} }
 
 		for eventName, eventData in object.events do
 			local eventConfig = {
@@ -447,45 +356,9 @@ function Parse.parseObject(options: Types.ObjectOptions)
 			local eventType = Parse.parseEvent(eventConfig)
 
 			table.insert(events, `\t{eventType}`)
-
-			local actualEventData = Parse.getObject("Event", eventConfig)
-
-			local plainDescription = Parse.constructPlainDescription(actualEventData)
-			if plainDescription then
-				plainDescription = Utility.escapeMarkdown(plainDescription)
-			end
-
-			if actualEventData.unknowntype then
-				table.insert(
-					markdownUndocumented,
-					`- **event {eventName}** {if plainDescription then ` - {plainDescription}` else ""}`
-				)
-			else
-				local formatted
-				if actualEventData.parameters then
-					local params = {}
-					for _, parameter in actualEventData.parameters do
-						local name = if typeof(parameter) == "table" then parameter[1] else parameter
-						table.insert(params, name)
-					end
-					formatted = Utility.escapeMarkdown(`**{eventName}:** ({table.concat(params, ", ")})`)
-				else
-					formatted = Utility.escapeMarkdown(`**{eventName}**`)
-				end
-
-				table.insert(
-					if actualEventData.deprecated then markdownEvents.deprecated else markdownEvents.normal,
-					`- {formatted}{if plainDescription then `\n  - {plainDescription}` else ""}{if typeof(markdownEvents.deprecated) == "string"
-						then `\n  - {markdownEvents.deprecated}`
-						else ""}`
-				)
-			end
 		end
 
 		table.insert(sections, table.concat(events, "\n"))
-
-		markdownSections.deprecatedEvents = markdownEvents.deprecated
-		markdownSections.events = markdownEvents.normal
 	end
 
 	output.documentation[`@roblox/globaltype/{typeName}`] = Parse.constructDescription(object, {
@@ -509,116 +382,6 @@ function Parse.parseObject(options: Types.ObjectOptions)
 			}, "\n")
 			else `declare class {typeName} extends {object.extends or "PilotObject"}\n\tClassName: {className}\nend`
 	)
-
-	local markdownPath = `wiki/docs/Objects/{options.name}.md`
-	local metadata = {}
-
-	metadata.tags = if object.categories then table.clone(object.categories) else {}
-	table.insert(
-		metadata.tags,
-		if options.type == "abstract"
-			then "AbstractClass"
-			elseif options.type == "object" then "PilotObject"
-			elseif options.type == "component" then "Component"
-			else nil
-	)
-
-	local markdownContent = {}
-	local markdownOutput = {}
-
-	local function createMarkdownString(key: string)
-		local uppercase = key:gsub("^%l", string.upper)
-		local deprecatedKey = `deprecated{uppercase}`
-
-		local normal = markdownSections[key]
-		local deprecated = markdownSections[deprecatedKey]
-
-		if normal and #normal > 0 and deprecated and #deprecated > 0 then
-			markdownContent[key] = {
-				{
-					class = options.name,
-					content = table.concat(normal, "\n")
-						.. "\n"
-						.. Utility.markdownDropdown(`Deprecated {uppercase}`, table.concat(deprecated, "\n")),
-				},
-			}
-		elseif normal and #normal > 0 then
-			markdownContent[key] = { { class = options.name, content = table.concat(normal, "\n") } }
-		elseif deprecated and #deprecated > 0 then
-			markdownContent[key] = { { class = options.name, content = table.concat(deprecated, "\n") } }
-		end
-	end
-
-	local function addMarkdownSection(name: string)
-		local section = markdownContent[name]
-		if not section then
-			return
-		end
-
-		local output = {}
-		for index, value in section do
-			table.insert(
-				output,
-				if value.class == options.name
-					then value.content
-					else Utility.markdownDropdown(
-						`Inherited from [{value.class}](/docs/Objects/{value.class})`,
-						value.content
-					)
-			)
-		end
-
-		table.insert(markdownOutput, `### {name:gsub("^%l", string.upper)}\n{table.concat(output, "\n\n")}`)
-	end
-
-	createMarkdownString("methods")
-	createMarkdownString("configurables")
-	createMarkdownString("properties")
-	createMarkdownString("events")
-	createMarkdownString("undocumented")
-
-	local extends = if typeof(object.extends) == "string" then { object.extends } else object.extends
-
-	if extends and #extends > 0 then
-		for _, class in extends do
-			if class == "PilotObject" then
-				continue
-			end
-
-			local markdown: any = markdownDocumentation[class]
-			for key, values in markdown do
-				for _, value in values do
-					if markdownContent[key] then
-						table.insert(markdownContent[key], value)
-					else
-						markdownContent[key] = { value }
-					end
-				end
-			end
-		end
-	end
-
-	addMarkdownSection("methods")
-	addMarkdownSection("configurables")
-	addMarkdownSection("properties")
-	addMarkdownSection("events")
-
-	markdownDocumentation[options.name] = markdownContent
-
-	if #markdownOutput > 0 then
-		local plainDescription = Parse.constructPlainDescription(object)
-		if plainDescription then
-			table.insert(markdownOutput, 1, Utility.escapeMarkdown(plainDescription))
-		end
-
-		if next(metadata) then
-			table.insert(markdownOutput, 1, `---\n{serde.encode("yaml", metadata)}---`)
-		end
-
-		fs.writeFile(`wiki/docs/Objects/{options.name}.md`, (table.concat(markdownOutput, "\n\n")))
-	elseif fs.isFile(markdownPath) then
-		fs.removeFile(markdownPath)
-	end
 end
 
 return Parse
