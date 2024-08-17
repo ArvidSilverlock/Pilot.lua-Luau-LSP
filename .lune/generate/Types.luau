@@ -83,6 +83,7 @@ export type Output = {
 	pilotObjects: { string },
 
 	documentation: Documentation,
+	selene: { [any]: any },
 }
 
 export type Options = {
