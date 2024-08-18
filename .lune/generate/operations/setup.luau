@@ -65,5 +65,16 @@ return function(options)
 		["luau-lsp.require.fileAliases"] = fileRequireAliases,
 	})
 
+	if options.darklua then
+		writeConfigurationFile(path("darklua.json"), "json", {
+			bundle = {
+				require_mode = {
+					name = "path",
+					sources = fileRequireAliases,
+				},
+			},
+		})
+	end
+
 	return 0
 end
