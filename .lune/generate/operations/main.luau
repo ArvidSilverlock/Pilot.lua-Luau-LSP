@@ -34,7 +34,7 @@ return function(options)
 		selene = {},
 	}
 
-	local function implement(objects: { [string]: Types.Object })
+	local function implement(objects: { [string]: Types.Object }, objectType)
 		local remainingObjects = table.clone(objects)
 
 		local objectName, objectData = next(remainingObjects)
@@ -48,6 +48,7 @@ return function(options)
 					name = objectName,
 					object = objectData,
 					output = output,
+					objectType = objectType,
 				})
 
 				remainingObjects[objectName] = nil
@@ -58,8 +59,8 @@ return function(options)
 		end
 	end
 
-	implement(partData.classes.abstractclasses)
-	implement(partData.classes.objects)
+	implement(partData.classes.abstractclasses, "abstract")
+	implement(partData.classes.objects, "object")
 
 	for typeName, type in partData.types do
 		table.insert(output.localTypes, `type {typeName} = {Parse.parseLuauType(type)}`)

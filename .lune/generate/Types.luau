@@ -92,6 +92,7 @@ export type Options = {
 export type ObjectOptions = {
 	object: Object,
 	name: string,
+	objectType: string,
 } & Options
 
 export type FunctionOptions = {
