@@ -286,7 +286,6 @@ function Parse.parseObject(options: Types.ObjectOptions)
 		local configure = {}
 
 		table.insert(configure, `\tfunction Configure(self, properties: \{`)
-		documentationSubKeys.Configure = "@roblox/globaltype/PilotObject.Configure"
 
 		for propertyName, propertyData in object.properties do
 			local property = Parse.parseValue({
@@ -307,9 +306,12 @@ function Parse.parseObject(options: Types.ObjectOptions)
 			table.insert(configure, `\t\t[string]: any,`)
 		end
 
-		table.insert(configure, `\t\})`)
+		if #configure > 2 then
+			table.insert(configure, `\t\})`)
 
-		table.insert(sections, table.concat(configure, "\n"))
+			table.insert(sections, table.concat(configure, "\n"))
+			documentationSubKeys.Configure = "@roblox/globaltype/PilotObject.Configure"
+		end
 		table.insert(sections, 1, table.concat(properties, "\n"))
 	end
 
@@ -355,22 +357,27 @@ function Parse.parseObject(options: Types.ObjectOptions)
 		keys = if next(documentationSubKeys) then documentationSubKeys else nil,
 	})
 
+	local inheritsFrom = object.extends or if options.objectType == "object" then "PilotObject" else nil
+	local classDelcaration = if inheritsFrom
+		then `declare class {typeName} extends {inheritsFrom}`
+		else `declare class {typeName}`
+
 	table.insert(
 		output.pilotObjects,
-		if typeName == "PilotObject"
+		if options.objectType == "abstract"
 			then table.concat({
-				`declare class {typeName}`,
+				classDelcaration,
 				table.concat(sections, "\n\n"),
 				`end`,
 			}, "\n")
 			elseif #sections > 0 then table.concat({
-				`declare class {typeName} extends {object.extends or "PilotObject"}`,
+				classDelcaration,
 				`\tClassName: {className}`,
 				"",
 				table.concat(sections, "\n\n"),
 				`end`,
 			}, "\n")
-			else `declare class {typeName} extends {object.extends or "PilotObject"}\n\tClassName: {className}\nend`
+			else `{classDelcaration}\n\tClassName: {className}\nend`
 	)
 end
 
