@@ -906,10 +906,10 @@
           },
           "Read": {
             "parameters": [
-              "key: string"
+              "key: any"
             ],
             "returns": [
-              "string"
+              "any"
             ]
           },
           "ReadAll": {
@@ -917,13 +917,13 @@
           },
           "ReadEntireDisk": {
             "returns": [
-              "{ [string]: string }"
+              "{ [any]: any }"
             ]
           },
           "Write": {
             "parameters": [
-              "key: string",
-              "data: string"
+              "key: any",
+              "data: any"
             ]
           },
           "WriteAll": {
