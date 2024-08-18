@@ -66,14 +66,20 @@ return function(options)
 	})
 
 	if options.darklua then
-		writeConfigurationFile(path("darklua.json"), "json", {
+		local darkluaConfig = {
 			bundle = {
 				require_mode = {
 					name = "path",
-					sources = fileRequireAliases,
 				},
+				excludes = {},
 			},
-		})
+		}
+
+		for moduleName in fileRequireAliases do
+			table.insert(darkluaConfig.bundle.excludes, moduleName)
+		end
+
+		writeConfigurationFile(path("darklua.json"), "json", darkluaConfig)
 	end
 
 	return 0
