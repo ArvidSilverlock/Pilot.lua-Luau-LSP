@@ -65,5 +65,22 @@ return function(options)
 		["luau-lsp.require.fileAliases"] = fileRequireAliases,
 	})
 
+	if options.darklua then
+		local darkluaConfig = {
+			bundle = {
+				require_mode = {
+					name = "path",
+				},
+				excludes = {},
+			},
+		}
+
+		for moduleName in fileRequireAliases do
+			table.insert(darkluaConfig.bundle.excludes, moduleName)
+		end
+
+		writeConfigurationFile(path("darklua.json"), "json", darkluaConfig)
+	end
+
 	return 0
 end
