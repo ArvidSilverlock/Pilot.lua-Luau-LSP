@@ -28,6 +28,7 @@ return function(options)
 
 		documentation = {},
 		selene = {
+			base = "roblox",
 			globals = {},
 		},
 	}
