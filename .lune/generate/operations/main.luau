@@ -134,7 +134,7 @@ return function(options)
 	end
 
 	fs.writeFile(
-		Utility.joinPath(options.o, `{options.types}/global.d.luau`),
+		Utility.joinPath(options.o, `{options["types-dir"]}/global.d.luau`),
 		table.concat({
 			table.concat(output.localTypes, "\n"),
 			table.concat(generatedTypes, "\n\n"),
@@ -148,7 +148,7 @@ return function(options)
 	)
 
 	fs.writeFile(
-		Utility.joinPath(options.o, `{options.types}/documentation.d.json`),
+		Utility.joinPath(options.o, `{options["types-dir"]}/documentation.d.json`),
 		(
 			serde.encode("json", output.documentation, true):gsub("\n( +)", function(whitespace)
 				return "\n" .. string.rep("\t", #whitespace / 2)
@@ -156,7 +156,10 @@ return function(options)
 		)
 	)
 
-	fs.writeFile(Utility.joinPath(options.o, `{options.types}/pilot.yml`), serde.encode("yaml", output.selene, true))
+	fs.writeFile(
+		Utility.joinPath(options.o, `{options["types-dir"]}/pilot.yml`),
+		serde.encode("yaml", output.selene, true)
+	)
 
 	stdio.write(stdio.color("green"))
 	stdio.write(stdio.style("bold"))
