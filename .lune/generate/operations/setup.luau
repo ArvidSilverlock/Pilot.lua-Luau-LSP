@@ -1,7 +1,13 @@
-local fs = require("@lune/fs")
 local serde = require("@lune/serde")
+local net = require("@lune/net")
+local fs = require("@lune/fs")
 
 local Utility = require("../Utility")
+
+local repos = {
+	selene = "Kampfkarren/selene",
+	darklua = "seaofvoices/darklua",
+}
 
 local function stripFileExtension(filename)
 	return filename:match("^(.*)%..-$") or filename
@@ -40,6 +46,8 @@ return function(options)
 
 	makeDirectory(path())
 
+	local vscodeSettings = {}
+
 	if options.luaulsp then
 		makeDirectory(typesPath())
 		makeDirectory(typesPath("modules"))
@@ -55,15 +63,14 @@ return function(options)
 			fs.copy(`./.lune/generate/modules/{module}`, modulePath)
 		end
 
-		makeDirectory(path(".vscode"))
-		writeConfigurationFile(path(".vscode/settings.json"), "json", {
+		Utility.mergeTables({
 			["luau-lsp.sourcemap.enabled"] = false,
 			["luau-lsp.completion.imports.suggestServices"] = false,
 			["luau-lsp.platform.type"] = "roblox",
 			["luau-lsp.types.definitionFiles"] = { `./{typesDirectory}/global.d.luau` },
 			["luau-lsp.types.documentationFiles"] = { `./{typesDirectory}/documentation.d.json` },
 			["luau-lsp.require.fileAliases"] = fileRequireAliases,
-		})
+		}, vscodeSettings)
 	end
 
 	if options.selene then
@@ -87,6 +94,31 @@ return function(options)
 		end
 
 		writeConfigurationFile(path("darklua.json"), "json", darkluaConfig)
+	end
+
+	if options.rokit then
+		local rokitConfig = { tools = {} }
+
+		for toolName, repo in repos do
+			if not options[toolName] then
+				continue
+			end
+
+			local releaseTag = net.jsonDecode(net.request({
+				url = `https://api.github.com/repos/{repo}/releases/latest`,
+				method = "GET",
+				headers = { ["Content-Type"] = "application/json" },
+			}).body).tag_name
+
+			rokitConfig.tools[toolName] = `{repo}@{releaseTag:gsub("^v", "")}`
+		end
+
+		writeConfigurationFile(path("rokit.toml"), "toml", rokitConfig)
+	end
+
+	if next(vscodeSettings) then
+		makeDirectory(path(".vscode"))
+		writeConfigurationFile(path(".vscode/settings.json"), "json", vscodeSettings)
 	end
 
 	return 0
