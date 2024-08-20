@@ -70,7 +70,7 @@ function Parse.parseLuauType(input: any): string
 	end
 end
 
-function Parse.constructKey(options: Types.Options)
+function Parse.constructKey(options: any)
 	return if options.key
 		then options.key
 		elseif options.within then `@roblox/globaltype/{options.within}.{options.name}`
@@ -270,6 +270,21 @@ function Parse.parseEvent(options: Types.EventOptions): string
 	end
 end
 
+local function inheritedKeysInserter(output, documentation: Types.Documentation)
+	return function(source: string, values: { [string]: any }?)
+		if not values then
+			return
+		end
+
+		for name, _ in values do
+			local key = Parse.constructKey({ name = name, within = source })
+			if not output[name] and documentation[key] then
+				output[name] = key
+			end
+		end
+	end
+end
+
 function Parse.parseObject(options: Types.ObjectOptions)
 	local object = Parse.getObject("Object", options)
 	local output = options.output
@@ -306,12 +321,13 @@ function Parse.parseObject(options: Types.ObjectOptions)
 			table.insert(configure, `\t\t[string]: any,`)
 		end
 
-		if #configure > 2 then
+		if #configure > 1 then
 			table.insert(configure, `\t\})`)
 
 			table.insert(sections, table.concat(configure, "\n"))
 			documentationSubKeys.Configure = "@roblox/globaltype/PilotObject.Configure"
 		end
+
 		table.insert(sections, 1, table.concat(properties, "\n"))
 	end
 
@@ -351,6 +367,36 @@ function Parse.parseObject(options: Types.ObjectOptions)
 		end
 
 		table.insert(sections, table.concat(events, "\n"))
+	end
+
+	local insertInheritedKeys = inheritedKeysInserter(documentationSubKeys, output.documentation)
+
+	local inheritenceNode = object
+	while inheritenceNode.extends do
+		local name = inheritenceNode.extends
+		inheritenceNode = PartData.classes.objects[name] or PartData.classes.abstractclasses[name]
+		if not inheritenceNode then
+			break
+		end
+
+		insertInheritedKeys(name, inheritenceNode.properties)
+
+		if inheritenceNode.properties and not documentationSubKeys.Configure then
+			local isConfigurable = false
+			for _, propertyData in inheritenceNode.properties do
+				if not propertyData.readonly then
+					isConfigurable = true
+					break
+				end
+			end
+
+			if isConfigurable then
+				documentationSubKeys.Configure = "@roblox/globaltype/PilotObject.Configure"
+			end
+		end
+
+		insertInheritedKeys(name, inheritenceNode.methods)
+		insertInheritedKeys(name, inheritenceNode.events)
 	end
 
 	output.documentation[`@roblox/globaltype/{typeName}`] = Parse.constructDescription(object, {
