@@ -1610,7 +1610,20 @@
 				"description": "Similar to a button, except is programmable to take more than one key input.\nCan be attached to a vehicle seat or clicked by a player.",
 				"events": {
 					"KeyPressed": {
-						"unknowntype": true
+						"parameters": [
+                            [
+								"keyCode: any",
+								"The `Enum.KeyCode` of the key that was pressed."
+							],
+                            [
+                                "keyString: string",
+                                "The letter of the key that was pressed. If the key is non-printable (i.e. shift or backspace) keyString will be an empty string."
+                            ],
+                            [
+                                "userId: number",
+                                "The <code>UserID</code> of the player who pressed the key."
+                            ]
+                        ]
 					},
 					"TextInputted": {
 						"parameters": [
