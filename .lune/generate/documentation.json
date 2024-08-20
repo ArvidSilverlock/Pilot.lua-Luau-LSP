@@ -1632,8 +1632,8 @@
                                 "The text that was inputted.\n**NOTE:** The text contains a newline character."
                             ],
                             [
-                                "userId: number",
-                                "The <code>UserID</code> of the player who inputted the text."
+                                "playerName: string",
+                                "The username of the player who input the text"
                             ]
                         ]
 					},
