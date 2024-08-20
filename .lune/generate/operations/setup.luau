@@ -33,37 +33,47 @@ local function pathJoiner(root)
 end
 
 return function(options)
+	local typesDirectory = options["types-dir"]
+
 	local path = pathJoiner(options.o)
-	local typesPath = pathJoiner(path(options.types))
+	local typesPath = pathJoiner(path(typesDirectory))
 
 	makeDirectory(path())
-	makeDirectory(path(".vscode"))
-	makeDirectory(typesPath())
-	makeDirectory(typesPath("modules"))
 
-	local fileRequireAliases = {}
-	for _, module in fs.readDir("./.lune/generate/modules") do
-		local modulePath = typesPath(`modules/{module}`)
-		if fs.isFile(modulePath) then
-			fs.removeFile(modulePath)
+	if options.luaulsp then
+		makeDirectory(typesPath())
+		makeDirectory(typesPath("modules"))
+
+		local fileRequireAliases = {}
+		for _, module in fs.readDir("./.lune/generate/modules") do
+			local modulePath = typesPath(`modules/{module}`)
+			if fs.isFile(modulePath) then
+				fs.removeFile(modulePath)
+			end
+
+			fileRequireAliases[stripFileExtension(module)] = `./{typesDirectory}/modules/{module}`
+			fs.copy(`./.lune/generate/modules/{module}`, modulePath)
 		end
 
-		fileRequireAliases[stripFileExtension(module)] = `./{options.types}/modules/{module}`
-		fs.copy(`./.lune/generate/modules/{module}`, modulePath)
+		makeDirectory(path(".vscode"))
+		writeConfigurationFile(path(".vscode/settings.json"), "json", {
+			["luau-lsp.sourcemap.enabled"] = false,
+			["luau-lsp.completion.imports.suggestServices"] = false,
+			["luau-lsp.platform.type"] = "roblox",
+			["luau-lsp.types.definitionFiles"] = { `./{typesDirectory}/global.d.luau` },
+			["luau-lsp.types.documentationFiles"] = { `./{typesDirectory}/documentation.d.json` },
+			["luau-lsp.require.fileAliases"] = fileRequireAliases,
+		})
 	end
 
-	writeConfigurationFile(path("selene.toml"), "toml", {
-		std = `luau+{options.types}/pilot`,
-	})
-
-	writeConfigurationFile(path(".vscode/settings.json"), "json", {
-		["luau-lsp.sourcemap.enabled"] = false,
-		["luau-lsp.completion.imports.suggestServices"] = false,
-		["luau-lsp.platform.type"] = "roblox",
-		["luau-lsp.types.definitionFiles"] = { `./{options.types}/global.d.luau` },
-		["luau-lsp.types.documentationFiles"] = { `./{options.types}/documentation.d.json` },
-		["luau-lsp.require.fileAliases"] = fileRequireAliases,
-	})
+	local selenePath = path("selene.toml")
+	if options.selene then
+		writeConfigurationFile(selenePath, "toml", {
+			std = `luau+{typesDirectory}/pilot`,
+		})
+	elseif fs.isFile(selenePath) then
+		fs.removeFile(selenePath)
+	end
 
 	return 0
 end
