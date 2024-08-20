@@ -10,11 +10,7 @@ local Types = require("../Types")
 local GetPartData = require("../data/PartData")
 
 return function(options)
-	local partData = GetPartData(options.source)
-
-	-- Sync `json` and `yaml`. Has the added benefit of keeping the format.
-	fs.writeFile(`.lune/generate/documentation.json`, serde.encode("json", partData, true))
-	fs.writeFile(`.lune/generate/documentation.yaml`, serde.encode("yaml", partData, true))
+	local partData = GetPartData()
 
 	-- Have to require this later so `GetPartData` works with no parameters
 	local Parse = require("../Parse")

@@ -3,22 +3,11 @@ local fs = require("@lune/fs")
 
 local Types = require("../Types")
 
-local yieldingThreads = {}
-
 -- OH MY GOD _G
 
-return function(documentationFileType: ("json" | "yaml")?): Types.ObjectData
-	if documentationFileType == nil and _G.cached == nil then
-		table.insert(yieldingThreads, coroutine.running())
-		coroutine.yield()
-	elseif documentationFileType then
-		_G.cached =
-			serde.decode(documentationFileType, fs.readFile(`.lune/generate/documentation.{documentationFileType}`))
-
-		for _, thread in yieldingThreads do
-			coroutine.resume(thread)
-		end
-		table.clear(yieldingThreads)
+return function(): Types.ObjectData
+	if _G.cached == nil then
+		_G.cached = serde.decode("json", fs.readFile(".lune/generate/documentation.json"))
 	end
 
 	return _G.cached
