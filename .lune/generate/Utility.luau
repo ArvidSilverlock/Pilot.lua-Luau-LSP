@@ -27,7 +27,7 @@ function Utility.mergeTables(from: { [any]: any }, into: { [any]: any })
 			if not table.find(into, value) then
 				table.insert(into, value)
 			end
-		elseif typeof(value) == "table" and not into[key] then
+		elseif typeof(value) == "table" and into[key] == nil then
 			into[key] = value
 		elseif typeof(value) == "table" and typeof(into[key]) == "table" then
 			Utility.mergeTables(value, into[key])
