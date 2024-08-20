@@ -634,16 +634,26 @@
 				},
 				"methods": {
 					"CalculateCraftingRecipe": {
-						"unknowntype": true
+						"parameters": [
+                            [
+                                "items: { string } | { [string]: number }",
+                                "A list of parts **OR** A dictionary of each part with how many of said part to craft."
+                            ]
+                        ],
+                        "returns": [
+                            "{ Power: number, [string]: number }"
+                        ]
 					},
 					"CraftItems": {
-						"unknowntype": true
+						"parameters": [
+                            "items: { string } | { [string]: number }"
+                        ]
 					},
 					"GetCraftCooldown": {
-						"unknowntype": true
+						"returns": ["number"]
 					},
 					"GetInventory": {
-						"unknowntype": true
+						"returns": [ "{ [string]: number }" ]
 					}
 				},
 				"properties": {
