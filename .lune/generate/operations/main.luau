@@ -27,7 +27,9 @@ return function(options)
 		pilotObjects = {},
 
 		documentation = {},
-		selene = {},
+		selene = {
+			globals = {},
+		},
 	}
 
 	local function implement(objects: { [string]: Types.Object }, objectType)
@@ -67,14 +69,14 @@ return function(options)
 	end
 
 	for valueName, data in partData.globals.values do
-		output.selene[valueName] = { any = true }
+		output.selene.globals[valueName] = { any = true }
 
 		table.insert(output.globalValues, `declare {valueName}: {Parse.parseLuauType(data.type)}`)
 		output.documentation[`@roblox/global/{valueName}`] = Parse.constructDescription(data)
 	end
 
 	for typeName, data: any in partData.globals.functions do
-		output.selene[typeName] = { any = true }
+		output.selene.globals[typeName] = { any = true }
 
 		local key = `@roblox/global/{typeName}`
 		if data.keys then
