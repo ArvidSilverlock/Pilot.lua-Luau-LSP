@@ -156,10 +156,12 @@ return function(options)
 		)
 	)
 
-	fs.writeFile(
-		Utility.joinPath(options.o, `{options["types-dir"]}/pilot.yml`),
-		serde.encode("yaml", output.selene, true)
-	)
+	if options.selene then
+		fs.writeFile(
+			Utility.joinPath(options.o, `{options["types-dir"]}/pilot.yml`),
+			serde.encode("yaml", output.selene, true)
+		)
+	end
 
 	stdio.write(stdio.color("green"))
 	stdio.write(stdio.style("bold"))
