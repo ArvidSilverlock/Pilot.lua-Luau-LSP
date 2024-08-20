@@ -24,5 +24,5 @@ end
 
 if options.luaulsp then
 	local runMain = require("./generate/operations/main")
-	return runMain({} :: any)
+	return runMain(options)
 end
