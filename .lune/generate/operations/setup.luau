@@ -66,7 +66,6 @@ return function(options)
 		})
 	end
 
-	local selenePath = path("selene.toml")
 	if options.selene then
 		writeConfigurationFile(path("selene.toml"), "toml", {
 			std = `luau+{typesDirectory}/pilot`,
