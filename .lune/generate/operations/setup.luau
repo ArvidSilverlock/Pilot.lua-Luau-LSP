@@ -4,9 +4,14 @@ local fs = require("@lune/fs")
 
 local Utility = require("../Utility")
 
-local repos = {
+local TOOL_REPOS = {
 	selene = "Kampfkarren/selene",
 	darklua = "seaofvoices/darklua",
+}
+
+local EXTENSIONS = {
+	luaulsp = "JohnnyMorganz.luau-lsp",
+	selene = "Kampfkarren.selene-vscode",
 }
 
 local function stripFileExtension(filename)
@@ -47,6 +52,7 @@ return function(options)
 	makeDirectory(path())
 
 	local vscodeSettings = {}
+	local recommendedExtensions = {}
 
 	if options.luaulsp then
 		makeDirectory(typesPath())
@@ -63,6 +69,8 @@ return function(options)
 			fs.copy(`./.lune/generate/modules/{module}`, modulePath)
 		end
 
+		table.insert(recommendedExtensions, EXTENSIONS.luaulsp)
+
 		Utility.mergeTables({
 			["luau-lsp.sourcemap.enabled"] = false,
 			["luau-lsp.completion.imports.suggestServices"] = false,
@@ -74,6 +82,7 @@ return function(options)
 	end
 
 	if options.selene then
+		table.insert(recommendedExtensions, EXTENSIONS.selene)
 		writeConfigurationFile(path("selene.toml"), "toml", {
 			std = `luau+{typesDirectory}/pilot`,
 		})
@@ -99,7 +108,7 @@ return function(options)
 	if options.rokit then
 		local rokitConfig = { tools = {} }
 
-		for toolName, repo in repos do
+		for toolName, repo in TOOL_REPOS do
 			if not options[toolName] then
 				continue
 			end
@@ -116,9 +125,18 @@ return function(options)
 		writeConfigurationFile(path("rokit.toml"), "toml", rokitConfig)
 	end
 
-	if next(vscodeSettings) then
+	if next(vscodeSettings) or next(recommendedExtensions) then
 		makeDirectory(path(".vscode"))
+	end
+
+	if next(vscodeSettings) then
 		writeConfigurationFile(path(".vscode/settings.json"), "json", vscodeSettings)
+	end
+
+	if next(recommendedExtensions) then
+		writeConfigurationFile(path(".vscode/extensions.json"), "json", {
+			recommendations = recommendedExtensions,
+		})
 	end
 
 	return 0
