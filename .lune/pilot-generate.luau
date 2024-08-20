@@ -8,10 +8,10 @@ local runMain = require("./generate/operations/main")
 
 local options = Utility.mergeTables(Utility.parseArguments(process.args, "o"), {
 	o = "./workspace",
-	types = "types",
+	["types-dir"] = "types",
 })
 
-if not (fs.isDir(Utility.joinPath(options.o)) and fs.isDir(Utility.joinPath(options.o, options.types))) then
+if not (fs.isDir(Utility.joinPath(options.o)) and fs.isDir(Utility.joinPath(options.o, options["types-dir"]))) then
 	stdio.ewrite("please run `pilot-setup` before `pilot-generate`\n")
 	return 1
 end
