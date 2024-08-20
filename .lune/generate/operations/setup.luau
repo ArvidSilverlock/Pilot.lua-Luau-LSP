@@ -68,11 +68,9 @@ return function(options)
 
 	local selenePath = path("selene.toml")
 	if options.selene then
-		writeConfigurationFile(selenePath, "toml", {
+		writeConfigurationFile(path("selene.toml"), "toml", {
 			std = `luau+{typesDirectory}/pilot`,
 		})
-	elseif fs.isFile(selenePath) then
-		fs.removeFile(selenePath)
 	end
 
 	if options.darklua then
@@ -85,8 +83,8 @@ return function(options)
 			},
 		}
 
-		for moduleName in fileRequireAliases do
-			table.insert(darkluaConfig.bundle.excludes, moduleName)
+		for _, module in fs.readDir("./.lune/generate/modules") do
+			table.insert(darkluaConfig.bundle.excludes, stripFileExtension(module))
 		end
 
 		writeConfigurationFile(path("darklua.json"), "json", darkluaConfig)
