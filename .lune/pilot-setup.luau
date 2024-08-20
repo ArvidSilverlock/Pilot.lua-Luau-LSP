@@ -9,7 +9,7 @@ local options = Utility.mergeTables(Utility.parseArguments(process.args, "o"), {
 })
 
 local argumentsSpecified = false
-for _, option in options do
+for option, _: any in options do
 	if option ~= "o" and option ~= "types-dir" then
 		argumentsSpecified = true
 		break
