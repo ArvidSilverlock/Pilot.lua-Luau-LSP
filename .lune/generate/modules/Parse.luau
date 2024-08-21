@@ -1,34 +1,12 @@
 --!strict
 
-local fs = require("@lune/fs")
-
-local Utility = require("./Utility")
+local PilotData = require("./PilotData")
 local Types = require("./Types")
-
-local PILOT_DATA = require("../object-data/PilotRaw")
-
--- stylua: ignore
-local OBJECTS do
-	OBJECTS = {}
-
-	local function add(objectType)
-		for objectName: any, objectData in PILOT_DATA.classes[objectType] do
-			OBJECTS[objectName] = { name = objectName, data = objectData, category = objectType }
-		end
-	end
-
-	add("abstractclasses")
-	add("objects")
-end
 
 local Parse = {}
 
-function Parse.getObject(name)
-	return assert(OBJECTS[name], `unknown object '{name}'`)
-end
-
-function Parse.parseParameter(value)
-	local nameAndType, description
+function Parse.parseParameter(value: string | { string })
+	local nameAndType: string, description: string?
 	if typeof(value) == "table" then
 		nameAndType, description = value[1], value[2]
 	else
@@ -45,7 +23,7 @@ function Parse.parseParameter(value)
 end
 
 function Parse.iterateParentClasses(objectName: string)
-	local object = Parse.getObject(objectName)
+	local object = PilotData.getObject(objectName)
 	local data = object.data
 
 	local extends = if data.extends == nil and object.category == "objects"
@@ -57,7 +35,7 @@ function Parse.iterateParentClasses(objectName: string)
 	return next, extends, nil
 end
 
-function Parse.describable(value, output: any?)
+function Parse.parseDescribable(value: Types.Describable, output: { [string]: any }?)
 	if output then
 		output.Description = value.description
 		output.IsDeprecated = value.deprecated == true
@@ -74,82 +52,60 @@ function Parse.describable(value, output: any?)
 	end
 end
 
-function Parse.iterateObjects()
-	local remainingObjects = table.clone(OBJECTS)
-	local name, object
+function Parse.parseType(input: any)
+	if typeof(input) == "table" then
+		if
+			#input > 0
+			and typeof(input[1]) == "string"
+			and (input[1]:match("^and%??$") or input[1]:match("^or%??$"))
+		then
+			local operation = input[1]
+			local output = {}
 
-	return function()
-		while true do
-			name, object = next(remainingObjects, name)
-			if not name or not object then
-				return
+			for index = 2, #input do
+				table.insert(output, Parse.parseType(input[index]))
 			end
 
-			local canDefine = true
-			for _, parentClass in Parse.iterateParentClasses(name) do
-				if remainingObjects[parentClass] then
-					canDefine = false
-					break
-				end
+			local concatenation = table.concat(output, if operation:match("^and") then " & " else " | ")
+			return if operation:sub(-1, -1) == "?" then `({concatenation})?` else concatenation
+		elseif typeof((next(input))) == "string" then
+			local output = {}
+
+			for key, value in input do
+				local formattedKey = if key:match("^[_%a][_%w]*$") then key else `[{string.format("%q", key)}]`
+				table.insert(output, `{formattedKey}: {Parse.parseType(value)}`)
 			end
 
-			if canDefine then
-				local returnName, returnObject = name, object
-				remainingObjects[name] = nil
-				name, object = nil
-				return returnName, returnObject
+			return `\{ {table.concat(output, ", ")} }`
+		else
+			local output = {}
+			for _, string: string in input :: any do
+				table.insert(output, string.format("%q", string))
 			end
+			return table.concat(output, " | ")
 		end
+	else
+		return input
 	end
 end
 
-local inheritenceChainCache = {}
+function Parse.parseFunction(data: Types.FunctionObject, within: string?)
+	local output = Parse.parseDescribable(data, {
+		Parameters = if within then { { Name = "self", Type = within } } else {},
+		Returns = {},
+	})
 
-function Parse.getInheritenceChain(objectName: string)
-	assert(OBJECTS[objectName], `unknown object {objectName}`)
-
-	local queue = { objectName }
-	local visited = {}
-
-	local chain = {}
-
-	while #queue > 0 do
-		local node: string = table.remove(queue, 1) :: any
-
-		if node ~= objectName then
-			table.insert(chain, node)
-		end
-
-		for _, parentClass in Parse.iterateParentClasses(node) do
-			if visited[parentClass] then
-				error(`possibly cyclic inheritence chain {table.concat(chain, "->")}`)
-			end
-
-			visited[parentClass] = true
-
-			local cached = inheritenceChainCache[parentClass]
-			if cached then
-				visited[parentClass] = true
-				table.insert(chain, parentClass)
-
-				for _, value in cached do
-					visited[value] = true
-					table.insert(chain, value)
-				end
-			else
-				table.insert(queue, parentClass)
-			end
+	if data.parameters then
+		for _, parameter in data.parameters do
+			table.insert(output.Parameters, Parse.parseParameter(parameter))
 		end
 	end
 
-	table.freeze(chain)
-
-	inheritenceChainCache[objectName] = chain
-	return chain
-end
-
-function Parse.parseType(input)
-	return input
+	if data.returns then
+		for _, returnValue in data.returns do
+			table.insert(output.Returns, Parse.parseParameter(returnValue))
+		end
+	end
 end
 
 return Parse
