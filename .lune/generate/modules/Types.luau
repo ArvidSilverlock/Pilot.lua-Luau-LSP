@@ -20,13 +20,6 @@ export type Documentation = {
 	[string]: DocumentationObject,
 }
 
-export type Definition = { string }
-
-export type DocumentationDefinitionPair = {
-	documentation: Documentation,
-	definition: Definition,
-}
-
 export type Describable = {
 	deprecated: boolean?,
 	readonly: boolean?,
@@ -65,51 +58,7 @@ export type EventObject = ({
 	parameters: { string | { string } }?,
 } & Describable & Typed) | boolean
 
-export type Output = {
-	localTypes: {},
-	generatedTypes: { { [any]: string } | string },
-
-	globalTypes: {},
-	globalValues: {},
-	globalFunctions: { { string } },
-	generatedGlobals: { string },
-
-	pilotObjects: { string },
-
-	documentation: Documentation,
-	selene: { [any]: any },
-}
-
-export type Options = {
-	key: string?,
-	name: string,
-	within: string?,
-
-	output: Output,
-	documentationSubKeys: { [string]: string }?,
-}
-
-export type ObjectOptions = {
-	object: Object,
-	name: string,
-	objectType: string,
-} & Options
-
-export type FunctionOptions = {
-	object: FunctionObject,
-	isMethod: boolean?,
-	standardLuauNotation: boolean?,
-} & Options
-
-export type ValueOptions = {
-	object: PropertyObject,
-} & Options
-
-export type EventOptions = {
-	object: EventObject,
-} & Options
-
-export type ObjectData = {
+export type RawPilotData = {
 	globals: {
 		functions: { [string]: FunctionObject | FunctionDictionaryObject },
 		types: { [string]: any },
@@ -124,17 +73,57 @@ export type ObjectData = {
 	events: { [string]: EventObject },
 }
 
--- stylua: ignore
-export type Generator = {
-	parseObject: (ObjectOptions) -> DocumentationDefinitionPair,
-	parseFunction: (FunctionOptions) -> DocumentationDefinitionPair,
-	parseProperty: (ValueOptions) -> DocumentationDefinitionPair,
-	parseEvent: (EventOptions) -> DocumentationDefinitionPair,
-} | (
-	  ("Object", ObjectOptions) -> DocumentationDefinitionPair
-	& ("Function", FunctionOptions) -> DocumentationDefinitionPair
-	& ("Property", ValueOptions) -> DocumentationDefinitionPair
-	& ("Event", EventOptions) -> DocumentationDefinitionPair
-)
+export type LuauType = any
+
+export type Described = {
+	Description: string,
+	LearnMoreLink: string,
+	CodeSample: string,
+}
+
+export type PropertyData = {
+	IsDeprecated: boolean,
+	IsReadOnly: boolean,
+	Type: LuauType,
+} & Described
+
+export type ParameterData = {
+	Name: string?,
+	Description: string?,
+	Type: LuauType,
+}
+
+export type MethodData = {
+	Parameters: { ParameterData },
+	Returns: { ParameterData },
+} & Describable
+
+export type EventData = {
+	Parameters: { ParameterData },
+} & Describable
+
+export type ObjectData = {
+	InheritenceChain: { string },
+	Categories: { string },
+	Members: (
+		{ Group: "Methods", Reference: MethodData }
+		| { Group: "Properties", Reference: PropertyData }
+		| { Group: "Configurables", Reference: PropertyData }
+		| { Group: "Events", Reference: EventData }
+	) & {
+		Name: string,
+		Source: string,
+	},
+
+	Methods: { [string]: MethodData },
+	Properties: { [string]: PropertyData },
+	Configurables: { [string]: PropertyData },
+	Events: { [string]: EventData },
+} & Describable
+
+export type PilotData = {
+	Raw: RawPilotData,
+	Objects: { [string]: ObjectData },
+}
 
 return nil
