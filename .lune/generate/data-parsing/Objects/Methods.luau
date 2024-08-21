@@ -1,7 +1,8 @@
+local PilotData = require("../../modules/PilotData")
 local Parse = require("../../modules/Parse")
 
 local function ImplementMethods(objectName, output)
-	local object = Parse.getObject(objectName)
+	local object = PilotData.getObject(objectName)
 	local objectData = object.data
 
 	if not objectData.methods then
@@ -11,10 +12,7 @@ local function ImplementMethods(objectName, output)
 	local objectOutput = output[objectName]
 
 	for name, data in objectData.methods do
-		local method = Parse.describable(data, {
-			Parameters = { { Name = "self", Type = objectName } },
-			Returns = {},
-		})
+		local method = Parse.parseFunction(data, objectName)
 
 		local memberReference = {
 			Name = name,
@@ -22,18 +20,6 @@ local function ImplementMethods(objectName, output)
 			Reference = method,
 			Source = objectName,
 		}
-
-		if data.parameters then
-			for _, parameter in data.parameters do
-				table.insert(method.Parameters, Parse.parseParameter(parameter))
-			end
-		end
-
-		if data.returns then
-			for _, returnValue in data.returns do
-				table.insert(method.Returns, Parse.parseParameter(returnValue))
-			end
-		end
 
 		objectOutput.Members[name] = memberReference
 		objectOutput.Methods[name] = method

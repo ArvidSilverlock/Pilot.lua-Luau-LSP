@@ -1,7 +1,8 @@
+local PilotData = require("../../modules/PilotData")
 local Parse = require("../../modules/Parse")
 
 local function ImplementProperties(objectName, output)
-	local object = Parse.getObject(objectName)
+	local object = PilotData.getObject(objectName)
 	local objectData = object.data
 
 	if not objectData.properties then
@@ -13,7 +14,7 @@ local function ImplementProperties(objectName, output)
 	for name, data in objectData.properties do
 		local outputGroup = if data.readonly then "Properties" else "Configurables"
 
-		local property = Parse.describable(data, {
+		local property = Parse.parseDescribable(data, {
 			Type = Parse.parseType(data.type),
 			IsReadOnly = data.readonly == true,
 			IsDeprecated = data.deprecated == true,

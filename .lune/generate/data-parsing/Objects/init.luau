@@ -1,3 +1,4 @@
+local PilotData = require("../../modules/PilotData")
 local Utility = require("../../modules/Utility")
 local Parse = require("../../modules/Parse")
 
@@ -22,12 +23,16 @@ end
 local Objects = {}
 
 function Objects.parse(input, output)
-	for objectName, objectData in Parse.iterateObjects() do
-		local inheritenceChain = Parse.getInheritenceChain(objectName)
+	local objects = {}
+	output.Objects = objects
 
-		local object = Parse.describable(objectData, {
+	for objectName, objectData in PilotData.iterateObjects() do
+		local inheritenceChain = PilotData.getInheritenceChain(objectName)
+
+		local object = Parse.parseDescribable(objectData, {
 			InheritenceChain = inheritenceChain,
 			Categories = if objectData.categories then table.clone(objectData.categories) else {},
+
 			Members = {},
 
 			Methods = {},
@@ -36,15 +41,15 @@ function Objects.parse(input, output)
 			Events = {},
 		})
 
-		output[objectName] = object
+		objects[objectName] = object
 
 		for index = #inheritenceChain, 1, -1 do
-			mergeObjects(inheritenceChain[index], objectName, output)
+			mergeObjects(inheritenceChain[index], objectName, objects)
 		end
 
-		implementProperties(objectName, output)
-		implementMethod(objectName, output)
-		implementEvent(objectName, output)
+		implementProperties(objectName, objects)
+		implementMethod(objectName, objects)
+		implementEvent(objectName, objects)
 
 		Utility.deepFreeze(object)
 	end

@@ -1,11 +1,11 @@
+local PilotData = require("../../modules/PilotData")
 local Parse = require("../../modules/Parse")
 
 local PILOT_DATA = require("../../object-data/PilotRaw")
-
 local EVENT_TEMPLATE_CACHE = {}
 
 local function ImplementEvents(objectName, output)
-	local object = Parse.getObject(objectName)
+	local object = PilotData.getObject(objectName)
 	local objectData = object.data
 
 	if not objectData.events then
@@ -20,7 +20,7 @@ local function ImplementEvents(objectName, output)
 		else
 			local data = if _data == true then PILOT_DATA.events[name] else _data
 
-			local event = Parse.describable(data, {
+			local event = Parse.parseDescribable(data, {
 				Parameters = {},
 				IsDeprecated = data.deprecated == true,
 			})
