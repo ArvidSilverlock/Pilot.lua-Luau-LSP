@@ -1,6 +1,9 @@
-local PilotData = require("../../modules/PilotData")
+--!strict
+
+local Parse = require("../../object-data/raw-pilot-data/Parse")
+local Read = require("../../object-data/raw-pilot-data/Read")
+
 local Utility = require("../../modules/Utility")
-local Parse = require("../../modules/Parse")
 
 local implementProperties = require("./Properties")
 local implementMethod = require("./Methods")
@@ -25,12 +28,22 @@ local Objects = {}
 function Objects.parse(input, output)
 	local objects = {}
 	output.Objects = objects
+	output.ObjectDefinitionOrder = {}
 
-	for objectName, objectData in PilotData.iterateObjects() do
-		local inheritenceChain = PilotData.getInheritenceChain(objectName)
+	for objectName, value in Read.iterateObjects() do
+		local objectData = value.data
+
+		table.insert(output.ObjectDefinitionOrder, objectName)
+
+		local inheritenceChain = Read.getInheritenceChain(objectName)
 
 		local object = Parse.parseDescribable(objectData, {
+			Name = if not objectName:match("^[_%a][_%w]*$") then "_" .. objectName:gsub("[^%w_]", "") else objectName,
+			ClassName = objectName,
+
+			Inherits = Read.getParentClasses(objectName),
 			InheritenceChain = inheritenceChain,
+
 			Categories = if objectData.categories then table.clone(objectData.categories) else {},
 
 			Members = {},
