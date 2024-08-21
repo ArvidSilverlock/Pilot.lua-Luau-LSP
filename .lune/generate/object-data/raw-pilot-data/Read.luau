@@ -1,6 +1,6 @@
 --!strict
 
-local PILOT_DATA = require("../object-data/PilotRaw")
+local PILOT_DATA = require("./Data")
 
 -- stylua: ignore
 local OBJECTS do
@@ -16,13 +16,20 @@ local OBJECTS do
 	add("objects")
 end
 
+local inheritenceChainCache = {}
+local inheritenceCache = {}
+
 local PilotData = {}
 
 function PilotData.getObject(name)
 	return assert(OBJECTS[name], `unknown object '{name}'`)
 end
 
-function PilotData.iterateParentClasses(objectName: string)
+function PilotData.getParentClasses(objectName: string)
+	if inheritenceCache[objectName] then
+		return inheritenceCache[objectName]
+	end
+
 	local object = PilotData.getObject(objectName)
 	local data = object.data
 
@@ -32,10 +39,12 @@ function PilotData.iterateParentClasses(objectName: string)
 		elseif typeof(data.extends) == "table" then data.extends
 		else {}
 
-	return next, extends, nil
+	inheritenceCache[objectName] = extends
+
+	return extends
 end
 
-function PilotData.iterateObjects()
+function PilotData.iterateObjects(): () -> (string?, { name: string, category: string, data: any }?)
 	local remainingObjects = table.clone(OBJECTS)
 	local name, object
 
@@ -47,7 +56,7 @@ function PilotData.iterateObjects()
 			end
 
 			local canDefine = true
-			for _, parentClass in PilotData.iterateParentClasses(name) do
+			for _, parentClass in PilotData.getParentClasses(name) do
 				if remainingObjects[parentClass] then
 					canDefine = false
 					break
@@ -63,7 +72,6 @@ function PilotData.iterateObjects()
 	end
 end
 
-local inheritenceChainCache = {}
 function PilotData.getInheritenceChain(objectName: string)
 	assert(OBJECTS[objectName], `unknown object {objectName}`)
 
@@ -79,7 +87,7 @@ function PilotData.getInheritenceChain(objectName: string)
 			table.insert(chain, node)
 		end
 
-		for _, parentClass in PilotData.iterateParentClasses(node) do
+		for _, parentClass in PilotData.getParentClasses(node) do
 			if visited[parentClass] then
 				error(`possibly cyclic inheritence chain {table.concat(chain, "->")}`)
 			end
