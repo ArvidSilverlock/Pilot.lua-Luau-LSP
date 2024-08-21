@@ -5,14 +5,12 @@ if _G._pilotData then
 	return (_G._pilotData :: any) :: Types.PilotData
 end
 
-local process = require("@lune/process")
-local stdio = require("@lune/stdio")
 local fs = require("@lune/fs")
 
-local rawData = require("./PilotRaw")
+local PILOT_DATA = require("../object-data/raw-pilot-data/Data")
 
 local data = {
-	raw = rawData,
+	Raw = PILOT_DATA,
 }
 
 local function runParser(name)
@@ -21,11 +19,14 @@ local function runParser(name)
 		else `../data-parsing/{name}.luau`
 
 	local parser = require(path)
-	parser.parse(rawData, data)
+	parser.parse(PILOT_DATA, data)
 end
 
 for _, parser in
 	{
+		"GlobalFunctions",
+		"GlobalValues",
+		"Types",
 		"Objects",
 	}
 do
