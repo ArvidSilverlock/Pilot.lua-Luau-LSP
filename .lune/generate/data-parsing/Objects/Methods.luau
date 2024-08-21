@@ -1,8 +1,10 @@
-local PilotData = require("../../modules/PilotData")
-local Parse = require("../../modules/Parse")
+--!strict
+
+local Parse = require("../../object-data/raw-pilot-data/Parse")
+local Read = require("../../object-data/raw-pilot-data/Read")
 
 local function ImplementMethods(objectName, output)
-	local object = PilotData.getObject(objectName)
+	local object = Read.getObject(objectName)
 	local objectData = object.data
 
 	if not objectData.methods then
@@ -12,7 +14,7 @@ local function ImplementMethods(objectName, output)
 	local objectOutput = output[objectName]
 
 	for name, data in objectData.methods do
-		local method = Parse.parseFunction(data, objectName)
+		local method = Parse.parseFunction(data, name, objectName, false)
 
 		local memberReference = {
 			Name = name,
