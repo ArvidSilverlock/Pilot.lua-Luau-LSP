@@ -494,7 +494,23 @@
 						"description": "Clears 3D elements."
 					},
 					"CreateElement3D": {
-						"unknowntype": true
+                        "description": "Creates a 3D part instance in the player's viewport.",
+                        "parameters": [
+                            [
+                                "shape: \"Ball\" | \"Block\" | \"Cylinder\" | \"Wedge\" | \"CornerWedge\"",
+                                "The `Enum.PartType` of the part."
+                            ],
+                            [
+                                "properties: { [string]: any }",
+                                "The part properties to apply."
+                            ]
+                        ],
+                        "returns": [
+                            [
+                                "Part",
+                                "The created part instance."
+                            ]
+                        ]
 					},
 					"GetCursor": {
 						"description": "Returns the part owner's cursor, or any other player's cursor if the owner does not have a cursor (this is considered the primary user).",
@@ -618,16 +634,26 @@
 				},
 				"methods": {
 					"CalculateCraftingRecipe": {
-						"unknowntype": true
+						"parameters": [
+                            [
+                                "items: { string } | { [string]: number }",
+                                "A list of parts **OR** A dictionary of each part with how many of said part to craft."
+                            ]
+                        ],
+                        "returns": [
+                            "{ Power: number, [string]: number }"
+                        ]
 					},
 					"CraftItems": {
-						"unknowntype": true
+						"parameters": [
+                            "items: { string } | { [string]: number }"
+                        ]
 					},
 					"GetCraftCooldown": {
-						"unknowntype": true
+						"returns": ["number"]
 					},
 					"GetInventory": {
-						"unknowntype": true
+						"returns": [ "{ [string]: number }" ]
 					}
 				},
 				"properties": {
@@ -1584,10 +1610,32 @@
 				"description": "Similar to a button, except is programmable to take more than one key input.\nCan be attached to a vehicle seat or clicked by a player.",
 				"events": {
 					"KeyPressed": {
-						"unknowntype": true
+						"parameters": [
+                            [
+								"keyCode: any",
+								"The `Enum.KeyCode` of the key that was pressed."
+							],
+                            [
+                                "keyString: string",
+                                "The letter of the key that was pressed. If the key is non-printable (i.e. shift or backspace) keyString will be an empty string."
+                            ],
+                            [
+                                "userId: number",
+                                "The <code>UserID</code> of the player who pressed the key."
+                            ]
+                        ]
 					},
 					"TextInputted": {
-						"unknowntype": true
+						"parameters": [
+                            [
+                                "text: string",
+                                "The text that was inputted.\n**NOTE:** The text contains a newline character."
+                            ],
+                            [
+                                "playerName: string",
+                                "The username of the player who input the text"
+                            ]
+                        ]
 					},
 					"UserInput": {
 						"unknowntype": true
