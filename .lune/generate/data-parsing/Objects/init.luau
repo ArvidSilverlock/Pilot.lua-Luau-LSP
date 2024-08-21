@@ -38,11 +38,6 @@ function Objects.parse(input, output)
 
 		output[objectName] = object
 
-		-- We go backwards so that we build it from the ground up, extra runtime work and memory consumption
-		-- for less programming work (no need to add checks for already defined values).
-
-		-- This tradeoff seems worth it in my eyes, since it's not meant to run that often.
-
 		for index = #inheritenceChain, 1, -1 do
 			mergeObjects(inheritenceChain[index], objectName, output)
 		end
