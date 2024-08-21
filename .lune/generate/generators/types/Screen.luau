@@ -1,4 +1,4 @@
-local APIDump = require("../../object-data/Roblox")
+local RobloxAPIDump = require("../../object-data/Roblox")
 
 local Types = require("../../modules/Types")
 
@@ -96,10 +96,8 @@ local function isUserInterface(class)
 		or class.Superclass == "GuiBase"
 end
 
-return function(valueType: "Function", options)
+return function(valueType: "Function", name: string, data: Types.FunctionData, within: string?)
 	assert(valueType == "Function", `the 'screen' generator only works for 'Function's, got '{valueType}'`)
-
-	local output = options.output
 
 	local types = {}
 	local methods = {}
@@ -108,7 +106,7 @@ return function(valueType: "Function", options)
 	local definedClasses = {}
 
 	local classes = {}
-	for _, class in APIDump.Classes do
+	for _, class in RobloxAPIDump.Classes do
 		classes[class.Name] = class
 	end
 
@@ -133,6 +131,14 @@ return function(valueType: "Function", options)
 		isFirstPass = false
 	until additions == 0
 
-	table.insert(output.generatedTypes, types)
-	return table.concat(methods, "\n")
+	local luauTypes = table.concat(types, "\n")
+	local methodType = table.concat(methods, "\n")
+
+	return {
+		Definition = methodType,
+		Luau = "-- N/A",
+		InsertDefinition = function(output: Types.DefinitionOutput)
+			table.insert(output.GlobalTypes, luauTypes)
+		end,
+	}
 end
