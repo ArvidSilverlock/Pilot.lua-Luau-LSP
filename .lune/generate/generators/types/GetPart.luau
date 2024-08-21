@@ -1,7 +1,6 @@
-local Utility = require("../Utility")
-local Types = require("../Types")
+local Utility = require("../../modules/Utility")
 
-local GetPartData = require("../data/PartData")
+local PILOT_DATA = require("../../object-data/PilotRaw")
 
 local BASE_TYPES = {
 	GetPart = "type _GetPart<T, U> = (object: T) -> U?",
@@ -10,17 +9,16 @@ local BASE_TYPES = {
 	GetPartsFromPort = "type _GetPartsFromPort<T, U> = (port: (number | Port)?, object: T) -> { U }",
 }
 
-return function(valueType: "Function", options: Types.FunctionOptions)
+return function(valueType: "Function", options)
 	assert(valueType == "Function", `the 'partgetters' generator only works for 'Function's, got '{valueType}'`)
 	assert(BASE_TYPES[options.name], `the 'partgetters' generator only works for the 4 part getting functions`)
 
-	local partData = GetPartData()
 	local output = options.output
 
 	local lines = { `declare {options.name}:` }
 
 	local index = 1
-	for objectName, _ in partData.classes.objects do
+	for objectName, _ in PILOT_DATA.classes.objects do
 		local className = string.format("%q", objectName)
 		local typeName = Utility.sanitiseName(objectName)
 		table.insert(lines, `\t{if index == 1 then " " else "&"} _{options.name}<{className}, {typeName}>`)
