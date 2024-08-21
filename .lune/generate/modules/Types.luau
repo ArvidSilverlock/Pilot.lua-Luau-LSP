@@ -20,7 +20,7 @@ export type Documentation = {
 	[string]: DocumentationObject,
 }
 
-export type Describable = {
+export type DescribableRaw = {
 	deprecated: boolean?,
 	readonly: boolean?,
 	description: string?,
@@ -39,24 +39,24 @@ export type Object = ({
 	properties: { [string]: PropertyObject }?,
 	events: { [string]: EventObject }?,
 	extends: string?,
-} & Describable & Typed) | string
+} & DescribableRaw & Typed) | string
 
 export type FunctionObject = {
 	parameters: { string | { string } }?,
 	returns: { string | { string } }?,
-} & Describable & Typed
+} & DescribableRaw & Typed
 
 export type FunctionDictionaryObject = {
 	keys: { [string]: FunctionObject },
-} & Describable
+} & DescribableRaw
 
 export type PropertyObject = {
 	type: string?,
-} & Describable & Typed
+} & DescribableRaw & Typed
 
 export type EventObject = ({
 	parameters: { string | { string } }?,
-} & Describable & Typed) | boolean
+} & DescribableRaw & Typed) | boolean
 
 export type RawPilotData = {
 	globals: {
@@ -75,17 +75,21 @@ export type RawPilotData = {
 
 export type LuauType = any
 
-export type Described = {
+export type Describable = {
 	Description: string,
 	LearnMoreLink: string,
 	CodeSample: string,
+	Deprecated: string | boolean,
 }
 
 export type PropertyData = {
-	IsDeprecated: boolean,
-	IsReadOnly: boolean,
+	ReadOnly: boolean,
 	Type: LuauType,
-} & Described
+	Minimum: number?,
+	Maximum: number?,
+	Step: number?,
+	Default: any?,
+} & Describable
 
 export type ParameterData = {
 	Name: string?,
@@ -93,9 +97,21 @@ export type ParameterData = {
 	Type: LuauType,
 }
 
-export type MethodData = {
+export type FunctionData = {
 	Parameters: { ParameterData },
 	Returns: { ParameterData },
+	Type: {
+		Definition: string,
+		Luau: string,
+		InsertDefinition: (DefinitionOutput) -> (),
+		InsertDocumentation: (any) -> (),
+		InsertSelene: (any) -> (),
+		InsertWiki: (any) -> (),
+	},
+} & Describable
+
+export type FunctionDictionaryData = {
+	Functions: { [string]: FunctionData },
 } & Describable
 
 export type EventData = {
@@ -103,10 +119,14 @@ export type EventData = {
 } & Describable
 
 export type ObjectData = {
+	Name: string,
+
+	Inherits: { string },
 	InheritenceChain: { string },
+
 	Categories: { string },
 	Members: (
-		{ Group: "Methods", Reference: MethodData }
+		{ Group: "Methods", Reference: FunctionData }
 		| { Group: "Properties", Reference: PropertyData }
 		| { Group: "Configurables", Reference: PropertyData }
 		| { Group: "Events", Reference: EventData }
@@ -115,7 +135,7 @@ export type ObjectData = {
 		Source: string,
 	},
 
-	Methods: { [string]: MethodData },
+	Methods: { [string]: FunctionData },
 	Properties: { [string]: PropertyData },
 	Configurables: { [string]: PropertyData },
 	Events: { [string]: EventData },
@@ -123,7 +143,28 @@ export type ObjectData = {
 
 export type PilotData = {
 	Raw: RawPilotData,
+	ObjectDefinitionOrder: { string },
 	Objects: { [string]: ObjectData },
+	Functions: { [string]: FunctionData },
+	FunctionDictionaries: { [string]: FunctionDictionaryData },
+	Values: { [string]: PropertyData },
+	Types: {
+		Global: { [string]: FunctionData },
+		Local: { [string]: FunctionData },
+		References: {
+			Name: string,
+			Group: "Global" | "Local",
+			Reference: FunctionData,
+		},
+	},
+}
+
+export type DefinitionOutput = {
+	GlobalTypes: { string },
+	LocalTypes: { string },
+	GlobalFunctions: { string },
+	GlobalValues: { string },
+	Objects: { string },
 }
 
 return nil
