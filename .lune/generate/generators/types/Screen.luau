@@ -1,6 +1,6 @@
-local APIDump = require("../data/APIDump")
+local APIDump = require("../../object-data/Roblox")
 
-local Types = require("../Types")
+local Types = require("../../modules/Types")
 
 local function getLuauType(valueType)
 	local category = valueType.Category
@@ -96,7 +96,7 @@ local function isUserInterface(class)
 		or class.Superclass == "GuiBase"
 end
 
-return function(valueType: "Function", options: Types.FunctionOptions)
+return function(valueType: "Function", options)
 	assert(valueType == "Function", `the 'screen' generator only works for 'Function's, got '{valueType}'`)
 
 	local output = options.output
