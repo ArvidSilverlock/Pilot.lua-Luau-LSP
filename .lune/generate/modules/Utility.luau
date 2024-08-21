@@ -12,6 +12,15 @@ function Utility.indent(value: string?, amount: number?): string
 	return indentString .. value:gsub("\n", "\n" .. indentString):gsub("\n%s+\n", "\n\n")
 end
 
+function Utility.deepFreeze(t)
+	table.freeze(t)
+	for _, value in t do
+		if typeof(value) == "table" and not table.isfrozen(value) then
+			Utility.deepFreeze(value)
+		end
+	end
+end
+
 function Utility.readJSON(link: string)
 	local response = net.request(link)
 	return if response.ok then serde.decode("json", response.body) else nil
