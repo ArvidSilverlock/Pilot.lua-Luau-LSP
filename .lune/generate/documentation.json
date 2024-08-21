@@ -2371,7 +2371,7 @@
 					},
 					"CreateElement": {
 						"description": "Creates an element of the specified class name with the specified properties.",
-						"generate": "screen"
+						"generate": "Screen"
 					},
 					"GetCanvas": {
 						"unknowntype": true
@@ -3157,25 +3157,25 @@
 			"GetPart": {
 				"codesample": "-- Get a `Screen` from any port\nlocal screen = GetPart(\"Screen\")",
 				"description": "Gets a part of the specified type from any connected ports.",
-				"generate": "partgetters",
+				"generate": "GetPart",
 				"parameters": ["part: string?"]
 			},
 			"GetPartFromPort": {
 				"codesample": "-- Get a `TouchScreen` from port 1\nlocal touchScreen = GetPartFromPort(1, \"TouchScreen\")",
 				"description": "Gets a part of the specified type from any port of the specified ID.",
-				"generate": "partgetters",
+				"generate": "GetPart",
 				"parameters": ["port: ( Port | number )?", "part: string?"]
 			},
 			"GetParts": {
 				"codesample": "-- Get all `Switch`es connected to any port\nlocal switches = GetParts(\"Switch\")",
 				"description": "Gets all the parts of the specified type from any connected ports.",
-				"generate": "partgetters",
+				"generate": "GetPart",
 				"parameters": ["part: string?"]
 			},
 			"GetPartsFromPort": {
 				"codesample": "-- Get all `Lights` from port 1\nlocal lights = GetPartsFromPort(1, \"Light\")",
 				"description": "Gets all the parts of the specified type from any port of the specified ID.",
-				"generate": "partgetters",
+				"generate": "GetPart",
 				"parameters": ["port: ( Port | number )?", "part: string?"]
 			},
 			"GetPort": {
