@@ -4,9 +4,11 @@ local Parse = require("../../object-data/raw-pilot-data/ParseRaw")
 local Read = require("../../object-data/raw-pilot-data/ReadRaw")
 local PILOT_DATA = require("../../object-data/raw-pilot-data/RawData")
 
+local Types = require("../../modules/Types")
+
 local EVENT_TEMPLATE_CACHE = {}
 
-local function ImplementEvents(objectName, output)
+local function ImplementEvents(objectName: string, output: { [string]: Types.ObjectData })
 	local object = Read.getObject(objectName)
 	local objectData = object.data
 
@@ -18,7 +20,7 @@ local function ImplementEvents(objectName, output)
 
 	for name, _data in objectData.events do
 		if _data == true and EVENT_TEMPLATE_CACHE[name] then
-			table.insert(objectOutput.Events, EVENT_TEMPLATE_CACHE[name])
+			objectOutput.Events[name] = EVENT_TEMPLATE_CACHE[name]
 		else
 			local data = if _data == true then PILOT_DATA.events[name] else _data
 
@@ -58,7 +60,7 @@ local function ImplementEvents(objectName, output)
 				event.Type = `{name}: Event<{eventName}, ({names}) -> (), {types}>`
 			end
 
-			objectOutput.Members[name] = memberReference
+			objectOutput.Members[name] = memberReference :: any
 			objectOutput.Events[name] = event
 
 			if _data == true then

@@ -3,7 +3,9 @@
 local Parse = require("../../object-data/raw-pilot-data/ParseRaw")
 local Read = require("../../object-data/raw-pilot-data/ReadRaw")
 
-local function ImplementMethods(objectName, output)
+local Types = require("../../modules/Types")
+
+local function ImplementMethods(objectName: string, output: { [string]: Types.ObjectData })
 	local object = Read.getObject(objectName)
 	local objectData = object.data
 
@@ -23,7 +25,7 @@ local function ImplementMethods(objectName, output)
 			Source = objectName,
 		}
 
-		objectOutput.Members[name] = memberReference
+		objectOutput.Members[name] = memberReference :: any
 		objectOutput.Methods[name] = method
 	end
 end
