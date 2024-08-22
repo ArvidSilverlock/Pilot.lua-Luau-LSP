@@ -29,7 +29,7 @@ Due to lune you have to add `--` after `pilot-generate` for any command options 
 
 Example: `lune run pilot-setup ./workspace types`
 
-## Command Options for `pilot-generate`directory>`, the value of this defaults to `types`.
+## Command Options for `pilot-generate`
 -- `--selene` option defines whether or not to generate a `pilot.yml` for selene.
 
 ## Command Options for both.
