@@ -12,7 +12,8 @@ local function insertSection(output, section, separator: string?)
 end
 
 local function constructObjectOutput(objectData, members, output): string
-	local sections = { `ClassName: {string.format("%q", objectData.Name)}` }
+	local sections =
+		{ if objectData.Group == "objects" then `ClassName: {string.format("%q", objectData.Name)}` else nil }
 
 	insertSection(sections, members.Methods)
 	insertSection(sections, members.Properties)
@@ -33,8 +34,8 @@ local function constructObjectOutput(objectData, members, output): string
 
 	return table.concat({
 		if objectData.Inherits[1]
-			then `define class {objectData.Name} extends {objectData.Inherits[1]}`
-			else `define class {objectData.Name}`,
+			then `declare class {objectData.Name} extends {objectData.Inherits[1]}`
+			else `declare class {objectData.Name}`,
 		Utility.indent(table.concat(sections, "\n\n")),
 		"end",
 	}, "\n")
@@ -68,9 +69,13 @@ local function defineObject(objectName, output)
 		elseif member.Group == "Events" then
 			table.insert(sections.Events, reference.Type)
 		end
+
+		if reference.Type and reference.Type.InsertDefinition then
+			reference.Type.InsertDefinition(output)
+		end
 	end
 
-	table.insert(output, constructObjectOutput(objectData, sections, output))
+	table.insert(output.Objects, constructObjectOutput(objectData, sections, output.Objects))
 end
 
 local function defineLuauType(value, globalTypesOutput, localTypesOutput)
@@ -118,7 +123,7 @@ function Definition.generate(options)
 	end
 
 	for _, objectName in PilotData.ObjectDefinitionOrder do
-		defineObject(objectName, sections.Objects)
+		defineObject(objectName, sections)
 	end
 
 	local output = {}
