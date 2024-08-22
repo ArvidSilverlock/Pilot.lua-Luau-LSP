@@ -1,6 +1,6 @@
 --!strict
 
-local PILOT_DATA = require("./Data")
+local PILOT_DATA = require("./RawData")
 
 -- stylua: ignore
 local OBJECTS do

@@ -1,7 +1,7 @@
 --!strict
 
-local Parse = require("../../object-data/raw-pilot-data/Parse")
-local Read = require("../../object-data/raw-pilot-data/Read")
+local Parse = require("../../object-data/raw-pilot-data/ParseRaw")
+local Read = require("../../object-data/raw-pilot-data/ReadRaw")
 
 local function ImplementMethods(objectName, output)
 	local object = Read.getObject(objectName)

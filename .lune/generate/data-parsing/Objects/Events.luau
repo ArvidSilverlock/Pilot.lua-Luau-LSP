@@ -1,8 +1,8 @@
 --!strict
 
-local Parse = require("../../object-data/raw-pilot-data/Parse")
-local Read = require("../../object-data/raw-pilot-data/Read")
-local PILOT_DATA = require("../../object-data/raw-pilot-data/Data")
+local Parse = require("../../object-data/raw-pilot-data/ParseRaw")
+local Read = require("../../object-data/raw-pilot-data/ReadRaw")
+local PILOT_DATA = require("../../object-data/raw-pilot-data/RawData")
 
 local EVENT_TEMPLATE_CACHE = {}
 
