@@ -44,7 +44,7 @@ function PilotData.getParentClasses(objectName: string)
 	return extends
 end
 
-function PilotData.iterateObjects(): () -> (string?, { name: string, category: string, data: any }?)
+function PilotData.iterateObjects(): () -> (string, { name: string, category: string, data: any })
 	local remainingObjects = table.clone(OBJECTS)
 	local name, object
 
@@ -52,7 +52,7 @@ function PilotData.iterateObjects(): () -> (string?, { name: string, category: s
 		while true do
 			name, object = next(remainingObjects, name)
 			if not name or not object then
-				return
+				return nil :: any, nil :: any
 			end
 
 			local canDefine = true
