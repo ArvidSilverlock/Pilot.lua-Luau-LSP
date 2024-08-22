@@ -3224,7 +3224,9 @@
 					},
 					"GetCurrentCoordinate": {
 						"description": "Returns the current region coordinates.",
-						"unknowntype": true
+						"returns": [
+							"Coordinate"
+						]
 					},
 					"WhenRegionLoads": {
 						"parameters": [
