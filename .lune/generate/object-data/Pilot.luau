@@ -7,7 +7,7 @@ end
 
 local fs = require("@lune/fs")
 
-local PILOT_DATA = require("../object-data/raw-pilot-data/Data")
+local PILOT_DATA = require("../object-data/raw-pilot-data/RawData")
 
 local data = {
 	Raw = PILOT_DATA,

@@ -1,7 +1,7 @@
 local Utility = require("../../modules/Utility")
 local Types = require("../../modules/Types")
 
-local PILOT_DATA = require("../../object-data/raw-pilot-data/Data")
+local PILOT_DATA = require("../../object-data/raw-pilot-data/RawData")
 
 local BASE_TYPES = {
 	GetPart = "type _GetPart<T, U> = (object: T) -> U?",

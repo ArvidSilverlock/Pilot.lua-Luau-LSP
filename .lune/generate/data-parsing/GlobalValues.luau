@@ -1,6 +1,6 @@
 --!strict
 
-local Parse = require("../object-data/raw-pilot-data/Parse")
+local Parse = require("../object-data/raw-pilot-data/ParseRaw")
 local Types = require("../modules/Types")
 
 local GlobalValues = {}
