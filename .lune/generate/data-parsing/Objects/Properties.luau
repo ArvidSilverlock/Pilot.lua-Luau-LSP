@@ -3,7 +3,9 @@
 local Parse = require("../../object-data/raw-pilot-data/ParseRaw")
 local Read = require("../../object-data/raw-pilot-data/ReadRaw")
 
-local function ImplementProperties(objectName, output)
+local Types = require("../../modules/Types")
+
+local function ImplementProperties(objectName: string, output: { [string]: Types.ObjectData })
 	local object = Read.getObject(objectName)
 	local objectData = object.data
 
@@ -35,8 +37,8 @@ local function ImplementProperties(objectName, output)
 			property.Default = data.default
 		end
 
-		objectOutput.Members[name] = memberReference
-		objectOutput[outputGroup][name] = property
+		objectOutput.Members[name] = memberReference :: any;
+		(objectOutput :: any)[outputGroup][name] = property
 	end
 end
 

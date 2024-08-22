@@ -4,6 +4,7 @@ local Parse = require("../../object-data/raw-pilot-data/ParseRaw")
 local Read = require("../../object-data/raw-pilot-data/ReadRaw")
 
 local Utility = require("../../modules/Utility")
+local Types = require("../../modules/Types")
 
 local implementProperties = require("./Properties")
 local implementMethod = require("./Methods")
@@ -25,7 +26,7 @@ end
 
 local Objects = {}
 
-function Objects.parse(input, output)
+function Objects.parse(input: Types.RawPilotData, output: Types.PilotData)
 	local objects = {}
 	output.Objects = objects
 	output.ObjectDefinitionOrder = {}

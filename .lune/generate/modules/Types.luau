@@ -118,6 +118,16 @@ export type EventData = {
 	Parameters: { ParameterData },
 } & Describable
 
+export type MemberData = (
+	{ Group: "Methods", Reference: FunctionData }
+	| { Group: "Properties", Reference: PropertyData }
+	| { Group: "Configurables", Reference: PropertyData }
+	| { Group: "Events", Reference: EventData }
+) & {
+	Name: string,
+	Source: string,
+}
+
 export type ObjectData = {
 	Name: string,
 
@@ -125,15 +135,7 @@ export type ObjectData = {
 	InheritenceChain: { string },
 
 	Categories: { string },
-	Members: (
-		{ Group: "Methods", Reference: FunctionData }
-		| { Group: "Properties", Reference: PropertyData }
-		| { Group: "Configurables", Reference: PropertyData }
-		| { Group: "Events", Reference: EventData }
-	) & {
-		Name: string,
-		Source: string,
-	},
+	Members: { [string]: MemberData },
 
 	Methods: { [string]: FunctionData },
 	Properties: { [string]: PropertyData },
