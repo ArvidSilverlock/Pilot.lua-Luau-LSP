@@ -40,6 +40,7 @@ function Objects.parse(input, output)
 		local object = Parse.parseDescribable(objectData, {
 			Name = if not objectName:match("^[_%a][_%w]*$") then "_" .. objectName:gsub("[^%w_]", "") else objectName,
 			ClassName = objectName,
+			Group = value.category,
 
 			Inherits = Read.getParentClasses(objectName),
 			InheritenceChain = inheritenceChain,
