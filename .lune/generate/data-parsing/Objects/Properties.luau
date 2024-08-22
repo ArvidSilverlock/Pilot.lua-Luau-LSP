@@ -30,11 +30,12 @@ local function ImplementProperties(objectName: string, output: { [string]: Types
 			Source = objectName,
 		}
 
-		if data.constraints then
-			property.Minimum = data.min
-			property.Maximum = data.max
-			property.Step = data.step
-			property.Default = data.default
+		local constraints = data.constraints
+		if constraints then
+			property.Minimum = constraints.min
+			property.Maximum = constraints.max
+			property.Step = constraints.step
+			property.Default = constraints.default
 		end
 
 		objectOutput.Members[name] = memberReference :: any;

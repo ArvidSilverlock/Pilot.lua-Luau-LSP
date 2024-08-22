@@ -33,13 +33,13 @@ export type Typed = {
 	generate: string?,
 }
 
-export type Object = ({
+export type Object = {
 	categories: { string }?,
 	methods: { [string]: FunctionObject }?,
 	properties: { [string]: PropertyObject }?,
 	events: { [string]: EventObject }?,
 	extends: string?,
-} & DescribableRaw & Typed) | string
+} & DescribableRaw & Typed
 
 export type FunctionObject = {
 	parameters: { string | { string } }?,
@@ -52,6 +52,12 @@ export type FunctionDictionaryObject = {
 
 export type PropertyObject = {
 	type: string?,
+	constraints: {
+		min: number?,
+		max: number?,
+		step: number?,
+		default: any?,
+	}?,
 } & DescribableRaw & Typed
 
 export type EventObject = ({
