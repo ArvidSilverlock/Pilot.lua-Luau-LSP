@@ -76,10 +76,10 @@ export type RawPilotData = {
 export type LuauType = any
 
 export type Describable = {
-	Description: string,
-	LearnMoreLink: string,
-	CodeSample: string,
-	Deprecated: string | boolean,
+	Description: string?,
+	LearnMoreLink: string?,
+	CodeSample: string?,
+	Deprecated: (string | boolean)?,
 }
 
 export type PropertyData = {
