@@ -2,6 +2,8 @@
 
 local PILOT_DATA = require("./RawData")
 
+local Types = require("../../modules/Types")
+
 -- stylua: ignore
 local OBJECTS do
 	OBJECTS = {}
@@ -21,8 +23,12 @@ local inheritenceCache = {}
 
 local PilotData = {}
 
-function PilotData.getObject(name)
-	return assert(OBJECTS[name], `unknown object '{name}'`)
+function PilotData.getObject(name): { name: string, data: Types.Object, category: string }
+	local object = OBJECTS[name]
+	if not object then
+		error(`unknown object '{name}'`)
+	end
+	return object :: any
 end
 
 function PilotData.getParentClasses(objectName: string)
