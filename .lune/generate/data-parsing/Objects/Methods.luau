@@ -14,7 +14,7 @@ local function ImplementMethods(objectName, output)
 	local objectOutput = output[objectName]
 
 	for name, data in objectData.methods do
-		local method = Parse.parseFunction(data, name, objectName, false)
+		local method = Parse.parseFunction(data, name, objectName, false, true)
 
 		local memberReference = {
 			Name = name,

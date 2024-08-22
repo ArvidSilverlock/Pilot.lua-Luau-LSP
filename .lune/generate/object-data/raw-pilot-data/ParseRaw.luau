@@ -114,9 +114,15 @@ function Parse.parseParameter(value: string | { string })
 	}
 end
 
-function Parse.parseFunction(data: Types.FunctionObject, name: string?, within: string?, isPlainLuau: boolean?)
+function Parse.parseFunction(
+	data: Types.FunctionObject,
+	name: string?,
+	within: string?,
+	isPlainLuau: boolean?,
+	isMethod: boolean?
+)
 	local output = Parse.parseDescribable(data, {
-		Parameters = if within then { { Name = "self", Type = within } } else {},
+		Parameters = if within and isMethod then { { Name = "self", Type = within } } else {},
 		Returns = {},
 	}) :: any
 
