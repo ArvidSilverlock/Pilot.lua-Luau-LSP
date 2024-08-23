@@ -166,7 +166,6 @@ end
 
 function Documentation.save(options, generatedData)
 	local jsonData = serde.encode("json", generatedData, true):gsub(NO_PARAMETER_REMOVE, '"params": []')
-
 	fs.writeFile(`{options.o}/{options["types-dir"]}/documentation.d.json`, jsonData)
 end
 
