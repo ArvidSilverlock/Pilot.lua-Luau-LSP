@@ -196,23 +196,34 @@
 					},
 					"GetConfigurable": {
 						"description": "Retrieves a configuration.",
-						"parameters": ["configurableName: string"],
-						"returns": ["any"]
+						"parameters": [
+							"configurableName: string"
+						],
+						"returns": [
+							"any"
+						]
 					},
 					"GetObject": {
 						"description": "Retrieves the part object the component is installed on.",
-						"returns": ["PilotObject"]
+						"returns": [
+							"PilotObject"
+						]
 					},
 					"IsDestroyed": {
 						"description": "Returns whether or not the component is deleted.",
-						"returns": ["boolean"]
+						"returns": [
+							"boolean"
+						]
 					},
 					"ListConfigurables": {},
 					"ListEvents": {},
 					"ListMethods": {},
 					"SetConfigurable": {
 						"description": "Sets a configuration.",
-						"parameters": ["configurableName: string", "value: any"]
+						"parameters": [
+							"configurableName: string",
+							"value: any"
+						]
 					},
 					"Trigger": {
 						"description": "Emulates a trigger signal *only* for the component."
@@ -229,15 +240,21 @@
 				"methods": {
 					"GetAmount": {
 						"deprecated": "Use `:GetResourceAmount` instead.",
-						"returns": ["number"]
+						"returns": [
+							"number"
+						]
 					},
 					"GetResource": {
 						"description": "Gives you the name of the resource it contains, or the string \"nil\" if none (although this is likely a bug and should return actual nil, it just calls tostring on the resource kind)",
-						"returns": ["string | \"nil\""]
+						"returns": [
+							"string | \"nil\""
+						]
 					},
 					"GetResourceAmount": {
 						"description": "Gives you the total amount of stuff in the container.",
-						"returns": ["number"]
+						"returns": [
+							"number"
+						]
 					}
 				}
 			},
@@ -250,12 +267,20 @@
 				},
 				"methods": {
 					"CanInstallComponent": {
-						"parameters": ["componentName: string"],
-						"returns": ["boolean"]
+						"parameters": [
+							"componentName: string"
+						],
+						"returns": [
+							"boolean"
+						]
 					},
 					"CanUninstallComponent": {
-						"parameters": ["componentName: string"],
-						"returns": ["boolean"]
+						"parameters": [
+							"componentName: string"
+						],
+						"returns": [
+							"boolean"
+						]
 					},
 					"Click": {
 						"unknowntype": true
@@ -263,70 +288,119 @@
 					"GetColor": {
 						"deprecated": "Use `.Color` instead.",
 						"description": "Gets the color of the object.",
-						"returns": [["Color3", "The color of the object."]]
+						"returns": [
+							[
+								"Color3",
+								"The color of the object."
+							]
+						]
 					},
 					"GetComponent": {
-						"parameters": ["componentName: string"]
+						"parameters": [
+							"componentName: string"
+						]
 					},
 					"GetConfigurables": {
 						"description": "Gets information about the configurable properties of the object.",
-						"returns": ["{ [string]: ConfigurableData }"]
+						"returns": [
+							"{ [string]: ConfigurableData }"
+						]
 					},
 					"GetDurability": {
 						"deprecated": "Use `.Durability` instead.",
 						"description": "Gets the current durability of the object.",
-						"returns": [["number", "The durability of the part."]]
+						"returns": [
+							[
+								"number",
+								"The durability of the part."
+							]
+						]
 					},
 					"GetEvents": {
-						"returns": [["{ string }", "An array of event names."]]
+						"returns": [
+							[
+								"{ string }",
+								"An array of event names."
+							]
+						]
 					},
 					"GetMethods": {
 						"description": "Gets information about the methods of the object.",
-						"returns": ["{ [string]: MethodData }"]
+						"returns": [
+							"{ [string]: MethodData }"
+						]
 					},
 					"GetNameOfOwnerAsync": {
 						"deprecated": "Use `require(\"player\"):GetNameFromUserIdAsync` instead.",
-						"returns": ["string"]
+						"returns": [
+							"string"
+						]
 					},
 					"GetOwnerId": {
 						"description": "Returns who locked the part if the part is locked, otherwise returns who created the part.",
 						"learnmore": "https://discord.com/channels/616089055532417036/1145165596967850044/1229499376347381780",
-						"returns": ["number"]
+						"returns": [
+							"number"
+						]
 					},
 					"GetShape": {
-						"returns": ["string?"]
+						"returns": [
+							"string?"
+						]
 					},
 					"GetSize": {
 						"deprecated": "Use `.Size` instead.",
 						"description": "Gets the size of the object.",
-						"returns": [["Vector3", "The size of the part."]]
+						"returns": [
+							[
+								"Vector3",
+								"The size of the part."
+							]
+						]
 					},
 					"GetTemperature": {
 						"deprecated": "Use `.Temperature` instead.",
 						"description": "Gets the temperature of the object.",
 						"returns": [
-							["number", "The temperature of the object."]
+							[
+								"number",
+								"The temperature of the object."
+							]
 						]
 					},
 					"HasComponent": {
-						"parameters": ["componentName: string"],
-						"returns": ["boolean"]
+						"parameters": [
+							"componentName: string"
+						],
+						"returns": [
+							"boolean"
+						]
 					},
 					"HasPermission": {
 						"description": "Returns a boolean as to whether or not the microcontroller has permission to do the specified action.",
-						"parameters": ["permission: Permission"],
-						"returns": ["boolean"]
+						"parameters": [
+							"permission: Permission"
+						],
+						"returns": [
+							"boolean"
+						]
 					},
 					"IsDestroyed": {
 						"description": "Returns a boolean as to whether or not the object is destroyed.",
-						"returns": ["boolean"]
+						"returns": [
+							"boolean"
+						]
 					},
 					"IsGrounded": {
 						"description": "Returns a boolean as to whether or not the object is grounded.",
-						"returns": ["boolean"]
+						"returns": [
+							"boolean"
+						]
 					},
 					"ListComponents": {
-						"returns": ["{ string }"]
+						"returns": [
+							"{ string }"
+						]
 					}
 				},
 				"properties": {
@@ -444,7 +518,13 @@
 				"extends": "PilotObject"
 			}
 		},
-		"components": ["ClickButton", "KeyButton", "Door", "Blade", "Hull"],
+		"components": [
+			"ClickButton",
+			"KeyButton",
+			"Door",
+			"Blade",
+			"Hull"
+		],
 		"objects": {
 			"100k": {
 				"description": "100k visits special item",
@@ -459,7 +539,10 @@
 					"CursorMoved": {
 						"description": "Fired when a player's cursor updates.",
 						"parameters": [
-							["cursor: ARCursor", "The cursor that updated."]
+							[
+								"cursor: ARCursor",
+								"The cursor that updated."
+							]
 						]
 					},
 					"CursorPressed": {
@@ -494,28 +577,31 @@
 						"description": "Clears 3D elements."
 					},
 					"CreateElement3D": {
-                        "description": "Creates a 3D part instance in the player's viewport.",
-                        "parameters": [
-                            [
-                                "shape: \"Ball\" | \"Block\" | \"Cylinder\" | \"Wedge\" | \"CornerWedge\"",
-                                "The `Enum.PartType` of the part."
-                            ],
-                            [
-                                "properties: { [string]: any }",
-                                "The part properties to apply."
-                            ]
-                        ],
-                        "returns": [
-                            [
-                                "Part",
-                                "The created part instance."
-                            ]
-                        ]
+						"description": "Creates a 3D part instance in the player's viewport.",
+						"parameters": [
+							[
+								"shape: \"Ball\" | \"Block\" | \"Cylinder\" | \"Wedge\" | \"CornerWedge\"",
+								"The `Enum.PartType` of the part."
+							],
+							[
+								"properties: { [string]: any }",
+								"The part properties to apply."
+							]
+						],
+						"returns": [
+							[
+								"Part",
+								"The created part instance."
+							]
+						]
 					},
 					"GetCursor": {
 						"description": "Returns the part owner's cursor, or any other player's cursor if the owner does not have a cursor (this is considered the primary user).",
 						"returns": [
-							["ARCursor", "The cursor of the primary user."]
+							[
+								"ARCursor",
+								"The cursor of the primary user."
+							]
 						]
 					},
 					"GetCursors": {
@@ -545,18 +631,24 @@
 				"description": "An incredibly light material that is very fragile."
 			},
 			"AirSupply": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Generates a 300 stud radius oxygen bubble when powered on. Very important part for space ships, as it acts as the oxygen supply for the ship.",
 				"events": {
 					"Loop": true
 				}
 			},
 			"AlienCore": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A mysterious piece of technology found within many robotic aliens.\nAlthough its precise function is unknown, it manages to be extremely useful in advanced technologies.\nIt seems to emanate raw power on its own, but only these robotic constructions seem to know .\nGenerally, more powerful aliens will utilize more alien cores."
 			},
 			"Aluminum": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A light material useful for air transport. Isn't very durable."
 			},
 			"Anchor": {
@@ -574,7 +666,9 @@
 				}
 			},
 			"Antenna": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "A wireless transmitter that can transmit electricity from wires and trigger signals from trigger wires and buttons.",
 				"properties": {
 					"AntennaID": {
@@ -626,7 +720,9 @@
 				}
 			},
 			"Assembler": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Assembles items as configured when the structure is supplied with the required power and resources.",
 				"events": {
 					"Configured": true,
@@ -635,25 +731,29 @@
 				"methods": {
 					"CalculateCraftingRecipe": {
 						"parameters": [
-                            [
-                                "items: { string } | { [string]: number }",
-                                "A list of parts **OR** A dictionary of each part with how many of said part to craft."
-                            ]
-                        ],
-                        "returns": [
-                            "{ Power: number, [string]: number }"
-                        ]
+							[
+								"items: { string } | { [string]: number }",
+								"A list of parts **OR** A dictionary of each part with how many of said part to craft."
+							]
+						],
+						"returns": [
+							"{ Power: number, [string]: number }"
+						]
 					},
 					"CraftItems": {
 						"parameters": [
-                            "items: { string } | { [string]: number }"
-                        ]
+							"items: { string } | { [string]: number }"
+						]
 					},
 					"GetCraftCooldown": {
-						"returns": ["number"]
+						"returns": [
+							"number"
+						]
 					},
 					"GetInventory": {
-						"returns": [ "{ [string]: number }" ]
+						"returns": [
+							"{ [string]: number }"
+						]
 					}
 				},
 				"properties": {
@@ -667,14 +767,19 @@
 				}
 			},
 			"AutomaticLaser": {
-				"categories": ["Weapons", "Electrical"],
+				"categories": [
+					"Weapons",
+					"Electrical"
+				],
 				"description": "Fires a continous set of lasers when powered. Like most other energy/thermal weapons, it generates heat when powered. It generates up to 65 degrees of heat, meaning you will need atleast 2 or 3 coolers.",
 				"events": {
 					"Loop": true
 				}
 			},
 			"Ball": {
-				"categories": ["Templates"],
+				"categories": [
+					"Templates"
+				],
 				"description": "A ball shaped template object."
 			},
 			"BallastTank": {
@@ -716,7 +821,9 @@
 				"extends": "ContainerObject"
 			},
 			"Beacon": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Creates a small beacon of light when powered. \n\tWhen 'ShowOnMap\\' is enabled, it broadcasts a signal into the universe.\n\t\\'BeaconName\\' changes the name of the beacon shown on the starmap. \n\t30 second cooldown for changing the configurables.",
 				"events": {
 					"Configured": true
@@ -736,7 +843,9 @@
 				}
 			},
 			"Beryllium": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A lightweight metal only found on Barren planets used for preventing plutonium cores from going supercritical until detonated."
 			},
 			"Bin": {
@@ -770,12 +879,16 @@
 				},
 				"methods": {
 					"GetLogs": {
-						"returns": ["RegionLog"]
+						"returns": [
+							"RegionLog"
+						]
 					}
 				}
 			},
 			"Blade": {
-				"categories": ["Templates"],
+				"categories": [
+					"Templates"
+				],
 				"description": "A sharp object that can pierce through objects if the material is durable and strong."
 			},
 			"BlastingCap": {
@@ -788,7 +901,9 @@
 				}
 			},
 			"Boombox": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Must be powered in order to play music. When clicked, it will toggle playing music and will play the song id you give it.",
 				"events": {
 					"Loop": true,
@@ -812,14 +927,18 @@
 				}
 			},
 			"BurnerGenerator": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Creates electricity when fueled with coal.",
 				"events": {
 					"Loop": true
 				}
 			},
 			"BurstLaser": {
-				"categories": ["Weapons"],
+				"categories": [
+					"Weapons"
+				],
 				"description": "Fires 5 rapid sets of concentrated laser beams. Each beam does a mediate amount of damage.\nCosts 100 power for each beam fired, meaning the total power cost is 500 power.",
 				"events": {
 					"OnClick": true,
@@ -827,11 +946,15 @@
 				}
 			},
 			"Button": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "Sends trigger signals when clicked by a player.\nWhen connected to a seat and the input key is configured/configureed, the player sitting in the seat can activate the button by pressing the corresponding key.\nTriggerMode 0: Trigger on key down\nTriggerMode 1: Trigger on key up\nTriggerMode 2: Trigger on key down and key up"
 			},
 			"Camera": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "It's a camera.\nWhen a camera has the same ID as a screen, that screen will display the camera view.\nClicking on a screen that is displaying the view of a camera will allow you to directly view what the camera is seeing.\nNo power is necessary.",
 				"events": {
 					"Configured": true
@@ -850,7 +973,9 @@
 				}
 			},
 			"Cannon": {
-				"categories": ["Weapons"],
+				"categories": [
+					"Weapons"
+				],
 				"description": "Fires a cannon ball when triggered or clicked.\nMust be supplied with an ammo material.\nIron is prioritized, and results in one large cannonball being shot.\nCopper results in grapeshot.",
 				"events": {
 					"OnClick": true,
@@ -867,25 +992,33 @@
 				"description": "A textile resource similar to Rubber, except it has a high amount of friction and low bounciness. It can be used in physical machines such as the feet of mechs, etc."
 			},
 			"CloningBay": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Similar to a SpawnPoint, but allows players to respawn at the location from far away even at another region.\nIt is pretty much a cross region spawnpoint. However, you can only have one cloning bay at a time.\nWhen powered, it will appear in your death menu when you die and you can click it to spawn at this location.\nHowever, you should pair the CloningBay with a spawn point next to it to ensure you spawn at the cloning bay."
 			},
 			"Cloth": {
 				"description": "A soft thin fabric that can soak up liquids."
 			},
 			"Coal": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A natural resource found abundant in mountains, and is commonly used as a source of generating heat and energy. Can be placed in a BurnerGenerator to generate energy."
 			},
 			"CombustionTurbine": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Creates electricity when fueled by gasoline.",
 				"events": {
 					"Loop": true
 				}
 			},
 			"Cone": {
-				"categories": ["Templates"],
+				"categories": [
+					"Templates"
+				],
 				"description": "A cone shaped template object."
 			},
 			"Constructor": {
@@ -919,7 +1052,9 @@
 			},
 			"Container": "Stores liquids and gases. When a liquid or gas touches the Container, the container will automatically store it.",
 			"Controller": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "Alters the speed of attached Controllable objects which include: Engine, Motor, BallastTank, IonDrive, IonRocket, Thruster, Rocket. Must use a polysilicon between this controller and \n\tan object that emits a trigger signal(like a button) to use the same events as clicking the UI. For example, FlipFlop will set the speed of the Controllable objects to 0, Deactivate will subtract 5 from the current speed, etc.",
 				"events": {
 					"Loop": true,
@@ -927,7 +1062,9 @@
 				}
 			},
 			"ConveyorBelt": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Moves objects ontop of it towards the front of the conveyor belt. Only moves when powered and anchored or attached to the ground.",
 				"properties": {
 					"ConveyorBeltSpeed": {
@@ -942,27 +1079,39 @@
 				}
 			},
 			"Cooler": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Cools down the heat around a space when supplied with power. \nGlows blue while functioning. Can be used to provide a cool environment in hot areas. \nIs also useful for cooling down objects such as iondrives and engines.\nCooling amount is based on size -20 * X * Y * Z / 16"
 			},
 			"Copper": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A brown shiny metal, the forefather of electronics."
 			},
 			"CornerRoundWedge": {
-				"categories": ["Templates"],
+				"categories": [
+					"Templates"
+				],
 				"description": "A rounded corner shaped template object."
 			},
 			"CornerRoundWedge2": {
-				"categories": ["Templates"],
+				"categories": [
+					"Templates"
+				],
 				"description": "A corner shaped template object rounded inwards."
 			},
 			"CornerTetra": {
-				"categories": ["Templates"],
+				"categories": [
+					"Templates"
+				],
 				"description": "A template which is a tetrahedron subtracted from a cube."
 			},
 			"CornerWedge": {
-				"categories": ["Templates"],
+				"categories": [
+					"Templates"
+				],
 				"description": "A corner wedge shaped template object."
 			},
 			"Coupler": {
@@ -988,22 +1137,30 @@
 				}
 			},
 			"Cylinder": {
-				"categories": ["Templates"],
+				"categories": [
+					"Templates"
+				],
 				"description": "A cylinder shaped template object."
 			},
 			"DarkConverter": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Converts attached dark matter bins into energy. 1 unit of dark matter is equal to 1000 watts of power. However, this generates a ton of heat in the process, nearly up to 200 degrees when activated. This means you will need about 10 coolers to avoid combustion.",
 				"events": {
 					"Loop": true
 				}
 			},
 			"DarkMatter": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A very valuable material extracted from black holes and a few empty regions in space. \nUsed primarily for weapons, but can also be convertred into energy and for other ingredients via DarkConverter."
 			},
 			"DarkReactor": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Generates Dark Matter when powered and near a black hole.\nThe reactor is very unstable, and if the reactor overheats it will cause a huge explosion.\n\nThe DarkReactor generates up to 500 degrees of temperature, meaing you will need atleast 25 coolers to cool the reactor to make sure it does not overheat.",
 				"events": {
 					"Loop": true
@@ -1011,7 +1168,9 @@
 			},
 			"Decoupler": "When triggered, it breaks welds and falls off of anything attached.\nCan be used to separate things.\nThe trigger signals will pass through the decoupler as it is decoupled.",
 			"DelayWire": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "Similar to a regular trigger wire, but depending on the configuration will wait x seconds before the trigger signal passes through.",
 				"properties": {
 					"DelayTime": {
@@ -1026,21 +1185,29 @@
 				}
 			},
 			"DeleteSwitch": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "An object that deletes itself when triggered.",
 				"events": {
 					"Triggered": true
 				}
 			},
 			"Diamond": {
-				"categories": ["Resources"]
+				"categories": [
+					"Resources"
+				]
 			},
 			"Diode": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Allows electrical objects to interact with each other when connected by the diode, but only in its direction as depicted by an arrow."
 			},
 			"Disk": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "",
 				"events": {
 					"Loop": true
@@ -1059,17 +1226,26 @@
 						"unknowntype": true
 					},
 					"Read": {
-						"parameters": ["key: any"],
-						"returns": ["any"]
+						"parameters": [
+							"key: any"
+						],
+						"returns": [
+							"any"
+						]
 					},
 					"ReadAll": {
 						"unknowntype": true
 					},
 					"ReadEntireDisk": {
-						"returns": ["{ [any]: any }"]
+						"returns": [
+							"{ [any]: any }"
+						]
 					},
 					"Write": {
-						"parameters": ["key: any", "data: any"]
+						"parameters": [
+							"key: any",
+							"data: any"
+						]
 					},
 					"WriteAll": {
 						"unknowntype": true
@@ -1100,7 +1276,9 @@
 				}
 			},
 			"Door": {
-				"categories": ["Templates"],
+				"categories": [
+					"Templates"
+				],
 				"description": "When triggered, it will open, and if triggered again will close.",
 				"properties": {
 					"DoorSwitch": {
@@ -1132,18 +1310,25 @@
 				}
 			},
 			"ElectricFence": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "A special version of the fence which damages upon contact.\nRequires power to electrocute.",
 				"events": {
 					"Loop": true
 				}
 			},
 			"Electromagnet": {
-				"categories": ["Logic", "Electrical"],
+				"categories": [
+					"Logic",
+					"Electrical"
+				],
 				"description": "A powerful magnet."
 			},
 			"EnergyBomb": {
-				"categories": ["Weapons"],
+				"categories": [
+					"Weapons"
+				],
 				"description": "Causes a powerful explosion when triggered. Often used in space combat as a means of a powerful missile or torpedo.",
 				"events": {
 					"Damaged": {
@@ -1153,11 +1338,15 @@
 				}
 			},
 			"EnergyGun": {
-				"categories": ["Weapons"],
+				"categories": [
+					"Weapons"
+				],
 				"description": "Fires a powerful shot of energy when provided power and triggered."
 			},
 			"EnergyShield": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Creates a bubble made of energy that protects it from energy based weapons such as Lasers and Plasma Cannons.\n\nAn EnergyShield has a few sets of properties that you can fine tune to create a balanced shield.\nShieldRadius - The size of the entire shield. This will exponentially consume more power the higher the radius is. \nRegenerationSpeed - On a scale from 1 to 10 on how fast the shield will regenerate.\nShieldStrength - Scale from 1 to 10 on how much the shield can endure.\n\nRegenerationSpeed and ShieldStrength both combined can't be over 11.\nFor example, a regeneration speed of 6 and a shield strength of 5 is possible.\nHowever, a regeneration speed of 10 and a shield strength of 10 isn't, as 10 + 10 > 11\nA regeneration speed of 1 and a shield strength of 10 however is possible, since 11 = 11.\n\nAnother benefit for energy shields is that it blocks all warhead explosions, whether inside the shield or outside.",
 				"events": {
 					"Configured": true,
@@ -1168,7 +1357,9 @@
 						"unknowntype": true
 					},
 					"GetShieldHealth": {
-						"returns": ["number"]
+						"returns": [
+							"number"
+						]
 					}
 				},
 				"properties": {
@@ -1219,15 +1410,21 @@
 				}
 			},
 			"EthernetCable": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "Allows for the transfer of data between ports. Mostly utilized in programming."
 			},
 			"ExoticMatter": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "???"
 			},
 			"Explosive": {
-				"categories": ["Weapons"],
+				"categories": [
+					"Weapons"
+				],
 				"description": "Causes an explosion when triggered. You can use a delay wire to make it explode after a few seconds and not immediately.",
 				"events": {
 					"Damaged": {
@@ -1237,7 +1434,9 @@
 				}
 			},
 			"Extractor": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Extracts and harvests materials from connected terrain such as mountains and ore deposits. \nFor example, to extract coal you attach it to the coal deposit, and configure the extractor to extract Coal.\n\nThe extractor must be powered in order to work. Will not work if there's another powered extractor 50 studs away.\nIf connected to a bin, it will supply that bin with the given material it is tasked to extract.\nTwo powered extractors cannot be on the same ore deposit, or else they both will not function. \n\nIf the materials can't be added to a bin, they will spawn in front of the hole on the front of the extractor.\nHowever, if the extractor is blocked by an object, it will not spew out any materials which prevents an increase on lag.\n\t\t\nWhen tasked to extract wood, it will extract any trees near it.",
 				"events": {
 					"Loop": true
@@ -1276,7 +1475,9 @@
 				"description": "A version of wood that is able to burn longer, allowing it to be an efficient fire burning device."
 			},
 			"Fireworks": {
-				"categories": ["Weapons"],
+				"categories": [
+					"Weapons"
+				],
 				"description": "Causes an explosion when triggered. You can use a delay wire to make it explode after a few seconds and not immediately.",
 				"events": {
 					"Damaged": {
@@ -1294,11 +1495,15 @@
 				}
 			},
 			"Flint": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "Useful for lighting up flammable materials.\nSimply rub it against a flammable material and it will set it on fire."
 			},
 			"FloatDevice": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Defies gravity when powered. Allows for vehicles such as space ships to float."
 			},
 			"Food": {
@@ -1311,7 +1516,9 @@
 				"description": "Enter the matrix."
 			},
 			"Freezer": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Turns attached water bins into ice when powered.",
 				"events": {
 					"Loop": true
@@ -1323,7 +1530,9 @@
 				}
 			},
 			"Gasoline": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A liquid used for fueling many devices such as rockets and engines."
 			},
 			"Gear": "A mechanical component commonly used in crafting recipes for many objects.",
@@ -1331,26 +1540,36 @@
 				"categories": {}
 			},
 			"Generator": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Creates energy from rotation."
 			},
 			"Glass": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "Created when sand is burned or set on fire. Can be broken by heavy impacts or by fist."
 			},
 			"Gold": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A very valuable and stretchable material."
 			},
 			"Goo": {
 				"description": "A sticky substance that can stick together to objects when touched."
 			},
 			"Grass": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "An organic substance found in terra and forest planets. Often green, but can be other colors. Useful for planting seeds for agriculture."
 			},
 			"GravityGenerator": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Generates an artificial gravity field when powered on. The gravity field only affects players, not individual parts. The amount of gravity can also be configureed, but the more gravity the higher amount of power needed. Only works in space, not inside planets.",
 				"events": {
 					"Loop": true
@@ -1368,11 +1587,15 @@
 				}
 			},
 			"Gun": {
-				"categories": ["Weapons"],
+				"categories": [
+					"Weapons"
+				],
 				"description": "Fires a harmful bullet when triggered.\nMust be supplied with ammo in order to function.\nFor example, you need an iron bin with 1 or more iron directly attached to it to work."
 			},
 			"Gyro": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Stabilizes vehicles and structures by pointing upwards. Useful for mechs or orientating structures to the correct rotation. The gyro can also be configured to seek objects and players.\n\nWhen powered, the gyro will follow its seek commands that can be configured using hammer.\nThe gyro has commands that allow it to find and seek objects and players.\n\nAn example of gyro's seek configuration includes \"Player1 Player2\" which will seek and aim towards the nearest player.\n\nPutting \"Radar\" at the beginning of the seek configuration will make it target parts instead. For example, \"Radar Gold Copper\" will find the nearest Gold or Copper deposit.\n\nPutting \"AllExcept\" will make the seeker target everything except the given list, basically inverting it. For example, \"AllExcept Player1 Player2\" will target \"Player3\" or \"Player\"4 but not \"Player1\".\n\nThe commands \"Min\" and \"Max\" set the minimum or maximum distance the seeker will target. For example, \"Min20 Max500\" will make the seeker only target objects within 500 studs and more than 20 studs away.\n\nTriggerWhenSeeked will trigger all connected parts every second when the Seek configurable is satisfied\n\n\"TrigMin\" and \"TrigMax\" work the same as \"Min\" and \"Max\" but it's for the trigger signal, trigger signal will only be sent if the above property is true.\n\nPutting \"Sun\" as part of the list will make the seeker automatically target the main stellar body in the system.\n\nGyros also have a property called MaxTorque. This allows you to control the max force on the gyro to stabilize it.",
 				"events": {
 					"Configured": true,
@@ -1416,11 +1639,15 @@
 				}
 			},
 			"HalfSphere": {
-				"categories": ["Templates"],
+				"categories": [
+					"Templates"
+				],
 				"description": "A half sphere shaped template object."
 			},
 			"Handle": {
-				"categories": ["Tools"],
+				"categories": [
+					"Tools"
+				],
 				"description": "A handle which can be equipped when a player touches it, turning all connected parts into an equipable tool.",
 				"properties": {
 					"Swing": {
@@ -1453,7 +1680,9 @@
 				}
 			},
 			"Hatch": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "Acts as a chute when active/gray, but when black or inactive it acts as a normal object.",
 				"extends": "Switch"
 			},
@@ -1478,19 +1707,27 @@
 				}
 			},
 			"Heater": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Generated heat when powered by electricity. Glows red hot while functioning.\nCan be used as insulation in cold environments. Heat amount is based on size 10 * X * Y * Z / 16"
 			},
 			"Heatshield": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Generates a 300 stud radius area that protects all players and **only players** within the vicinity from temperature damage."
 			},
 			"Helium": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A light invisible odorless gas, floats up."
 			},
 			"Hologram": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Using our brand new Multi-Dimensional Holographic Projection Technology™ you are able to create a stationary clone with only the ID of the user provided!.",
 				"events": {
 					"Configured": true
@@ -1509,15 +1746,21 @@
 				}
 			},
 			"Hull": {
-				"categories": ["Templates"],
+				"categories": [
+					"Templates"
+				],
 				"description": "Is able to float in the water, as well as carry objects attached to it. Primarily used for creating boats and other water craft."
 			},
 			"Hydrogen": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A gas commonly found in stars and gas giants."
 			},
 			"Hydroponic": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Grows grass and wood from water, turning attached water bins into either wood, sticks or grass. Incredibly useful for space bases or bases in areas devoid of life.",
 				"events": {
 					"Loop": true
@@ -1533,7 +1776,9 @@
 				}
 			},
 			"HyperDrive": {
-				"categories": ["Propulsion"],
+				"categories": [
+					"Propulsion"
+				],
 				"description": "A device used to travel at faster than light speeds to other regions of the universe. \nSimply input the coordinates to your destination and have a sufficient amount of fuel, and you'll be on your way to your destination.\nTo initiate warping, power the hyperdrive and trigger it. When warping, the hyperdrive will be anchored to prevent any movement.\n\nThe power required for warping will be dependent on the distance travelled, as well as the size of the object being transported.\nThe amount of power required will be displayed in the hyper drive, shown in the red text. \n\nAll of the parts connected to the hyperdrive and every player sitting will be teleported, however any free floating parts or standing up players will be sucked into the vaccum of space, so be careful.\n\nThe red text at the bottom of the hyperdrive indicates how much power is needed to perform the jump.\n\nMake sure the numbers on the hyperdrive is facing up to ensure correct stud alignment.",
 				"events": {
 					"Configured": true,
@@ -1553,18 +1798,24 @@
 				}
 			},
 			"Ice": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A compact natural resource found in tundra planets and the top of a few mountains. It is a slippery material, and has very low friction which can be useful in some devices. Burning ice results in water."
 			},
 			"Igniter": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "Sets alight parts within the immediate vicinity when triggered.",
 				"events": {
 					"Triggered": true
 				}
 			},
 			"ImpulseCannon": {
-				"categories": ["Weapons"],
+				"categories": [
+					"Weapons"
+				],
 				"description": "Blasts a harmless burst of energy which sends anything nearby soaring at a high velocity.",
 				"events": {
 					"OnClick": true,
@@ -1572,15 +1823,21 @@
 				}
 			},
 			"Instrument": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "A device used to measure special values such as current speed and temperature.\n\nThese are the types as follows:\nSpeed - Speed / velocity of the instrument\nRotSpeed - Rotational speed of the instrument\nTemperature - Temperature of the local environment\nTime - Current time (relative to the region and scaled to earth time)\nPower - Total amount of power in a wire system, for example attaching it to a powercell with 200 power will display 200 power.\nSize - The dimensions of the part it is attached to.\nPosition - The position of the current instrument.\nTemperatureF - Temperature but in Fahrenheit.",
 				"events": {
 					"Loop": true
 				},
 				"methods": {
 					"GetReading": {
-						"parameters": ["typeId: number"],
-						"returns": ["number | Vector3"]
+						"parameters": [
+							"typeId: number"
+						],
+						"returns": [
+							"number | Vector3"
+						]
 					}
 				},
 				"properties": {
@@ -1594,48 +1851,56 @@
 				"description": ""
 			},
 			"IonRocket": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "An IonRocket allows space flight. When powered, it will propel force dependent on the Propulsion setting, which you can configure with the hammer tool. \n\t\tThe arrow indicates the direction the ionrocket will propel to when powered.",
 				"extends": "Thruster"
 			},
 			"Iron": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A compact and durable material, commonly found in planets. It is used often in crafting, and is a very important resource to have."
 			},
 			"Jade": {
-				"categories": ["Resources"]
+				"categories": [
+					"Resources"
+				]
 			},
 			"Keyboard": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "Similar to a button, except is programmable to take more than one key input.\nCan be attached to a vehicle seat or clicked by a player.",
 				"events": {
 					"KeyPressed": {
 						"parameters": [
-                            [
+							[
 								"keyCode: any",
 								"The `Enum.KeyCode` of the key that was pressed."
 							],
-                            [
-                                "keyString: string",
-                                "The letter of the key that was pressed. If the key is non-printable (i.e. shift or backspace) keyString will be an empty string."
-                            ],
-                            [
-                                "userId: number",
-                                "The <code>UserID</code> of the player who pressed the key."
-                            ]
-                        ]
+							[
+								"keyString: string",
+								"The letter of the key that was pressed. If the key is non-printable (i.e. shift or backspace) keyString will be an empty string."
+							],
+							[
+								"userId: number",
+								"The <code>UserID</code> of the player who pressed the key."
+							]
+						]
 					},
 					"TextInputted": {
 						"parameters": [
-                            [
-                                "text: string",
-                                "The text that was inputted.\n**NOTE:** The text contains a newline character."
-                            ],
-                            [
-                                "playerName: string",
-                                "The username of the player who input the text"
-                            ]
-                        ]
+							[
+								"text: string",
+								"The text that was inputted.\n**NOTE:** The text contains a newline character."
+							],
+							[
+								"playerName: string",
+								"The username of the player who input the text"
+							]
+						]
 					},
 					"UserInput": {
 						"unknowntype": true
@@ -1643,10 +1908,16 @@
 				},
 				"methods": {
 					"SimulateKeyPress": {
-						"parameters": ["key: string?", "player: string"]
+						"parameters": [
+							"key: string?",
+							"player: string"
+						]
 					},
 					"SimulateTextInput": {
-						"parameters": ["input: string?", "player: string"]
+						"parameters": [
+							"input: string?",
+							"player: string"
+						]
 					},
 					"SimulateUserInput": {
 						"unknowntype": true
@@ -1654,14 +1925,19 @@
 				}
 			},
 			"Kiln": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Turns attached sand bins into glass.",
 				"events": {
 					"Loop": true
 				}
 			},
 			"Laser": {
-				"categories": ["Weapons", "Electrical"],
+				"categories": [
+					"Weapons",
+					"Electrical"
+				],
 				"description": "Fires a concentraded beam of energy when powered, which can be used to damage and set objects on fire. \n\tHas a Range of 1000 studs.\n\tPrimarily used as a weapon in space combat situations.\n\tWhile it can damage objects effectively, it cannot damage energy shields.",
 				"events": {
 					"Loop": true
@@ -1674,15 +1950,21 @@
 				}
 			},
 			"Lava": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A liquid used for fueling many devices such as rockets and engines."
 			},
 			"Lead": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "An uncommon material used in protection against radiation and weapon manufacturing."
 			},
 			"LifeSensor": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "Senses and detects organic life up to a distnace of 2000 studs. Used mainly in programming, as is used in alien technology to hunt down organisms such as players.\nHas a special programmable event called 'GetReading()' which returns a table of all organisms, with their positions and names.\nExample:\n{\n\tPlayer1 = Vector3.new(5, 5, 5);\n}",
 				"methods": {
 					"GetPlayers": {
@@ -1705,19 +1987,25 @@
 					},
 					"ListPlayers": {
 						"description": "Returns an array of player UserIds.",
-						"returns": ["{ number }"]
+						"returns": [
+							"{ number }"
+						]
 					}
 				}
 			},
 			"Light": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Emits light when powered with electricity. Can be colored in different ways, changing the light color",
 				"events": {
 					"Configured": true
 				},
 				"methods": {
 					"SetColor": {
-						"parameters": ["color: Color3"]
+						"parameters": [
+							"color: Color3"
+						]
 					}
 				},
 				"properties": {
@@ -1746,7 +2034,9 @@
 				}
 			},
 			"LightBridge": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Fires a beam of solid light that can be walked on.",
 				"events": {
 					"Configured": true,
@@ -1760,30 +2050,40 @@
 				}
 			},
 			"LightTube": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Emits light when powered with electricity. Can be colored in different ways, changing the light color",
 				"methods": {
 					"SetColor": {
-						"parameters": ["color: Color3"]
+						"parameters": [
+							"color: Color3"
+						]
 					}
 				}
 			},
 			"Magnesium": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A shiny gray solid that is flammable, randomly ignites when touching stone."
 			},
 			"Marble": {
 				"description": "A compact and durable material. Primarily used as a building material for decorations."
 			},
 			"Melter": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Turns attached ice bins into water when powered.",
 				"events": {
 					"Loop": true
 				}
 			},
 			"Microcontroller": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "Runs computer programs when triggered and powered.\nWhen triggered by an activator polysilicon, it will run code.\nWhen triggered by a deactivator polysilicon, it will stop running code.\nFor more information on pilot.lua or the game's programming system, visit the programming tutorial or visit the wiki for the game online.\nRequires 5 power per second when running.\n\nMicrocontroller Globals:\nvoid **Beep**(number Pitch) - default pitch 1, max 10 beeps playing concurrently\nobject **GetPort**(number PortID) - returns port configured with 'PortID'\nobject **GetPartFromPort/GetPartsFromPort**(object/number Port, string ClassName) - gets a part connected to port 'Port' with classname 'ClassName'\nvoid **TriggerPort**(object/number Port) - sends a trigger signal from the port 'Port'\n\nGlobals also include all lua globals and all rbx.lua globals,\nexcept for roblox script-related or game-related globals such as workspace, game, stats, time, etc.",
 				"events": {
 					"Configured": true,
@@ -1819,7 +2119,9 @@
 				}
 			},
 			"Microphone": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "Used in programming. Takes user's inputs.",
 				"events": {
 					"Chatted": {
@@ -1828,12 +2130,16 @@
 				}
 			},
 			"MiningLaser": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Fires a concentraded beam of energy when powered, which is used to mine objects such as asteroids, mountains and ore deposits.\nThis works similar to an extractor, except it indirectly extracts power from other natural sources. \n\nWhen the laser hits an object, it will extract resources from that object and put it in attached bins.\nVery useful for creating mining vehicles to extract resources.\n\nUnlike the extractor however, this is far more efficient.\nThe MiningLaser outputs 2 resources per second, unlike the extractor which only does 2. This means the laser is 1.5x more efficient.\n\nHowever, the mining laser generates more heat than the extractor. Atleast 2 coolers are recommended per mining laser.",
 				"extends": "Extractor"
 			},
 			"Modem": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "A computer networking object that allows you to send, save and get messages cross-region.\nThis is an incredibly useful part to set up an internet of sorts and send data to other computers.\n\nThe modem has 5 programmable functions to it.\nSendMessage(Data, NetworkId defaults to 0) sends a message (specifically through messaging service) carrying data.\nMessageSent is a special event that can be connected to via Connect. Has one argument called Data which is the data received. \nPostRequest saves a string of data to the WoS internet ':PostRequest(Domain, Data)' (modem must be locked)\nGetRequest gets a string of data from the WoS internet ':GetRequest(Domain)'\nRealPostRequest send a POST request to the real www ':(Domain, DataPassed, AsyncBool, FuncToSendResultsTo, OptionalHeaders)'",
 				"events": {
 					"Loop": true,
@@ -1846,14 +2152,21 @@
 						"unknowntype": true
 					},
 					"GetRequest": {
-						"parameters": ["domain: string"],
-						"returns": ["string"]
+						"parameters": [
+							"domain: string"
+						],
+						"returns": [
+							"string"
+						]
 					},
 					"PostAsync": {
 						"unknowntype": true
 					},
 					"PostRequest": {
-						"parameters": ["domain: string", "data: string"]
+						"parameters": [
+							"domain: string",
+							"data: string"
+						]
 					},
 					"RealPostRequest": {
 						"parameters": [
@@ -1863,7 +2176,9 @@
 							"transformFunction: (...any) -> ()",
 							"optionalHeaders: { [string]: any }?"
 						],
-						"returns": ["{ response: string, success: boolean }"]
+						"returns": [
+							"{ response: string, success: boolean }"
+						]
 					},
 					"RequestAsync": {
 						"unknowntype": true
@@ -1872,7 +2187,10 @@
 						"unknowntype": true
 					},
 					"SendMessage": {
-						"parameters": ["data: string", "id: number"]
+						"parameters": [
+							"data: string",
+							"id: number"
+						]
 					},
 					"UrlEncode": {
 						"unknowntype": true
@@ -1889,7 +2207,9 @@
 				}
 			},
 			"Motor": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Spins objects attached to the hinge at the front when powered.",
 				"events": {
 					"Configured": true
@@ -1920,20 +2240,28 @@
 				"description": "A building decoration material that glows by itself without requiring power."
 			},
 			"Neutronium": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "The most durable obtainable material in the game. It is a strange form of matter found from the crusts of neutron stars. Due to the nature of neutron stars, neutronium is the hardest known material as well as the densest known material in the universe."
 			},
 			"NitrogenOxide": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A light gas emitted from machines such as extractors and rockets. Inhaling can cause severe lung damage."
 			},
 			"NuclearWaste": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A highly radioactive material produced from spent Uranium in a reactor."
 			},
 			"Obamium": "An ancient artifact left behind from an alternate reality.",
 			"Obelisk": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "An object designed to attract aliens to the region. Emits an ominous noise when powered.\nMust be anchored and powered in order to function. Must also be open to the sky. Only one obelisk in a region can be powered at a time.\nWhen active, it attracts an Alien every 300 seconds.\n**Use at your own risk.**",
 				"events": {
 					"Loop": true
@@ -1969,15 +2297,21 @@
 				}
 			},
 			"Oil": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A liquid used in refineries to produce Gasoline which can be used for fueling engines and rockets and Petroleum which can be used to make plastic."
 			},
 			"Perfectium": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "The perfect material. Unbreakable, very stretchable, but is impossibly rare. The very sight of it makes you wonder the imperfections of human beings."
 			},
 			"Petroleum": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A gas used for creating plastic."
 			},
 			"Pipe": {
@@ -2023,11 +2357,15 @@
 				}
 			},
 			"Plasma": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A gas found abundant in stars, and can be harvested from them. Used primarily for weapons, as well as electrical components."
 			},
 			"PlasmaCannon": {
-				"categories": ["Weapons"],
+				"categories": [
+					"Weapons"
+				],
 				"description": "Fires an orb of unstable plasma out of the barrel exploding on impact.\nNeeds to be fueled with 500 power and 50 helium or 1 plasma to fire.",
 				"events": {
 					"OnClick": true,
@@ -2047,7 +2385,9 @@
 				"description": "A volatile core close to going supercritical used in recipes for Nuclear explosives."
 			},
 			"Polysilicon": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "A special electronic material used to send special signals to certain objects.\n\nHas a special configuration called Frequency which dictates how many times the polysilicon will repeat a trigger.\nFor example, if a polysilicon was attached to a pulley, having a frequency of 5 and triggered, the pulley will be activated 5 times.",
 				"events": {
 					"Configured": true
@@ -2065,12 +2405,18 @@
 					},
 					"PolysiliconMode": {
 						"description": "The mode of the Polysilicon. Each mode results in different behaviors for objects.",
-						"type": ["Activate", "Deactivate", "FlipFlop"]
+						"type": [
+							"Activate",
+							"Deactivate",
+							"FlipFlop"
+						]
 					}
 				}
 			},
 			"Port": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "An object used primarily in programming. Allows a microcontroller and computers to interact with their surroundings.",
 				"events": {
 					"Triggered": true
@@ -2094,7 +2440,9 @@
 			},
 			"Primer": "A component used in crafting recipes for a few objects.",
 			"Propeller": {
-				"categories": ["Propulsion"],
+				"categories": [
+					"Propulsion"
+				],
 				"description": "Propellers propel forward when spun.\nForward direction indicated by white spot.\nDoes not work in space or non atmospheric planets.",
 				"events": {
 					"Loop": true
@@ -2173,11 +2521,15 @@
 				}
 			},
 			"Pulverizer": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Turns attached stone bins into sand. Once powered, the pulverizer will pulverize any stone bins attached into sand."
 			},
 			"Pump": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Pumps liquid from the environment into attached containers. For example, a pump located in the ocean will pump water when powered.",
 				"events": {
 					"Configured": true,
@@ -2194,11 +2546,15 @@
 				}
 			},
 			"Quartz": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A translucent and malleable crystal useful for making durable windows."
 			},
 			"RTG": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Creates electricity from decaying radioactive elements."
 			},
 			"Radar": {
@@ -2212,7 +2568,9 @@
 				"methods": {
 					"SetPosition": {
 						"description": "Sets the position of the rail.",
-						"parameters": ["depth: number"]
+						"parameters": [
+							"depth: number"
+						]
 					}
 				},
 				"properties": {
@@ -2246,7 +2604,10 @@
 				}
 			},
 			"Railgun": {
-				"categories": ["Weapons", "Electrical"],
+				"categories": [
+					"Weapons",
+					"Electrical"
+				],
 				"description": "Fires a piercing rail at high speeds. A long range weapon. Requires rails and electricity for ammo. Damage increases for every 10 studs of length.pierce if the hit part is destroyed. Must be at least have a width and height of 6 and at least a length of 30 to function.\n\t\nWhile Railgun is similar to Artillery, the Railgun is nearly instant while Artillery is a projectile weapon.\n\nRequires to charge for one minute before it can fire. While charging and when charged, it creates large amount of heat. Charging status resets when this part is damaged.\n\nWhen it is finished charging, it will stop creating a sound. At that point, it must be triggered and supplied by a rail bin in order to fire.",
 				"events": {
 					"Damaged": {
@@ -2260,10 +2621,14 @@
 				"description": "Generates steam using water and heat from radiation.\nUp to 4 pieces of uranium can be inserted into the reactor as fuel.\nIf the temperature is above 400, it will begin to turn water into steam (rate dependent on temperature).\nIf the temperature exceeds 1200 F, a meltdown will occur.\nThe Reactor fuel status can be acquired through the :GetFuel() method with a microcontroller.\nPolysilicon is used to control a reactor, and fuel must be ejected manually:\n\nActivation lowers the control rods, decreasing reaction rate.\nDeactivation raises the control rods, allowing fuel to react.\nFlipFlop will eject fuel or waste from the fuel rod with the least fuel.",
 				"methods": {
 					"GetFuel": {
-						"returns": ["{ [number]: number }"]
+						"returns": [
+							"{ [number]: number }"
+						]
 					},
 					"GetTemp": {
-						"returns": ["number"]
+						"returns": [
+							"number"
+						]
 					}
 				},
 				"properties": {
@@ -2274,14 +2639,18 @@
 				}
 			},
 			"Refinery": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Turns oil into Petroleum and Gasoline.",
 				"events": {
 					"Loop": true
 				}
 			},
 			"RegionCloaker": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Hides a certain region from players, making the coordinates not appear on their screen. \n\tRegion can only be un/cloaked every 25 seconds. So if you unpower the RegionCloaker(uncloaks), you must wait 25 seconds before powering it again to ensure the region gets cloaked."
 			},
 			"ReinforcedGlass": {
@@ -2301,7 +2670,9 @@
 				}
 			},
 			"RemoteControl": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "Similar to an antenna, but sends trigger signals forward wirelessly when triggered.",
 				"events": {
 					"OnClick": true,
@@ -2320,23 +2691,31 @@
 				}
 			},
 			"Rocket": {
-				"categories": ["Propulsion"],
+				"categories": [
+					"Propulsion"
+				],
 				"description": "A propulsion device that consumes gasoline.",
 				"extends": "Thruster"
 			},
 			"Rotor": {
-				"categories": ["Propulsion"],
+				"categories": [
+					"Propulsion"
+				],
 				"description": "Provides vertical height when spun, and only works in oxygen planets.\nThe spin speed determines the height, and the tilt of the rotor determines the forward propulsion of the rotor.",
 				"events": {
 					"Loop": true
 				}
 			},
 			"RoundWedge": {
-				"categories": ["Templates"],
+				"categories": [
+					"Templates"
+				],
 				"description": "A block rounded on one edge, or 1/4 of a cylinder."
 			},
 			"RoundWedge2": {
-				"categories": ["Templates"],
+				"categories": [
+					"Templates"
+				],
 				"description": "A block rounded inwards on one edge."
 			},
 			"Router": {
@@ -2355,10 +2734,14 @@
 				"description": "A textile resource used in manufacturing many industrial objects."
 			},
 			"Ruby": {
-				"categories": ["Resources"]
+				"categories": [
+					"Resources"
+				]
 			},
 			"RustedMetal": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A weathered piece of metal."
 			},
 			"Sail": {
@@ -2370,7 +2753,9 @@
 				}
 			},
 			"Sand": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "An abundant resource that can be found in the shores of terra and forest planets, the sea floors of ocean planets and in the dunes of desert planets. When burnt, the sand becomes glass."
 			},
 			"Scanner": {
@@ -2401,14 +2786,19 @@
 				}
 			},
 			"Scrapper": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Scraps solid items provided through a dispenser into their crafting components when powered. It also destroys unanchored single parts when touched.",
 				"events": {
 					"Loop": true
 				}
 			},
 			"Screen": {
-				"categories": ["Logic", "Electrical"],
+				"categories": [
+					"Logic",
+					"Electrical"
+				],
 				"description": "A programmable object capable of showing text, buttons and images on an LED display. Very useful for creating custom programmable interfaces.",
 				"events": {
 					"Configured": true
@@ -2427,7 +2817,10 @@
 					"GetDimensions": {
 						"description": "Gets the size of the screen in pixels in the form of a <code>Vector2</code>",
 						"returns": [
-							["Vector2", "The size of the screen in pixels."]
+							[
+								"Vector2",
+								"The size of the screen in pixels."
+							]
 						]
 					}
 				},
@@ -2448,14 +2841,18 @@
 				"categories": {}
 			},
 			"Servo": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Spins objects attached to the hinge at the front when powered, to set angles.\n\tPolysilicon can be used to control its angle.\n\tActivate will increment the goal angle by the configured angle step (clockwise looking at its face)\n\tDeactivate will decrement the goal angle (counter-clockwise)\n\tFlipFlop will reset the angle to 0\n\tMicrocontrollers can also set a servo's angle with :SetAngle(Goal)",
 				"events": {
 					"Configured": true
 				},
 				"methods": {
 					"SetAngle": {
-						"parameters": ["angle: number"]
+						"parameters": [
+							"angle: number"
+						]
 					}
 				},
 				"properties": {
@@ -2489,7 +2886,9 @@
 				}
 			},
 			"Shotgun": {
-				"categories": ["Weapons"],
+				"categories": [
+					"Weapons"
+				],
 				"description": "Fires a shot of harmful pellets when triggered.\nMust be supplied with ammo in order to function.\nFor example, you need an iron bin with 1 or more iron directly attached to it to work."
 			},
 			"Sign": {
@@ -2516,7 +2915,9 @@
 				}
 			},
 			"Silicon": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A metalloid that is very useful for electronics. Can commonly be found in cliffs and rocks"
 			},
 			"SmoothGlass": {
@@ -2526,18 +2927,24 @@
 				"description": ""
 			},
 			"Snow": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "An abundant resource that can be found in terra biomes and tundra planets. When burnt, the snow turns into water."
 			},
 			"SolarPanel": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Generates electricity using solar energy from a local star. \nThe closer it is to a star, the more energy it generates. \nThe type of star also affects its energy generation, as well as the size of the solar panel. \n\nIf the solar panel is blocked by a part, it will not generate any energy. Glass however will work.",
 				"events": {
 					"Loop": true
 				}
 			},
 			"SolarScoop": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Extracts materials from a star when powered and pointed at a star.\nDepending on the class of the star, it will extract more materials.\n\nGenerates around 240 degrees of heat, meaning you will need atleast 12 coolers to cool it down.\n\nRed stars generate 25 helium, 5 plasma and 10 hydrogen per second.\nOrange stars generate 30 helium, 5 plasma and and 15 hydrogen per second.\nYellow stars generate 35 helium, 5 plasma and and 20 hydrogen per second.\nLight blue stars generate 40 helium, 25 hydrogen, 10 plasma and and 10 iron per second.\nNeutron stars generate 60 helium, 45 hydrogen, 15 plasma and and 20 iron per second. It also generates 1-2 neutronium every 2 minutes.\n\nIt is recommended to use a Filter to seperate the materials extracted by a solar scoop.",
 				"events": {
 					"Loop": true
@@ -2572,7 +2979,9 @@
 				"description": "Acts as a spawn location for the player who locked it."
 			},
 			"Speaker": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Plays audio of length up to 5 seconds, unless it is powered in which case it can play a full audio.\nWhen clicked or triggered, it will toggle playing music and will play the song id you give it.\nSpeaker:LoadSound(SoundId) will return a Sound object\nA Sound object can be modified using properties SoundId, Looped, PlaybackSpeed, Pitch, TimePositionand the methods Play, Pause, Stop, Destroy",
 				"events": {
 					"Configured": true,
@@ -2580,7 +2989,9 @@
 				},
 				"methods": {
 					"Chat": {
-						"parameters": ["message: string"]
+						"parameters": [
+							"message: string"
+						]
 					},
 					"ClearSounds": {
 						"unknowntype": true
@@ -2589,7 +3000,9 @@
 						"unknowntype": true
 					},
 					"PlaySound": {
-						"parameters": ["soundId: number"]
+						"parameters": [
+							"soundId: number"
+						]
 					}
 				},
 				"properties": {
@@ -2612,11 +3025,15 @@
 				}
 			},
 			"Spotlight": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Emits light in a cone when powered with electricity. Color emition can be changed by coloring it.",
 				"methods": {
 					"SetColor": {
-						"parameters": ["color: Color3"]
+						"parameters": [
+							"color: Color3"
+						]
 					}
 				}
 			},
@@ -2624,26 +3041,36 @@
 				"description": ""
 			},
 			"StarMap": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Shows your current location in the universe and other nearby stars and celestial bodies.\nHas 2 modes, universe and solar.\nUniverse mode shows your location in the universe, and solar mode shows your location in the solar system if you are in one.\nRequires power in order to function. \n\t\nIt also has unique icons for every celestial body type. Clicking on a Icon will set a all connected HyperDrive/Telescope to those coordinates.\n\nWhen triggered with polysilicon, polysilicon 0 will set it to univesre mode, polysilicon 1 will set it to solar system mode, and polysilicon 2 will switch it.\n\nHas two iterative functions that can be used with the microcontroller 'GetBodies' and 'GetSystems', e.g. for key, val in StartMap:GetBodies() do",
 				"methods": {
 					"GetBodies": {
-						"returns": ["() -> (string)"]
+						"returns": [
+							"() -> (string)"
+						]
 					},
 					"GetSystems": {
-						"returns": ["() -> (string)"]
+						"returns": [
+							"() -> (string)"
+						]
 					}
 				}
 			},
 			"StasisField": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Creates a 500 stud radius field that prevents any parts or objects around it from being dragged.\nThis can be used alongside with a RegionCloaker to create public infrastructure to avoid trolling and such.\nHowever, in order to function, the shield must be anchored/grounded, and nothing must be blocking above it. The shield is also extremely fragile.",
 				"events": {
 					"Loop": true
 				}
 			},
 			"Steam": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A result of water being heated up to high temperatures."
 			},
 			"SteamEngine": {
@@ -2664,7 +3091,9 @@
 				}
 			},
 			"SteamTurbine": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Creates electricity when fueled by 2 boilers.",
 				"events": {
 					"Loop": true
@@ -2679,15 +3108,21 @@
 				}
 			},
 			"Stick": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A natural resource found in trees and flora, often accompanied by wood. It is used for creating vital tools."
 			},
 			"Stone": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A resource found in nearly all planets. It is not recommended to use for structures, but is often used in crafting simple objects."
 			},
 			"StorageSensor": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "When the number of contents within connected storage objects is within a defined range, it will send trigger signals similar to a button.\nThis can be used to automate production of certain products when the stored quantity is low.",
 				"events": {
 					"Loop": true
@@ -2695,7 +3130,10 @@
 				"properties": {
 					"QuantityRange": {
 						"constraints": {
-							"default": [0, 10]
+							"default": [
+								0,
+								10
+							]
 						},
 						"description": "The range of item quantities within which this sensor will trigger.",
 						"type": "NumberRange"
@@ -2703,7 +3141,9 @@
 				}
 			},
 			"StudAligner": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "An integral part for creating vehicles, it aligns them to be viable for saving.\nThis is important due to a bug in roblox called 'part shift' in which precision of numbers is lost during saving.\nAs a result, parts will move a tiny bit, which results in dramatic changes to a vehicle.\nThis part solves that, by alligned the vehicle to a whole number position, allowing it to be saved properly.\n\nMake sure the arrow is facing up.\nTo stud align your vehicle, make sure it is unanchored and simply trigger the stud alligner.\nOnce it aligns the vehicle, it will anchor all anchors attached.\n\nMake sure to also allign at a viable and proper place to prevent any noclip glitches during alignment.",
 				"events": {
 					"OnClick": true,
@@ -2711,11 +3151,16 @@
 				}
 			},
 			"Sulfur": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A yellow flammable solid. Being set on fire gives it a special blue fire."
 			},
 			"Switch": {
-				"categories": ["Logic", "Electrical"],
+				"categories": [
+					"Logic",
+					"Electrical"
+				],
 				"description": "Acts as a wire when active/green, but when black or inactive it acts as a normal object. Must use a polysilicon to switch for trigger events.",
 				"events": {
 					"Configured": true,
@@ -2761,7 +3206,9 @@
 				}
 			},
 			"Telescope": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "A device that allows you to look at celestial objects and regions of space from a far away distance.\nSimply click the device and an interface will pop up on your screen allowing you to see details about a planet.\nTo view a specific coordinate, configure the telescope and set to the desired coordinates.\n\nCan only see within 100 universe units, any farther will result in a blurry image.\n\nInformation such as resources on the planet, temperature, distance from its local sun, and planet type will be displayed as well.\n\nMust be powered in order to view object's information.\nHas a 1 minute delay between viewing different systems.",
 				"events": {
 					"Configured": true,
@@ -2771,11 +3218,15 @@
 				"methods": {
 					"GetCoordinate": {
 						"description": "Gets information about the configured region.",
-						"returns": ["RegionInfo"]
+						"returns": [
+							"RegionInfo"
+						]
 					},
 					"GetCurrentCoordinate": {
 						"description": "Returns the current region coordinates.",
-						"unknowntype": true
+						"returns": [
+							"Coordinate"
+						]
 					},
 					"WhenRegionLoads": {
 						"parameters": [
@@ -2816,7 +3267,9 @@
 					},
 					"TemperatureRange": {
 						"constraints": {
-							"default": [140]
+							"default": [
+								140
+							]
 						},
 						"description": "The range of temperatures (°F) within which the gate will be open.",
 						"type": "NumberRange"
@@ -2824,7 +3277,9 @@
 				}
 			},
 			"TemperatureSensor": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "When the surrounding temperature is within a defined range, it will send trigger signals similar to a button.\n\nFor example, if the current temperature is 1100 and the temperature range is \"1000:inf\", then the sensor will send a signal.\n\t\nThis is very useful for creating smart cooling systems for a vehicle or reactor, preventing overheating from occuring.\n\nIf you want the temperature sensor to trigger outside of a certain range, take the inverse of the range.\nFor example, \"-inf:999\" would trigger when the temperature is within that range.\n\nConnecting the TemperatureSensor to a reactor will use the reactor's temperature instead of the surrounding temperature.",
 				"events": {
 					"Loop": true
@@ -2837,7 +3292,9 @@
 				"properties": {
 					"TemperatureRange": {
 						"constraints": {
-							"default": [140]
+							"default": [
+								140
+							]
 						},
 						"description": "The range of temperatures (°F) which this sensor will trigger at.",
 						"type": "NumberRange"
@@ -2845,11 +3302,16 @@
 				}
 			},
 			"Tetrahedron": {
-				"categories": ["Templates"],
+				"categories": [
+					"Templates"
+				],
 				"description": "A tetrahedron template made of 3 perpendicular right triangles."
 			},
 			"Thruster": {
-				"categories": ["Propulsion", "Electrical"],
+				"categories": [
+					"Propulsion",
+					"Electrical"
+				],
 				"description": "A device that creates forward propulsion depending on its size when powered.\nThe size of the thruster will determine the max thrust speed it can have, with a larger thruster being capable of higher speeds.\n\nThe speed setting of the thruster can also be configured from -100 (full backward) to 100 (full forward).\n\nThe maximum speed of a thruster is dependent on its volume.\nThrusters will generate more heat the larger and more powerful the thruster is. A 10x10x10 thruster, for example, would need about 8 coolers to operate.\nThe power required by a thruster is proportional to its actual speed output.\n\nThrusters can be heated to a temperature of around <200 degrees before overheating and combusting.",
 				"events": {
 					"Configured": true
@@ -2870,7 +3332,9 @@
 				"description": "A cheap material made from baked clay useful for building houses."
 			},
 			"TimeSensor": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "When the current time matches the same time as the timesensor, it will trigger.\n\nFor example, if the world turns 7:15 it will activate.\n\nThis is useful for creating dynamic lights that turn on only during the night, saving energy.\n\nThe format should be hour:minute",
 				"properties": {
 					"Time": {
@@ -2887,18 +3351,26 @@
 			},
 			"Tire": "A cylindrical shaped object used commonly in vehicles such as cars.",
 			"Titanium": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A strong heavy material that is very useful for small scale constructs."
 			},
 			"TouchScreen": {
-				"categories": ["Logic", "Electrical"],
+				"categories": [
+					"Logic",
+					"Electrical"
+				],
 				"description": "A Screen, but with capabilities of handling player mouse input.\nThis is to be used with programming.",
 				"events": {
 					"Configured": true,
 					"CursorMoved": {
 						"description": "Fired when a player moves their cursor on the screen.",
 						"parameters": [
-							["cursor: Cursor", "The cursor that moved."]
+							[
+								"cursor: Cursor",
+								"The cursor that moved."
+							]
 						]
 					},
 					"CursorPressed": {
@@ -2956,7 +3428,9 @@
 				}
 			},
 			"TouchSensor": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "Sends trigger signals upon contact with another player or another object.",
 				"events": {
 					"Touched": {
@@ -2979,7 +3453,10 @@
 				}
 			},
 			"Transformer": {
-				"categories": ["Logic", "Electrical"],
+				"categories": [
+					"Logic",
+					"Electrical"
+				],
 				"description": "Sends continuous trigger signals every second when powered.",
 				"events": {
 					"Loop": true,
@@ -3022,27 +3499,37 @@
 				}
 			},
 			"Treads": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "When touching in contact with a solid surface, it will move forward. Must be connected to an engine or motor similar to a drivebox to function.",
 				"events": {
 					"Loop": true
 				}
 			},
 			"TriggerSwitch": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "Acts as a triggerwire when active/green, but when black or inactive it acts as a normal object.",
 				"extends": "Switch"
 			},
 			"TriggerWire": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "Allows trigger objects to interact with each other when connected by triggerwires."
 			},
 			"Truss": {
-				"categories": ["Templates"],
+				"categories": [
+					"Templates"
+				],
 				"description": "Used as a ladder."
 			},
 			"Turbofan": {
-				"categories": ["Propulsion"],
+				"categories": [
+					"Propulsion"
+				],
 				"description": "Generates thrust from crude Oil, similar to a Thruster.\nIf a motor is attached to the front, it instead acts like an engine and rotates it.",
 				"properties": {
 					"TurboFanSpeed": {
@@ -3052,11 +3539,15 @@
 				}
 			},
 			"Uranium": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "A radioactive material often found in deposits in planets, especially ones near stars.\nUseful for energy generation from reactors or radiation generators."
 			},
 			"Valve": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "Acts as a pipe when active/gray, but when black or inactive it acts as a normal object.",
 				"extends": "Switch"
 			},
@@ -3078,7 +3569,12 @@
 							"default": "Horizontal"
 						},
 						"description": "The control mode of the seat. Horizontal: Rotate horizontally with A/D. Full: Rotate horizontally and vertically with W/A/S/D. Mouse: point towards the player's mouse when holding click.",
-						"type": ["Horizontal", "Yaw/Pitch", "Full", "Mouse"]
+						"type": [
+							"Horizontal",
+							"Yaw/Pitch",
+							"Full",
+							"Mouse"
+						]
 					},
 					"Speed": {
 						"constraints": {
@@ -3092,7 +3588,9 @@
 				}
 			},
 			"Warhead": {
-				"categories": ["Weapons"],
+				"categories": [
+					"Weapons"
+				],
 				"description": "Causes a powerful explosion when triggered. You can use a delay wire to make it explode after a few seconds and not immediately.\nThe only down-side of the warhead is that it is blocked completely by energy shields.",
 				"events": {
 					"Damaged": {
@@ -3102,15 +3600,21 @@
 				}
 			},
 			"Water": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "The basis of all life, and is a liquid found in terra, forest, ocean and certain tundras and rogue planets. Can be made from burning ice or snow."
 			},
 			"WaterCooler": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Generates cold temperatures when given a supply of water. Useful for cooling down devices, and does not require power. Performs the same amount of cooling that five coolers would."
 			},
 			"Wedge": {
-				"categories": ["Templates"],
+				"categories": [
+					"Templates"
+				],
 				"description": "A triangular shaped template object."
 			},
 			"Winch": {
@@ -3152,22 +3656,32 @@
 				}
 			},
 			"Wire": {
-				"categories": ["Electrical"],
+				"categories": [
+					"Electrical"
+				],
 				"description": "Allows electrical objects to interact with each other when connected by wires. For example, attaching a wire between a powercell and a light will allow electricity to move through the wire, allowing the light to function causing a source of light to be created."
 			},
 			"WirelessButton": {
-				"categories": ["Logic"],
+				"categories": [
+					"Logic"
+				],
 				"description": "Similar to a button, but can be clicked from infinite distances and cannot be used for keybinds.",
 				"events": {
 					"OnClick": true
 				}
 			},
 			"Wood": {
-				"categories": ["Resources"],
+				"categories": [
+					"Resources"
+				],
 				"description": "**A natural resource found in trees and flora.** It is a simple and yet effective material that is used for simple objects and structures. These can be mainly found in terra and forest planets, but can occasionally be found in temperate tundra and desert planets."
 			},
 			"ZapWire": {
-				"categories": ["Logic", "Weapons", "Electrical"],
+				"categories": [
+					"Logic",
+					"Weapons",
+					"Electrical"
+				],
 				"description": "Allows electrical objects to interact with each other when connected by wires.\nIf a flammable object is touched, it will be lit on fire."
 			}
 		}
@@ -3175,19 +3689,27 @@
 	"events": {
 		"Configured": {
 			"description": "Fires when the object is configured.",
-			"parameters": ["configurerId: number"]
+			"parameters": [
+				"configurerId: number"
+			]
 		},
 		"Loop": {
 			"description": "Fires when the object is updated by the game loop.",
-			"parameters": ["deltaTime: number"]
+			"parameters": [
+				"deltaTime: number"
+			]
 		},
 		"OnClick": {
 			"description": "Fires when the object is clicked.",
-			"parameters": ["clickerId: number"]
+			"parameters": [
+				"clickerId: number"
+			]
 		},
 		"Triggered": {
 			"description": "Fires when the object is triggered.",
-			"parameters": ["otherPart: PilotObject"]
+			"parameters": [
+				"otherPart: PilotObject"
+			]
 		}
 	},
 	"globals": {
@@ -3195,127 +3717,207 @@
 			"Beep": {
 				"codesample": "-- Beep!\nBeep(1)",
 				"description": "Produces a beep sound using a triangle wave.",
-				"parameters": ["frequency: number?"]
+				"parameters": [
+					"frequency: number?"
+				]
 			},
 			"GetCPUTime": {
 				"deprecated": "Use `pilot.getCPUTime` instead.",
 				"description": "Returns the current elapsed CPU time.",
-				"returns": ["number"]
+				"returns": [
+					"number"
+				]
 			},
 			"GetPart": {
 				"codesample": "-- Get a `Screen` from any port\nlocal screen = GetPart(\"Screen\")",
 				"description": "Gets a part of the specified type from any connected ports.",
 				"generate": "partgetters",
-				"parameters": ["part: string?"]
+				"parameters": [
+					"part: string?"
+				]
 			},
 			"GetPartFromPort": {
 				"codesample": "-- Get a `TouchScreen` from port 1\nlocal touchScreen = GetPartFromPort(1, \"TouchScreen\")",
 				"description": "Gets a part of the specified type from any port of the specified ID.",
 				"generate": "partgetters",
-				"parameters": ["port: ( Port | number )?", "part: string?"]
+				"parameters": [
+					"port: ( Port | number )?",
+					"part: string?"
+				]
 			},
 			"GetParts": {
 				"codesample": "-- Get all `Switch`es connected to any port\nlocal switches = GetParts(\"Switch\")",
 				"description": "Gets all the parts of the specified type from any connected ports.",
 				"generate": "partgetters",
-				"parameters": ["part: string?"]
+				"parameters": [
+					"part: string?"
+				]
 			},
 			"GetPartsFromPort": {
 				"codesample": "-- Get all `Lights` from port 1\nlocal lights = GetPartsFromPort(1, \"Light\")",
 				"description": "Gets all the parts of the specified type from any port of the specified ID.",
 				"generate": "partgetters",
-				"parameters": ["port: ( Port | number )?", "part: string?"]
+				"parameters": [
+					"port: ( Port | number )?",
+					"part: string?"
+				]
 			},
 			"GetPort": {
 				"codesample": "-- Get port with an ID of 1\nlocal port = GetPort(1)",
 				"description": "Gets the connected port of the specified ID.",
-				"parameters": ["id: number?"],
-				"returns": ["Port?"]
+				"parameters": [
+					"id: number?"
+				],
+				"returns": [
+					"Port?"
+				]
 			},
 			"GetPorts": {
 				"codesample": "-- Get all ports, no matter the ID\nlocal ports = GetPort()",
 				"description": "Gets all the connected ports of the specified ID.",
-				"parameters": ["id: number?"],
-				"returns": ["{ Port }"]
+				"parameters": [
+					"id: number?"
+				],
+				"returns": [
+					"{ Port }"
+				]
 			},
 			"JSONDecode": {
 				"codesample": "-- Decode a JSON string\nlocal jsonString = '{\"name\": \"example\", \"value\": 42}'\nprint(repr(JSONDecode(jsonString))) -- { name = \"example\", value = 42 }",
 				"description": "Decodes JSON.",
 				"learnmore": "https://create.roblox.com/docs/reference/engine/classes/HttpService#JSONDecode",
-				"parameters": ["data: string"],
-				"returns": ["JSON"]
+				"parameters": [
+					"data: string"
+				],
+				"returns": [
+					"JSON"
+				]
 			},
 			"JSONEncode": {
 				"codesample": "local data = { name = \"example\", value = 42 }\nprint(JSONEncode(data)) -- {\"name\":\"example\",\"value\":42}",
 				"description": "Encodes JSON. Proxy for `HttpService:JSONEncode`",
 				"learnmore": "https://create.roblox.com/docs/reference/engine/classes/HttpService#JSONEncode",
-				"parameters": ["data: JSON"],
-				"returns": ["string"]
+				"parameters": [
+					"data: JSON"
+				],
+				"returns": [
+					"string"
+				]
 			},
 			"TriggerPort": {
 				"description": "Triggers the specified port.",
-				"parameters": ["port: Port | number"]
+				"parameters": [
+					"port: Port | number"
+				]
 			},
 			"logError": {
 				"description": "Logs an error in the output.",
-				"parameters": ["message: string", "level: number?"]
+				"parameters": [
+					"message: string",
+					"level: number?"
+				]
 			},
 			"pilot": {
 				"description": "Provides functions for accessing/manipulating information about threads such as permissions, ownership, and interrupts.",
 				"keys": {
 					"claimThread": {
 						"description": "Sets the thread's parent to the running thread. The target thread must be part of the sandbox and may not exist on a lower ring otherwise nothing will happen.",
-						"parameters": ["thread: thread"],
-						"returns": ["boolean"]
+						"parameters": [
+							"thread: thread"
+						],
+						"returns": [
+							"boolean"
+						]
 					},
 					"getCPUTime": {
 						"description": "Returns the current elapsed CPU time.",
-						"returns": ["number"]
+						"returns": [
+							"number"
+						]
 					},
 					"getRing": {
 						"description": "Gets the ring of the target (or running) thread.",
-						"parameters": ["thread: thread?"],
-						"returns": ["number"]
+						"parameters": [
+							"thread: thread?"
+						],
+						"returns": [
+							"number"
+						]
 					},
 					"getThreadParent": {
 						"description": "Gets the parent of the target (or running) thread. The parent thread must be part of the sandbox and may not exist on a lower ring otherwise nil will be returned.",
-						"parameters": ["thread: thread?"],
-						"returns": ["thread?"]
+						"parameters": [
+							"thread: thread?"
+						],
+						"returns": [
+							"thread?"
+						]
 					},
 					"getTimeout": {
 						"description": "Gets the current CPU timeout, or the CPU timeout that the given thread will obey.",
-						"parameters": ["thread: thread?"],
-						"returns": ["number"]
+						"parameters": [
+							"thread: thread?"
+						],
+						"returns": [
+							"number"
+						]
 					},
 					"hasRing": {
 						"description": "Checks if the target (or running) thread has the specified ring privilege or lower.",
-						"parameters": ["ring: number", "thread: thread?"],
-						"returns": ["boolean"]
+						"parameters": [
+							"ring: number",
+							"thread: thread?"
+						],
+						"returns": [
+							"boolean"
+						]
 					},
 					"saveRing": {
 						"description": "Creates a function which elevates the caller to the specified (or current) ring regardless of its privilege. You can use this to de-escalate, spawn a new thread, and then re-escalate your thread after. Requires ring 0 or lower.",
-						"parameters": ["ring: number?"],
-						"returns": ["() -> ()"]
+						"parameters": [
+							"ring: number?"
+						],
+						"returns": [
+							"() -> ()"
+						]
 					},
 					"setInterrupt": {
 						"description": "Will repeatedly call the interrupt every period CPU time on a valid resumption time (ignores yields/waits). Returns a function which deletes the interrupt.",
-						"parameters": ["period: number", "callback: () -> ()"],
-						"returns": ["() -> ()"]
+						"parameters": [
+							"period: number",
+							"callback: () -> ()"
+						],
+						"returns": [
+							"() -> ()"
+						]
 					},
 					"setRing": {
 						"description": "Sets the ring of the target (or running) thread. You can use .saveRing to store the current ring so you can escalate again later.",
-						"parameters": ["ring: number", "thread: thread?"]
+						"parameters": [
+							"ring: number",
+							"thread: thread?"
+						]
 					},
 					"setTimeout": {
 						"description": "Sets the CPU timeout of the given thread. Requires ring -1 or lower. This will not let you exceed the game's timeout, but will let you set lower timeouts. This has to do with whatever thread happens to be actively running. Currently there is not a way for you to recover from a timeout, so you should use .setInterrupt to handle your own custom timeouts.",
-						"parameters": ["timeout: number?", "thread: thread?"]
+						"parameters": [
+							"timeout: number?",
+							"thread: thread?"
+						]
 					}
 				}
 			}
 		},
 		"types": {
-			"CanvasContext": ["2D", "3D"],
-			"CelestialBodyType": ["Planet", "BlackHole", "Star"],
+			"CanvasContext": [
+				"2D",
+				"3D"
+			],
+			"CelestialBodyType": [
+				"Planet",
+				"BlackHole",
+				"Star"
+			],
 			"ConfigurableData": {
 				"DefaultValue": "any?",
 				"Description": "string",
@@ -3323,7 +3925,21 @@
 				"Options": "({ string } | { number })?",
 				"Type": "string"
 			},
-			"Coordinate": "string",
+			"CoordinateMetatable": {
+				"Clone": "(self: Coordinate) -> ()",
+				"CoordStringWithoutPlanet": "(self: Coordinate, arg1: any) -> string",
+				"GetRandom": "(self: Coordinate, arg2: any) -> Random",
+				"GetSeed": "(self: Coordinate, arg2: any) -> number",
+				"ToArray": "(self: Coordinate, arg2: any) -> {number | boolean}",
+				"__index": "CoordinateMetatable",
+				"__add": "(Coordinate) -> Coordinate",
+				"__div": "(Coordinate) -> Coordinate",
+				"__eq": "(Coordinate) -> Coordinate",
+				"__mul": "(Coordinate) -> Coordinate",
+				"__tostring": "(Coordinate) -> string",
+				"type": "\"Coordinate\""
+			},
+			"Coordinate": "typeof(setmetatable({} :: { InPlanet: boolean, SolarCoordinates: Vector2, UniverseCoordinates: Vector2, }, {} :: CoordinateMetatable))",
 			"Cursor": {
 				"Player": "string",
 				"Pressed": "boolean",
@@ -3442,7 +4058,11 @@
 				"Barren",
 				"Gas"
 			],
-			"PolysiliconMode": ["Activate", "Deactivate", "FlipFlop"],
+			"PolysiliconMode": [
+				"Activate",
+				"Deactivate",
+				"FlipFlop"
+			],
 			"RawFileSystem": {
 				"Device": "<T>(device: T, attributes: FileAttributes) -> FileSystemDevice<T>",
 				"Directory": "(contents: { [string]: FileSystemFileNode }, attributes: FileAttributes, readonly: boolean?) -> FileSystemDirectory",
@@ -3509,10 +4129,27 @@
 				"Melting"
 			],
 			"RegionLogs": "{ RegionLog }",
-			"RelayMode": ["Send", "Receive"],
-			"StarType": ["Red", "Orange", "Yellow", "Blue", "Neutron"],
-			"TemperatureUnit": ["K", "F", "C"],
-			"VehicleSeatMode": ["Horizontal", "Full", "Mouse"]
+			"RelayMode": [
+				"Send",
+				"Receive"
+			],
+			"StarType": [
+				"Red",
+				"Orange",
+				"Yellow",
+				"Blue",
+				"Neutron"
+			],
+			"TemperatureUnit": [
+				"K",
+				"F",
+				"C"
+			],
+			"VehicleSeatMode": [
+				"Horizontal",
+				"Full",
+				"Mouse"
+			]
 		},
 		"values": {
 			"FileSystem": {
