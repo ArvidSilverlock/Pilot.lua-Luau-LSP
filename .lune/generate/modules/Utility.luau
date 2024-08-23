@@ -1,5 +1,6 @@
-local net = require("@lune/net")
 local serde = require("@lune/serde")
+local net = require("@lune/net")
+local fs = require("@lune/fs")
 
 local Utility = {}
 
@@ -19,6 +20,35 @@ function Utility.deepFreeze(t)
 			Utility.deepFreeze(value)
 		end
 	end
+end
+
+function Utility.makeDirectory(dir)
+	if not fs.isDir(dir) then
+		fs.writeDir(dir)
+	end
+end
+
+function Utility.stripFileExtension(filename: string)
+	return filename:match("^(.*)%..-$") or filename
+end
+
+function Utility.pathJoiner(root)
+	if not root:match("%$") then
+		root ..= "/"
+	end
+
+	return function(path)
+		return if path then root .. if path:match("^/") then path:sub(2) else path else root
+	end
+end
+
+function Utility.writeConfigurationFile(path: string, format: serde.EncodeDecodeFormat, values: { [any]: any })
+	if fs.isFile(path) then
+		local currentValue = serde.decode(format, fs.readFile(path))
+		Utility.mergeTables(currentValue, values)
+	end
+
+	fs.writeFile(path, serde.encode(format, values, true))
 end
 
 function Utility.readJSON(link: string)
