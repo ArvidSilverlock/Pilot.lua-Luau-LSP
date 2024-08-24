@@ -13,6 +13,14 @@ function Utility.indent(value: string?, amount: number?): string
 	return indentString .. value:gsub("\n", "\n" .. indentString):gsub("\n%s+\n", "\n\n")
 end
 
+function Utility.escapeMarkdown(input: string): string
+	return (input:gsub("<code>(.-)</code>", "`%1`"):gsub("<", "\\<"):gsub("{", "\\{"))
+end
+
+function Utility.markdownDropdown(dropdown: string, content: string?): string?
+	return if content then `<details>\n\t<summary>{dropdown}</summary>\n{Utility.indent(content)}\n</details>` else nil
+end
+
 function Utility.deepFreeze(t)
 	table.freeze(t)
 	for _, value in t do
