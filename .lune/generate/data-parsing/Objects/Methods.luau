@@ -1,6 +1,6 @@
 --!strict
 
-local Parse = require("../../object-data/raw-pilot-data/ParseRaw")
+local ParseFunction = require("../../object-data/raw-pilot-data/Parse/Function")
 local Read = require("../../object-data/raw-pilot-data/ReadRaw")
 
 local Types = require("../../modules/Types")
@@ -16,7 +16,7 @@ local function ImplementMethods(objectName: string, output: { [string]: Types.Ob
 	local objectOutput = output[objectName]
 
 	for name, data in objectData.methods do
-		local method = Parse.parseFunction(data, name, objectName, false, true)
+		local method = ParseFunction.parse(data, name, objectName, false, true)
 
 		local memberReference = {
 			Name = name,

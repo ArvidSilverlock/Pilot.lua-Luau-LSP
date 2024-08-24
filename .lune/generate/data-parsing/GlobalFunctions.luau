@@ -1,6 +1,7 @@
 --!strict
 
-local Parse = require("../object-data/raw-pilot-data/ParseRaw")
+local ParseMiscellaneous = require("../object-data/raw-pilot-data/Parse/Miscellaneous")
+local ParseFunction = require("../object-data/raw-pilot-data/Parse/Function")
 local Types = require("../modules/Types")
 
 local GlobalFunctions = {}
@@ -11,17 +12,17 @@ function GlobalFunctions.parse(input: Types.RawPilotData, output: Types.PilotDat
 
 	for name, data: any in input.globals.functions do
 		if data.keys then
-			local object = Parse.parseDescribable(data, {
+			local object = ParseMiscellaneous.describable(data, {
 				Functions = {},
 			})
 
 			for key, functionData in data.keys do
-				object.Functions[key] = Parse.parseFunction(functionData, key, name, true, false)
+				object.Functions[key] = ParseFunction.parse(functionData, key, name, true, false)
 			end
 
 			output.FunctionDictionaries[name] = object
 		else
-			output.Functions[name] = Parse.parseFunction(data, name, nil, false, false)
+			output.Functions[name] = ParseFunction.parse(data, name, nil, false, false)
 		end
 	end
 end

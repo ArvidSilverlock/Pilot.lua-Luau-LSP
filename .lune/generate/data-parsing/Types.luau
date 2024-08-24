@@ -1,6 +1,6 @@
 --!strict
 
-local Parse = require("../object-data/raw-pilot-data/ParseRaw")
+local ParseType = require("../object-data/raw-pilot-data/Parse/Type")
 local Types = require("../modules/Types")
 
 local function parseType(input: Types.RawPilotData, output: Types.PilotData, typeName: string, isGlobal: boolean)
@@ -8,7 +8,7 @@ local function parseType(input: Types.RawPilotData, output: Types.PilotData, typ
 	local typeValue = if isGlobal then input.globals.types[typeName] else input.types[typeName]
 
 	local typeObject = {
-		Type = Parse.parseType(typeValue),
+		Type = ParseType.parse(typeValue),
 	}
 
 	local reference = {

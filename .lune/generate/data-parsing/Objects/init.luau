@@ -1,6 +1,6 @@
 --!strict
 
-local Parse = require("../../object-data/raw-pilot-data/ParseRaw")
+local ParseMiscellaneous = require("../../object-data/raw-pilot-data/Parse/Miscellaneous")
 local Read = require("../../object-data/raw-pilot-data/ReadRaw")
 
 local Utility = require("../../modules/Utility")
@@ -38,7 +38,7 @@ function Objects.parse(input: Types.RawPilotData, output: Types.PilotData)
 
 		local inheritenceChain = Read.getInheritenceChain(objectName)
 
-		local object = Parse.parseDescribable(objectData, {
+		local object = ParseMiscellaneous.describable(objectData, {
 			Name = if not objectName:match("^[_%a][_%w]*$") then "_" .. objectName:gsub("[^%w_]", "") else objectName,
 			ClassName = objectName,
 			Group = value.category,
