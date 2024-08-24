@@ -31,11 +31,11 @@ else
 	options.docs = true
 	options.vscode = true
 	options.modules = true
+	options.wiki = false
 
 	options.selene = stdio.prompt("confirm", "Setup selene (linter)?")
 	options.darklua = stdio.prompt("confirm", "Setup darklua (bundler)?")
 	options.rokit = stdio.prompt("confirm", "Setup rokit (toolchain manager)?")
-	options.wiki = stdio.prompt("confirm", "Generate the wiki (wiki markdown files)?")
 end
 
 local function generate(optionName: string, generatorName: string, default: boolean)
