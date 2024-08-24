@@ -377,7 +377,7 @@
 						"type": "number"
 					},
 					"Durability": {
-						"description": "The current health/durability of the object",
+						"description": "The maximum health of the object",
 						"readonly": true,
 						"type": "number"
 					},
@@ -387,14 +387,12 @@
 						"type": "string"
 					},
 					"Health": {
-						"deprecated": "Use `.Durability` instead.",
-						"description": "The current health/durability of the object",
+						"description": "The current health of the object",
 						"readonly": true,
 						"type": "number"
 					},
 					"Heat": {
-						"deprecated": "Use `.Temperature` instead.",
-						"description": "The current heat/temperature of the object.",
+						"description": "The current heat of the object.",
 						"readonly": true,
 						"type": "number"
 					},
@@ -2580,10 +2578,10 @@
 				"description": "Shows your current location in the universe and other nearby stars and celestial bodies.\nHas 2 modes, universe and solar.\nUniverse mode shows your location in the universe, and solar mode shows your location in the solar system if you are in one.\nRequires power in order to function. \n\t\nIt also has unique icons for every celestial body type. Clicking on a Icon will set a all connected HyperDrive/Telescope to those coordinates.\n\nWhen triggered with polysilicon, polysilicon 0 will set it to univesre mode, polysilicon 1 will set it to solar system mode, and polysilicon 2 will switch it.\n\nHas two iterative functions that can be used with the microcontroller 'GetBodies' and 'GetSystems', e.g. for key, val in StartMap:GetBodies() do",
 				"methods": {
 					"GetBodies": {
-						"returns": ["() -> (string)"]
+						"returns": ["{ [string]: { PlanetType: PlanetType } }"]
 					},
 					"GetSystems": {
-						"returns": ["() -> (string)"]
+						"returns": ["{ string }"]
 					}
 				}
 			},
@@ -2727,12 +2725,10 @@
 					},
 					"GetCurrentCoordinate": {
 						"description": "Returns the current region coordinates.",
-						"unknowntype": true
+						"returns": ["Coordinate"]
 					},
 					"WhenRegionLoads": {
-						"parameters": [
-							"callback: (regionData: RegionInfo) -> ()"
-						]
+						"parameters": ["callback: (regionData: any) -> ()"]
 					}
 				},
 				"properties": {
@@ -3392,7 +3388,9 @@
 				"Forest",
 				"Exotic",
 				"Barren",
-				"Gas"
+				"Gas",
+				"RobotDepot",
+				"RobotFactory"
 			],
 			"PolysiliconMode": ["Activate", "Deactivate", "FlipFlop"],
 			"RawFileSystem": {
