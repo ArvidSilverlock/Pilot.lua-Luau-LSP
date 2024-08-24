@@ -29,10 +29,12 @@ local function implementFunction(output, name, data)
 				table.insert(globalFunction.args, { type = "..." })
 			else
 				local luauType, isNullable
-				if argument.Type:match("^%b()%s*%?$") then
-					luauType, isNullable = argument.Type:match("^%b()"):sub(2, -2), true
+				local baseType = argument.Type.Luau
+
+				if baseType:match("^%b()%s*%?$") then
+					luauType, isNullable = baseType:match("^%b()"):sub(2, -2), true
 				else
-					luauType, isNullable = argument.Type:match("^(.-)(%??)$")
+					luauType, isNullable = baseType:match("^(.-)(%??)$")
 				end
 
 				local trimmed = luauType:match("^%s*(.-)%s*$")
