@@ -1,5 +1,6 @@
 local RobloxAPIDump = require("../../object-data/Roblox")
 
+local Utility = require("../../modules/Utility")
 local Types = require("../../modules/Types")
 
 local function getLuauType(valueType)
@@ -136,6 +137,8 @@ return function(valueType: "Function", name: string, data: Types.FunctionData, w
 
 	return {
 		Definition = methodType,
+		Wiki = "- CreateElement(*string* className, *\\{ [string]: any }?* properties) → Instance"
+			.. if data.Description then `\n  - {Utility.escapeMarkdown(data.Description)}` else "",
 		Luau = "-- N/A",
 		InsertDefinition = function(output: Types.DefinitionOutput)
 			table.insert(output.GlobalTypes, luauTypes)
