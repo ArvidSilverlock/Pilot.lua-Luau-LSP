@@ -1,6 +1,6 @@
 --!strict
 
-local Parse = require("../../object-data/raw-pilot-data/ParseRaw")
+local ParseProperty = require("../../object-data/raw-pilot-data/Parse/Property")
 local Read = require("../../object-data/raw-pilot-data/ReadRaw")
 
 local Types = require("../../modules/Types")
@@ -13,33 +13,11 @@ local function ImplementProperties(objectName: string, output: { [string]: Types
 		return
 	end
 
-	local objectOutput = output[objectName]
+	local outputData = output[objectName]
 
 	for name, data in objectData.properties do
-		local outputGroup = if data.readonly then "Properties" else "Configurables"
-
-		local property: any = Parse.parseDescribable(data, {
-			Type = Parse.parseType(data.type),
-			ReadOnly = data.readonly == true,
-		})
-
-		local memberReference = {
-			Name = name,
-			Group = outputGroup,
-			Reference = property,
-			Source = objectName,
-		}
-
-		local constraints = data.constraints
-		if constraints then
-			property.Minimum = constraints.min
-			property.Maximum = constraints.max
-			property.Step = constraints.step
-			property.Default = constraints.default
-		end
-
-		objectOutput.Members[name] = memberReference :: any;
-		(objectOutput :: any)[outputGroup][name] = property
+		local group, member, reference = ParseProperty.parse(name, data, objectName);
+		(outputData :: any)[group][name], outputData.Members[name] = member, reference
 	end
 end
 
