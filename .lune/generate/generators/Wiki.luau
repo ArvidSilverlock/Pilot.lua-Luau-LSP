@@ -1,3 +1,5 @@
+local WIKI_DIRECTORY = "./wiki/docs/Objects"
+
 local fs = require("@lune/fs")
 
 local PilotData = require("../object-data/Pilot")
@@ -34,7 +36,7 @@ local function insertSection(source, output)
 
 		local sectionOutput = {}
 
-		local function add(group)
+		local function insertGroup(group)
 			local values = source[sourceObject][sectionName][group]
 			local documented, undocumented = values.Documented, values.Undocumented
 
@@ -59,8 +61,8 @@ local function insertSection(source, output)
 			end
 		end
 
-		add("Normal")
-		add("Deprecated")
+		insertGroup("Normal")
+		insertGroup("Deprecated")
 
 		if #sectionOutput > 0 then
 			local stringForm = table.concat(sectionOutput, "\n")
@@ -87,17 +89,17 @@ end
 local Wiki = {}
 
 function Wiki.generate(options)
-	local pages = {}
+	local generatedPages = {}
 
 	for _, objectName in PilotData.ObjectDefinitionOrder do
 		local objectData = PilotData.Objects[objectName]
-		local sections = {}
+		local pageOutput = {}
 
 		for _, member in objectData.Members do
-			local source = sections[member.Source]
+			local source = pageOutput[member.Source]
 			if not source then
 				source = createDocumentationSections()
-				sections[member.Source] = source
+				pageOutput[member.Source] = source
 			end
 
 			local value = member.Reference
@@ -114,7 +116,7 @@ function Wiki.generate(options)
 		local plainDescription = constructPlainDescription(objectData)
 		local output = if plainDescription then { Utility.escapeMarkdown(plainDescription) } else {}
 
-		local addSection = insertSection(sections, output)
+		local addSection = insertSection(pageOutput, output)
 		for _, section in { "Methods", "Configurables", "Properties", "Events" } do
 			local sectionOutput = {}
 
@@ -129,24 +131,24 @@ function Wiki.generate(options)
 			end
 		end
 
-		pages[objectName] = table.concat(output, "\n\n")
+		generatedPages[objectName] = table.concat(output, "\n\n")
 	end
 
-	return pages
+	return generatedPages
 end
 
-function Wiki.save(options, pages)
-	Utility.makeDirectory("./wiki/docs/Objects")
+function Wiki.save(options, generatedPages)
+	Utility.makeDirectory(WIKI_DIRECTORY)
 
-	for _, page in fs.readDir("./wiki/docs/Objects") do
+	for _, page in fs.readDir(WIKI_DIRECTORY) do
 		local pageName = Utility.stripFileExtension(page)
-		if not pages[pageName] then
-			fs.removeFile(`./wiki/docs/Objects/{page}`)
+		if not generatedPages[pageName] then
+			fs.removeFile(`{WIKI_DIRECTORY}/{page}`)
 		end
 	end
 
-	for name, page in pages do
-		fs.writeFile(`./wiki/docs/Objects/{name}.md`, page)
+	for name, page in generatedPages do
+		fs.writeFile(`{WIKI_DIRECTORY}/{name}.md`, page)
 	end
 end
 
