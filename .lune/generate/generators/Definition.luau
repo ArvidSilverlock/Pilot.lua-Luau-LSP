@@ -67,7 +67,7 @@ local function defineObject(objectName, output)
 		elseif member.Group == "Properties" then
 			table.insert(sections.Properties, `{member.Name}: {reference.Type}`)
 		elseif member.Group == "Events" then
-			table.insert(sections.Events, reference.Type)
+			table.insert(sections.Events, reference.Type.Luau)
 		end
 
 		if reference.Type and reference.Type.InsertDefinition then
