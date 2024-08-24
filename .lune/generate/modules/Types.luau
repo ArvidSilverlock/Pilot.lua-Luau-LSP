@@ -37,7 +37,7 @@ export type Object = {
 	categories: { string }?,
 	methods: { [string]: FunctionObject }?,
 	properties: { [string]: PropertyObject }?,
-	events: { [string]: EventObject }?,
+	events: { [string]: EventObject | boolean }?,
 	extends: string?,
 } & DescribableRaw & Typed
 
@@ -60,9 +60,9 @@ export type PropertyObject = {
 	}?,
 } & DescribableRaw & Typed
 
-export type EventObject = ({
+export type EventObject = {
 	parameters: { string | { string } }?,
-} & DescribableRaw & Typed) | boolean
+} & DescribableRaw & Typed
 
 export type RawPilotData = {
 	globals: {
@@ -79,7 +79,17 @@ export type RawPilotData = {
 	events: { [string]: EventObject },
 }
 
-export type LuauType = any
+export type LuauType = {
+	Luau: string,
+	Definition: string?,
+	Wiki: string?,
+	Unknown: boolean,
+
+	InsertDefinition: (DefinitionOutput) -> ()?,
+	InsertDocumentation: (any) -> ()?,
+	InsertSelene: (any) -> ()?,
+	InsertWiki: (any) -> ()?,
+}
 
 export type Describable = {
 	Description: string?,
@@ -106,14 +116,7 @@ export type ParameterData = {
 export type FunctionData = {
 	Parameters: { ParameterData },
 	Returns: { ParameterData },
-	Type: {
-		Definition: string,
-		Luau: string,
-		InsertDefinition: (DefinitionOutput) -> (),
-		InsertDocumentation: (any) -> (),
-		InsertSelene: (any) -> (),
-		InsertWiki: (any) -> (),
-	},
+	Type: LuauType,
 } & Describable
 
 export type FunctionDictionaryData = {
