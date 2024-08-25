@@ -7,6 +7,14 @@
 		"@lune/": "~/.lune/.typedefs/0.8.2/"
 	},
 
+	"[luau]": {
+		"editor.defaultFormatter": "JohnnyMorganz.stylua"
+	},
+	"[json]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"editor.formatOnSave": true,
+
 	"prettier.tabWidth": 4,
 	"prettier.useTabs": true
 }
