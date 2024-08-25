@@ -3,14 +3,9 @@ local WIKI_DIRECTORY = "./wiki/docs/Objects"
 local fs = require("@lune/fs")
 
 local PilotData = require("../object-data/Pilot")
+local ParseMiscellaneous = require("../object-data/raw-pilot-data/Parse/Miscellaneous")
 local Utility = require("../modules/Utility")
 local Types = require("../modules/Types")
-
-local function constructPlainDescription(data: Types.Describable): string?
-	return if data.Description and not data.Description:match("^%s*$")
-		then data.Description:match("^%s*(.-)%s*$")
-		else nil
-end
 
 local function createDocumentationSection()
 	return {
@@ -113,7 +108,7 @@ function Wiki.generate(options)
 			table.insert(group, value.Type.Wiki or `- {member.Name}`)
 		end
 
-		local plainDescription = constructPlainDescription(objectData)
+		local plainDescription = ParseMiscellaneous.plainDescription(objectData)
 		local output = if plainDescription then { Utility.escapeMarkdown(plainDescription) } else {}
 
 		local addSection = insertSection(pageOutput, output)
