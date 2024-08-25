@@ -69,7 +69,7 @@ local function insertSection(source, output)
 
 			local formatted = if isInherited
 				then Utility.markdownDropdown(
-					`Inherited from [{sourceObject}](/docs/objects/{sourceObject})`,
+					`Inherited from [{sourceObject}](/docs/Objects/{sourceObject})`,
 					stringForm
 				)
 				else stringForm
