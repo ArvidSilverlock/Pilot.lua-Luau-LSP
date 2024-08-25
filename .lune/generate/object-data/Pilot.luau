@@ -1,4 +1,4 @@
-local Types = require("../Modules/Types")
+local Types = require("../modules/Types")
 
 -- Forced module caching. _G usage...
 if _G._pilotData then
