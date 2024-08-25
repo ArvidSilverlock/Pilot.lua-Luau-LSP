@@ -2367,16 +2367,24 @@
 			"Scanner": {
 				"methods": {
 					"CalculateCost": {
-						"unknowntype": true
+						"description": "Calculates the cost of performing a scan with the given range.",
+						"parameters": ["range: number?"],
+						"returns": ["number"]
 					},
 					"GetDistance": {
-						"unknowntype": true
+						"description": "Gets the approximate distance to the part. Accuracy falls off exponentially.",
+						"parameters": ["part: Part"],
+						"returns": ["number"]
 					},
 					"GetPartsInRange": {
-						"unknowntype": true
+						"description": "Does a (power hungry) query for all parts in the configured (or specified) range up to 1024 studs. Can optionally filter for a class name, but many use cases will prefer to store part objects in a set.",
+						"parameters": ["range: number?", "className: string?"],
+						"returns": ["{Part}"]
 					},
 					"Locate": {
-						"unknowntype": true
+						"description": "Uses GPS to locate a part (uses :GetDistance() internally). The scanners you provide should be on different axes and stuff. You need at least 3 to correctly identify a position.",
+						"parameters": ["part: Part", "scanners: {Scanner}"],
+						"returns": ["Vector3"]
 					}
 				},
 				"properties": {
