@@ -62,10 +62,10 @@ local function defineObject(objectName, output)
 		if member.Group == "Methods" then
 			table.insert(sections.Methods, reference.Type.Definition)
 		elseif member.Group == "Configurables" then
-			table.insert(sections.Configureables, `{member.Name}: {reference.Type}`)
-			table.insert(sections.Configure, `{member.Name}: {reference.Type}?,`)
+			table.insert(sections.Configureables, `{member.Name}: {reference.Type.Luau}`)
+			table.insert(sections.Configure, `{member.Name}: {reference.Type.Luau}?,`)
 		elseif member.Group == "Properties" then
-			table.insert(sections.Properties, `{member.Name}: {reference.Type}`)
+			table.insert(sections.Properties, `{member.Name}: {reference.Type.Luau}`)
 		elseif member.Group == "Events" then
 			table.insert(sections.Events, reference.Type.Luau)
 		end
