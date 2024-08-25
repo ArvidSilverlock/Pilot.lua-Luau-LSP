@@ -1,6 +1,7 @@
-local APIDump = require("../data/APIDump")
+local RobloxAPIDump = require("../../object-data/Roblox")
 
-local Types = require("../Types")
+local Utility = require("../../modules/Utility")
+local Types = require("../../modules/Types")
 
 local function getLuauType(valueType)
 	local category = valueType.Category
@@ -96,10 +97,8 @@ local function isUserInterface(class)
 		or class.Superclass == "GuiBase"
 end
 
-return function(valueType: "Function", options: Types.FunctionOptions)
+return function(valueType: "Function", name: string, data: Types.FunctionData, within: string?)
 	assert(valueType == "Function", `the 'screen' generator only works for 'Function's, got '{valueType}'`)
-
-	local output = options.output
 
 	local types = {}
 	local methods = {}
@@ -108,7 +107,7 @@ return function(valueType: "Function", options: Types.FunctionOptions)
 	local definedClasses = {}
 
 	local classes = {}
-	for _, class in APIDump.Classes do
+	for _, class in RobloxAPIDump.Classes do
 		classes[class.Name] = class
 	end
 
@@ -133,6 +132,16 @@ return function(valueType: "Function", options: Types.FunctionOptions)
 		isFirstPass = false
 	until additions == 0
 
-	table.insert(output.generatedTypes, types)
-	return table.concat(methods, "\n")
+	local luauTypes = table.concat(types, "\n")
+	local methodType = table.concat(methods, "\n")
+
+	return {
+		Definition = methodType,
+		Wiki = "- CreateElement(*string* className, *\\{ [string]: any }?* properties) → Instance"
+			.. if data.Description then `\n  - {Utility.escapeMarkdown(data.Description)}` else "",
+		Luau = "-- N/A",
+		InsertDefinition = function(output: Types.DefinitionOutput)
+			table.insert(output.GlobalTypes, luauTypes)
+		end,
+	}
 end
