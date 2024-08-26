@@ -304,9 +304,7 @@
 					"GetTemperature": {
 						"deprecated": "Use `.Temperature` instead.",
 						"description": "Gets the temperature of the object.",
-						"returns": [
-							["number", "The temperature of the object."]
-						]
+						"returns": [["number", "The temperature of the object."]]
 					},
 					"HasComponent": {
 						"parameters": ["componentName: string"],
@@ -456,9 +454,7 @@
 					"Configured": true,
 					"CursorMoved": {
 						"description": "Fired when a player's cursor updates.",
-						"parameters": [
-							["cursor: ARCursor", "The cursor that updated."]
-						]
+						"parameters": [["cursor: ARCursor", "The cursor that updated."]]
 					},
 					"CursorPressed": {
 						"description": "Fired when a player left clicks.",
@@ -498,18 +494,13 @@
 								"shape: \"Ball\" | \"Block\" | \"Cylinder\" | \"Wedge\" | \"CornerWedge\"",
 								"The `Enum.PartType` of the part."
 							],
-							[
-								"properties: { [string]: any }",
-								"The part properties to apply."
-							]
+							["properties: { [string]: any }", "The part properties to apply."]
 						],
 						"returns": [["Part", "The created part instance."]]
 					},
 					"GetCursor": {
 						"description": "Returns the part owner's cursor, or any other player's cursor if the owner does not have a cursor (this is considered the primary user).",
-						"returns": [
-							["ARCursor", "The cursor of the primary user."]
-						]
+						"returns": [["ARCursor", "The cursor of the primary user."]]
 					},
 					"GetCursors": {
 						"description": "Gets a dictionary of player usernames to their cursors.",
@@ -636,9 +627,7 @@
 						"returns": ["{ Power: number, [string]: number }"]
 					},
 					"CraftItems": {
-						"parameters": [
-							"items: { string } | { [string]: number }"
-						]
+						"parameters": ["items: { string } | { [string]: number }"]
 					},
 					"GetCraftCooldown": {
 						"returns": ["number"]
@@ -1373,10 +1362,7 @@
 					"PointAt": {
 						"description": "Points the gyro towards the specified position.",
 						"parameters": [
-							[
-								"position: Vector3",
-								"The position for the gyro to look at."
-							]
+							["position: Vector3", "The position for the gyro to look at."]
 						]
 					}
 				},
@@ -2417,9 +2403,7 @@
 					},
 					"GetDimensions": {
 						"description": "Gets the size of the screen in pixels in the form of a <code>Vector2</code>",
-						"returns": [
-							["Vector2", "The size of the screen in pixels."]
-						]
+						"returns": [["Vector2", "The size of the screen in pixels."]]
 					}
 				},
 				"properties": {
@@ -2886,26 +2870,18 @@
 					"Configured": true,
 					"CursorMoved": {
 						"description": "Fired when a player moves their cursor on the screen.",
-						"parameters": [
-							["cursor: Cursor", "The cursor that moved."]
-						]
+						"parameters": [["cursor: Cursor", "The cursor that moved."]]
 					},
 					"CursorPressed": {
 						"description": "Fired when a player left clicks on the screen.",
 						"parameters": [
-							[
-								"cursor: Cursor",
-								"The cursor that started pressing left click."
-							]
+							["cursor: Cursor", "The cursor that started pressing left click."]
 						]
 					},
 					"CursorReleased": {
 						"description": "Fired when a player releases the left click button on the screen.",
 						"parameters": [
-							[
-								"cursor: Cursor",
-								"The cursor that stopped pressing left click."
-							]
+							["cursor: Cursor", "The cursor that stopped pressing left click."]
 						]
 					}
 				},
