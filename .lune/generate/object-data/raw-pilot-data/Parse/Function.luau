@@ -31,7 +31,7 @@ local function parseFunctionType(data: Types.FunctionData, name: string?, isPlai
 
 	for index, returnValue in data.Returns do
 		table.insert(output, returnValue.Type.Luau)
-		if index < #data.Parameters then
+		if index < #data.Returns then
 			table.insert(output, ", ")
 		end
 	end
