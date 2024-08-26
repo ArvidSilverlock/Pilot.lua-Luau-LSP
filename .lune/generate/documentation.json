@@ -3359,9 +3359,9 @@
 				"unlink": "(self: FileSystem, pathname: string) -> ()",
 				"writefile": "(self: FileSystem, filepath: string, contents: string) -> ()"
 			},
-			"FileSystemDevice<T>": {
+			"FileSystemDevice": {
 				"attributes": "FileAttributes?",
-				"device": "T",
+				"device": "any",
 				"kind": "\"device\""
 			},
 			"FileSystemDirectory": {
@@ -3374,7 +3374,7 @@
 				"contents": "string",
 				"kind": "\"file\""
 			},
-			"FileSystemFileNode": "FileSystemDirectory | FileSystemFile | FileSystemLink | FileSystemRoot | FileSystemDevice<any>",
+			"FileSystemFileNode": "FileSystemDirectory | FileSystemFile | FileSystemLink | FileSystemRoot | FileSystemDevice",
 			"FileSystemLink": {
 				"attributes": "FileAttributes?",
 				"kind": "\"link\"",
@@ -3433,7 +3433,7 @@
 			],
 			"PolysiliconMode": ["Activate", "Deactivate", "FlipFlop"],
 			"RawFileSystem": {
-				"Device": "<T>(device: T, attributes: FileAttributes) -> FileSystemDevice<T>",
+				"Device": "(device: any, attributes: FileAttributes) -> FileSystemDevice",
 				"Directory": "(contents: { [string]: FileSystemFileNode }, attributes: FileAttributes, readonly: boolean?) -> FileSystemDirectory",
 				"File": "(contents: string, attributes: FileAttributes) -> FileSystemFile",
 				"Link": "(pathname: string, attributes: FileAttributes) -> FileSystemLink",
