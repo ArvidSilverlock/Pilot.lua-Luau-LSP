@@ -14,7 +14,7 @@ function Darklua.save(options, generatedData)
 		},
 	}
 
-	for _, module in fs.readDir("./.lune/generate/modules") do
+	for _, module in fs.readDir("./.lune/generate/object-data/pilot-modules") do
 		table.insert(darkluaConfig.bundle.excludes, Utility.stripFileExtension(module))
 	end
 
