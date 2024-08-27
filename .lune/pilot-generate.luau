@@ -19,9 +19,6 @@ end
 if argumentsSpecified then
 	stdio.write("Arguments besides '-o' and `--types-dir` specified, not providing Q/A.\n")
 else
-	options.o = process.args[1] or "./workspace"
-	options["types-dir"] = process.args[2] or "types"
-
 	stdio.write(stdio.color("red"))
 	stdio.write("Note: ")
 	stdio.write(stdio.color("reset"))
