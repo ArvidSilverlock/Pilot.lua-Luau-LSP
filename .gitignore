@@ -3,6 +3,8 @@ workspace
 
 # generated wiki directories
 wiki/docs/Objects/*
+wiki/docs/Programmable Objects/*
+wiki/docs/Classes/*
 
 # miscellaneous
 .DS_Store
