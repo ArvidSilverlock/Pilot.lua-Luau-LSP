@@ -1,5 +1,6 @@
-local WIKI_DIRECTORY = "./wiki/docs/Objects"
+local WIKI_DIRECTORY = "./wiki/docs"
 
+local serde = require("@lune/serde")
 local fs = require("@lune/fs")
 
 local PilotData = require("../object-data/Pilot")
@@ -23,7 +24,7 @@ local function createDocumentationSections()
 	}
 end
 
-local function insertSection(source, output)
+local function insertSection(source, output, paths)
 	return function(sectionName, sourceObject, isInherited, hasAddedTitle)
 		if not source[sourceObject] or not source[sourceObject][sectionName] then
 			return false
@@ -63,10 +64,7 @@ local function insertSection(source, output)
 			local stringForm = table.concat(sectionOutput, "\n")
 
 			local formatted = if isInherited
-				then Utility.markdownDropdown(
-					`Inherited from [{sourceObject}](/docs/Objects/{sourceObject})`,
-					stringForm
-				)
+				then Utility.markdownDropdown(`Inherited from [{sourceObject}]({paths[sourceObject]})`, stringForm)
 				else stringForm
 
 			if not hasAddedTitle then
@@ -84,11 +82,22 @@ end
 local Wiki = {}
 
 function Wiki.generate(options)
-	local generatedPages = {}
+	local generatedPages = {
+		["Objects"] = {},
+		["Classes"] = {},
+		["Programmable Objects"] = {},
+	}
+	local paths = {}
 
 	for _, objectName in PilotData.ObjectDefinitionOrder do
 		local objectData = PilotData.Objects[objectName]
+
 		local pageOutput = {}
+		local metadata = {}
+
+		if #objectData.Categories > 0 then
+			metadata.tags = table.clone(objectData.Categories)
+		end
 
 		for _, member in objectData.Members do
 			local source = pageOutput[member.Source]
@@ -111,7 +120,7 @@ function Wiki.generate(options)
 		local plainDescription = ParseMiscellaneous.plainDescription(objectData)
 		local output = if plainDescription then { Utility.escapeMarkdown(plainDescription) } else {}
 
-		local addSection = insertSection(pageOutput, output)
+		local addSection = insertSection(pageOutput, output, paths)
 		for _, section in { "Methods", "Configurables", "Properties", "Events" } do
 			local sectionOutput = {}
 
@@ -126,25 +135,36 @@ function Wiki.generate(options)
 			end
 		end
 
-		generatedPages[objectName] = table.concat(output, "\n\n")
+		if next(metadata) then
+			table.insert(output, 1, `---\n{serde.encode("yaml", metadata)}---`)
+		end
+
+		local section = if objectData.Group == "abstractclasses"
+			then "Classes"
+			elseif objectData.IsProgrammable then "Programmable Objects"
+			else "Objects"
+
+		paths[objectName] = `/docs/{section}/{objectName}.md`
+		generatedPages[section][objectName] = table.concat(output, "\n\n")
 	end
 
 	return generatedPages
 end
 
-function Wiki.save(options, generatedPages)
-	Utility.makeDirectory(WIKI_DIRECTORY)
-
-	for _, page in fs.readDir(WIKI_DIRECTORY) do
-		local pageName = Utility.stripFileExtension(page)
-		if not generatedPages[pageName] then
-			fs.removeFile(`{WIKI_DIRECTORY}/{page}`)
+local function recursiveWrite(pages, path)
+	for name, value in pages do
+		if typeof(value) == "table" then
+			fs.removeDir(`{path}/{name}`)
+			fs.writeDir(`{path}/{name}`)
+			recursiveWrite(value, `{path}/{name}`)
+		else
+			fs.writeFile(`{path}/{name}.md`, value)
 		end
 	end
+end
 
-	for name, page in generatedPages do
-		fs.writeFile(`{WIKI_DIRECTORY}/{name}.md`, page)
-	end
+function Wiki.save(options, generatedPages)
+	recursiveWrite(generatedPages, WIKI_DIRECTORY)
 end
 
 return Wiki
