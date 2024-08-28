@@ -124,6 +124,7 @@ export type FunctionDictionaryData = {
 } & Describable
 
 export type EventData = {
+	IsTemplate: boolean,
 	Parameters: { ParameterData },
 } & Describable
 
@@ -150,6 +151,8 @@ export type ObjectData = {
 	Properties: { [string]: PropertyData },
 	Configurables: { [string]: PropertyData },
 	Events: { [string]: EventData },
+
+	IsProgrammable: boolean,
 } & Describable
 
 export type PilotData = {
