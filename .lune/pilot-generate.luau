@@ -16,7 +16,18 @@ for option, _: any in options do
 	end
 end
 
-if argumentsSpecified then
+if options.release then
+	stdio.write("Using release options.\n")
+
+	options.types = true
+	options.docs = true
+	options.vscode = true
+	options.modules = true
+	options.wiki = true
+	options.selene = true
+	options.darklua = true
+	options.rokit = true
+elseif argumentsSpecified then
 	stdio.write("Arguments besides '-o' and `--types-dir` specified, not providing Q/A.\n")
 else
 	stdio.write(stdio.color("red"))
