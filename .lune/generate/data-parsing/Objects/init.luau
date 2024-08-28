@@ -66,6 +66,23 @@ function Objects.parse(input: Types.RawPilotData, output: Types.PilotData)
 		implementMethod(objectName, objects)
 		implementEvent(objectName, objects)
 
+		local isProgrammable = false
+		for memberName, memberData in object.Members do
+			if
+				(memberName == "PilotObject" or memberData.Source ~= "PilotObject")
+				and not (memberData.Group == "Events" and memberData.Reference.IsTemplate)
+				and not (memberData.Group == "Configurables" or memberData.Group == "Properties")
+			then
+				if objectName == "Warhead" then
+					print(memberName, memberData)
+				end
+				isProgrammable = true
+				break
+			end
+		end
+
+		object.IsProgrammable = isProgrammable
+
 		Utility.deepFreeze(object)
 	end
 end
