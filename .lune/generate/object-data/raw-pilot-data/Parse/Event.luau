@@ -97,7 +97,10 @@ function Event.parse(
 	event.Type.Wiki = generateWikiDescription(name, event)
 
 	if _data == true then
+		event.IsTemplate = true
 		EVENT_TEMPLATE_CACHE[name] = { Member = event, Reference = memberReference }
+	else
+		event.IsTemplate = false
 	end
 
 	return event, memberReference
