@@ -36,7 +36,7 @@ export default function Home(): JSX.Element {
 	return (
 		<Layout
 			title={siteConfig.title}
-			description="Description will go into a meta tag in <head />"
+			description="A Waste of Space wiki for all your programmatic needs!"
 		>
 			<HomepageHeader />
 		</Layout>
