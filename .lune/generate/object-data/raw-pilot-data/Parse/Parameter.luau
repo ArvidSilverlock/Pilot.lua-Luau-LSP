@@ -13,7 +13,7 @@ function Parameter.invertedTypedName(parameter: Types.ParameterData): string
 		else parameter.Type.Luau
 end
 
-function Parameter.parse(value: string | { string }): Types.ParameterData
+function Parameter.parse(value: string | { string }, isReturnValue: boolean?): Types.ParameterData
 	local nameAndType: string, description: string?
 	if typeof(value) == "table" then
 		nameAndType, description = value[1], value[2]
@@ -22,11 +22,18 @@ function Parameter.parse(value: string | { string }): Types.ParameterData
 	end
 
 	local parameterName, typeString = nameAndType:match("^([_%a][_%w]*):%s*(.+)$")
+	if not parameterName and not typeString then
+		parameterName, typeString = nameAndType:match("^(%.%.%.):%s*(.+)$")
+	end
 
 	return {
 		Name = parameterName,
 		Type = {
-			Luau = typeString or nameAndType,
+			Luau = if parameterName == "..."
+					and typeString
+					and isReturnValue
+				then `...{typeString}`
+				else typeString or nameAndType,
 			Definition = nil,
 			Unknown = false,
 		},
