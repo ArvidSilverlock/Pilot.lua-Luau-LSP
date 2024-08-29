@@ -67,6 +67,50 @@
 					}
 				}
 			},
+			"UserInput": {
+				"learnmore": "https://discord.com/channels/616089055532417036/823313507167502336/1038620936896790538",
+				"properties": {
+					"Mouse": {
+						"description": "An array of <code>InputObjects</code> corresponding to the mouse buttons currently being currently held down.",
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#GetMouseButtonsPressed",
+						"type": "{ InputObject }"
+					},
+					"Keyboard": {
+						"description": "An array of <code>InputObjects</code> associated with the keys currently being pressed.",
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#GetKeysPressed",
+						"type": "{ InputObject }"
+					},
+					"Gamepad": {
+						"description": "An dictionary of <code>Enum.UserInputType.GamepadX</code> keys to an array of <code>InputObjects</code> representing the current state of all available inputs for said gamepad as values.",
+						"learnmore": "https://discord.com/channels/616089055532417036/823313507167502336/1038621144397381692",
+						"type": "{ [EnumUserInputType]: { InputObject } }"
+					},
+					"VREnabled": {
+						"description": "This property describes whether the user is using a virtual reality (VR) device.",
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#VREnabled",
+						"type": "boolean"
+					},
+					"KeyboardEnabled": {
+						"description": "This property describes whether the user's device has a keyboard available. This property is <code>true</code> when the user's device has an available keyboard, and <code>false</code> when it does not.",
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#KeyboardEnabled",
+						"type": "boolean"
+					},
+					"TouchEnabled": {
+						"description": "This property describes whether the user's current device has a touch screen available.",
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#TouchEnabled",
+						"type": "boolean"
+					},
+					"GamepadEnabled": {
+						"description": "This property describes whether the device being used by a user has an available gamepad. If gamepads are available.",
+						"type": "boolean"
+					},
+					"LastInputType": {
+						"description": "The 'Enum.UserInputType` associated with the user's most recent input.",
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#GetLastInputType",
+						"type": "EnumUserInputType"
+					}
+				}
+			},
 			"ARCursor": {
 				"properties": {
 					"Camera": {
@@ -134,7 +178,7 @@
 					"UserInput": {
 						"description": "A table of input data (would suggest printing with repr) - Contains Mouse, Keyboard, Gamepad, VREnabled, KeyboardEnabled, TouchEnabled, GamepadEnabled, and LastInputType.",
 						"readonly": true,
-						"unknowntype": true
+						"type": "UserInput"
 					},
 					"VirtualTarget": {
 						"description": "The hovered part in the virtual 3D space.",
@@ -222,7 +266,14 @@
 			"ContainerObject": {
 				"events": {
 					"ContainerChanged": {
-						"unknowntype": true
+						"description": "Fires when the amount of the item in the container changes. Note that <code>resourceType</code> describes the \"state\" (i.e., <code>Power</code> for powercell, <code>Solid</code> for bin, <code>Fluid</code> for tank) of the resource rather than the contents",
+						"parameters": [
+							"resourceType: \"Solid\" | \"Fluid\" | \"Power\"",
+							[
+								"resourceAmount: number",
+								"The total resource count in the container, not the change in resources. One fluid is considered one fluid rather than ten (which is what would appear on the tank display)"
+							]
+						]
 					}
 				},
 				"extends": "PilotObject",
@@ -474,13 +525,9 @@
 							]
 						]
 					},
-					"KeyPressed": {
-						"unknowntype": true
-					},
+					"KeyPressed": true,
 					"OnClick": true,
-					"UserInput": {
-						"unknowntype": true
-					}
+					"UserInput": true
 				},
 				"extends": "Screen",
 				"methods": {
@@ -1066,7 +1113,7 @@
 				},
 				"methods": {
 					"Dispense": {
-						"unknowntype": true
+						"description": "Dispenses a single item."
 					}
 				},
 				"properties": {
@@ -1513,7 +1560,7 @@
 				"methods": {
 					"GetRequiredPower": {
 						"description": "Returns the amount of power required for the warp.",
-						"unknowntype": true
+						"type": "number"
 					}
 				},
 				"properties": {
@@ -1580,36 +1627,16 @@
 				"categories": ["Logic"],
 				"description": "Similar to a button, except is programmable to take more than one key input.\nCan be attached to a vehicle seat or clicked by a player.",
 				"events": {
-					"KeyPressed": {
-						"parameters": [
-							[
-								"keyCode: any",
-								"The `Enum.KeyCode` of the key that was pressed."
-							],
-							[
-								"keyString: string",
-								"The letter of the key that was pressed. If the key is non-printable (i.e. shift or backspace) keyString will be an empty string."
-							],
-							[
-								"userId: number",
-								"The <code>UserID</code> of the player who pressed the key."
-							]
-						]
-					},
+					"KeyPressed": true,
+					"UserInput": true,
 					"TextInputted": {
 						"parameters": [
+							"userId: number",
 							[
 								"text: string",
 								"The text that was inputted.\n**NOTE:** The text contains a newline character."
-							],
-							[
-								"playerName: string",
-								"The username of the player who input the text"
 							]
 						]
-					},
-					"UserInput": {
-						"unknowntype": true
 					}
 				},
 				"methods": {
@@ -1764,15 +1791,30 @@
 				"methods": {
 					"Receive": {
 						"description": "Waits for data to be received.",
-						"unknowntype": true
+						"codesample": "-- Microcontroller A\nlocal function receive(sender: Microcontroller, command: string, ...: any)\n    if command == \"Tell me a joke.\" then\n        sender:Send(\"Why did the chicken cross the road?\")\n    elseif command == \"I don't know, why?\" then\n        sender:Send(\"To get to the other side.\")\n    end\nend\n\nwhile true do\n    receive(Microcontroller:Receive())\nend\n\n-- Microcontroller B\nlocal otherMicrocontroller = GetPartFromPort(1, \"Microcontroller\")\n\nlocal function receive(sender: Microcontroller, command: string, ...: any)\n    if command == \"Why did the chicken cross the road?\" then\n        sender:Send(\"I don't know, why?\")\n    elseif command == \"To get to the other side.\" then\n        sender:Send(\"HAHAHA that's SO FUNNY!!!!\")\n        sender:Shutdown() -- kill enemy\n    end\nend\n\ntask.spawn(function()\n    while true do\n        receive(Microcontroller:Receive())\n    end\nend)\n\notherMicrocontroller:Send(\"Tell me a joke.\")",
+						"returns": [
+							[
+								"sender: Microcontroller",
+								"The microcontroller sending the data."
+							],
+							[
+								"...: any",
+								"The parameters sent through by the other microcontroller."
+							]
+						]
 					},
 					"Send": {
 						"description": "Sends the data you provide to a remote microcontroller. Parts you pass will be based on your microcontroller's context.",
-						"unknowntype": true
+						"codesample": "-- Microcontroller A\nlocal function receive(sender: Microcontroller, command: string, ...: any)\n    if command == \"Tell me a joke.\" then\n        sender:Send(\"Why did the chicken cross the road?\")\n    elseif command == \"I don't know, why?\" then\n        sender:Send(\"To get to the other side.\")\n    end\nend\n\nwhile true do\n    receive(Microcontroller:Receive())\nend\n\n-- Microcontroller B\nlocal otherMicrocontroller = GetPartFromPort(1, \"Microcontroller\")\n\nlocal function receive(sender: Microcontroller, command: string, ...: any)\n    if command == \"Why did the chicken cross the road?\" then\n        sender:Send(\"I don't know, why?\")\n    elseif command == \"To get to the other side.\" then\n        sender:Send(\"HAHAHA that's SO FUNNY!!!!\")\n        sender:Shutdown() -- kill enemy\n    end\nend\n\ntask.spawn(function()\n    while true do\n        receive(Microcontroller:Receive())\n    end\nend)\n\notherMicrocontroller:Send(\"Tell me a joke.\")",
+						"parameters": [
+							[
+								"...: any",
+								"The parameters to send to the other microcontroller."
+							]
+						]
 					},
 					"Shutdown": {
-						"description": "Kills the microcontroller.",
-						"unknowntype": true
+						"description": "Kills the microcontroller."
 					}
 				},
 				"properties": {
@@ -1794,7 +1836,11 @@
 				"description": "Used in programming. Takes user's inputs.",
 				"events": {
 					"Chatted": {
-						"unknowntype": true
+						"description": "Fires when a user speaks in chat. Also registers hidden commands like '/e dance' or '/console'.",
+						"parameters": [
+							"userId: number",
+							["message: string", "The unfiltered message send by the user."]
+						]
 					}
 				}
 			},
@@ -1913,10 +1959,10 @@
 			"ObjectDetector": {
 				"methods": {
 					"GetLastHitData": {
-						"unknowntype": true
+						"type": "ObjectDetectorHitData"
 					},
 					"GetLastHitPart": {
-						"unknowntype": true
+						"returns": ["PilotObject"]
 					}
 				},
 				"properties": {
@@ -2399,7 +2445,8 @@
 						"generate": "Screen"
 					},
 					"GetCanvas": {
-						"unknowntype": true
+						"description": "Returns the parent container of all the screen's content.",
+						"returns": ["Frame"]
 					},
 					"GetDimensions": {
 						"description": "Gets the size of the screen in pixels in the form of a <code>Vector2</code>",
@@ -3154,6 +3201,21 @@
 		},
 		"Damaged": {
 			"unknowntype": true
+		},
+		"KeyPressed": {
+			"parameters": [
+				[
+					"userId: number",
+					"The <code>UserID</code> of the player who pressed the key."
+				],
+				[
+					"keyName: string",
+					"The letter of the key that was pressed. If the key is non-printable (i.e. shift or backspace) keyString will be an empty string."
+				]
+			]
+		},
+		"UserInput": {
+			"parameters": ["userId: number", "inputObject: InputObject"]
 		}
 	},
 	"globals": {
@@ -3280,6 +3342,16 @@
 			}
 		},
 		"types": {
+			"ObjectDetectorHitData": {
+				"Durability": "number",
+				"isTerrain": "boolean",
+				"Name": "string",
+				"Position": "Vector3",
+				"Color": "Color3",
+				"Distance": "number",
+				"CreatedBy": "number",
+				"[string]": "any"
+			},
 			"CanvasContext": ["2D", "3D"],
 			"CelestialBodyType": ["Planet", "BlackHole", "Star"],
 			"ConfigurableData": {
