@@ -37,7 +37,7 @@ local function canWriteProperty(member)
 		)
 end
 
-local function parseClass(class, classes, types, methods, addMethod)
+local function parseClass(class, classes, types, methods, scrappedClasses, addMethod)
 	local properties = {}
 
 	if class.Members then
@@ -77,24 +77,15 @@ local function parseClass(class, classes, types, methods, addMethod)
 	end
 
 	if addMethod then
-		table.insert(
-			methods,
-			`function CreateElement(self, className: "{class.Name}", properties: {propertiesSource}Properties?): {class.Name}`
-		)
+		local formatted = string.format("%q", class.Name)
+		if propertiesSource == "Instance" then
+			table.insert(scrappedClasses, formatted)
+		elseif methods[propertiesSource] then
+			table.insert(methods[propertiesSource], formatted)
+		else
+			methods[propertiesSource] = { formatted }
+		end
 	end
-end
-
-local function isUserInterface(class)
-	return class.MemoryCategory == "Gui"
-		or class.Superclass == "UIComponent"
-		or class.Superclass == "UILayout"
-		or class.Superclass == "GuiLabel"
-		or class.Superclass == "GuiObject"
-		or class.Superclass == "UIBase"
-		or class.Superclass == "UIConstraint"
-		or class.Superclass == "GuiBase2d"
-		or class.Superclass == "GuiButton"
-		or class.Superclass == "GuiBase"
 end
 
 return function(valueType: "Function", name: string, data: Types.FunctionData, within: string?)
@@ -102,6 +93,7 @@ return function(valueType: "Function", name: string, data: Types.FunctionData, w
 
 	local types = {}
 	local methods = {}
+	local scrappedClasses = {}
 
 	local superClasses = {}
 	local definedClasses = {}
@@ -115,25 +107,46 @@ return function(valueType: "Function", name: string, data: Types.FunctionData, w
 	repeat
 		local additions = 0
 		for className, class in classes do
-			if
-				isFirstPass and (class.Tags and table.find(class.Tags, "NotCreatable") or not isUserInterface(class))
-			then
-				continue
-			elseif not isFirstPass and (definedClasses[className] or not superClasses[className]) then
+			if isFirstPass then
+				if class.Tags and table.find(class.Tags, "NotCreatable") then
+					continue
+				elseif
+					className:match("Options$")
+					or className:match("Service$")
+					or className:match("Controller$")
+					or className:match("Description$")
+					or className:match("^Wrap")
+					or className:match("^Humanoid")
+					or (class.Tags and table.find(class.Tags, "Deprecated"))
+				then
+					table.insert(scrappedClasses, string.format("%q", className))
+					continue
+				end
+			elseif definedClasses[className] or not superClasses[className] then
 				continue
 			end
 
 			superClasses[class.Superclass] = true
 			definedClasses[className] = true
 
-			parseClass(class, classes, types, methods, isFirstPass)
+			parseClass(class, classes, types, methods, scrappedClasses, isFirstPass)
 			additions += 1
 		end
 		isFirstPass = false
 	until additions == 0
 
 	local luauTypes = table.concat(types, "\n")
-	local methodType = table.concat(methods, "\n")
+
+	local methodString = {}
+	for source, subClasses in methods do
+		table.insert(
+			methodString,
+			`_CreateElement<{table.concat(subClasses, " | ")}, {source}{if #subClasses > 1 then " & any" else ""}>`
+		)
+	end
+
+	local anyMethod = `\n\t& _CreateElement<{table.concat(scrappedClasses, " | ")} | string, Instance & any>`
+	local methodType = `CreateElement:\n{Utility.indent("  " .. table.concat(methodString, "\n& "))}` .. anyMethod
 
 	return {
 		Definition = methodType,
@@ -142,6 +155,10 @@ return function(valueType: "Function", name: string, data: Types.FunctionData, w
 		Luau = "-- N/A",
 		InsertDefinition = function(output: Types.DefinitionOutput)
 			table.insert(output.GlobalTypes, luauTypes)
+			table.insert(
+				output.LocalTypes,
+				"type _CreateElement<T, V> = (self: Screen, className: T, properties: InstanceProperties & { [string]: any }) -> V"
+			)
 		end,
 	}
 end
