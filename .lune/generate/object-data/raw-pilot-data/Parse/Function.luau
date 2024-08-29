@@ -110,13 +110,13 @@ function Function.parse(
 	else
 		if data.parameters then
 			for _, parameter in data.parameters do
-				table.insert(output.Parameters, ParseParameter.parse(parameter))
+				table.insert(output.Parameters, ParseParameter.parse(parameter, false))
 			end
 		end
 
 		if data.returns then
 			for _, returnValue in data.returns do
-				table.insert(output.Returns, ParseParameter.parse(returnValue))
+				table.insert(output.Returns, ParseParameter.parse(returnValue, true))
 			end
 		end
 	end
