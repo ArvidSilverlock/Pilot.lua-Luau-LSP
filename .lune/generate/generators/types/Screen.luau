@@ -160,5 +160,12 @@ return function(valueType: "Function", name: string, data: Types.FunctionData, w
 				"type _CreateElement<T, V> = (self: Screen, className: T, properties: InstanceProperties & { [string]: any }) -> V"
 			)
 		end,
+		InsertVanilla = function(output: Types.DefinitionOutput)
+			table.insert(output.GlobalTypes, luauTypes)
+			table.insert(
+				output.LocalTypes,
+				"type _CreateElement<T, V> = (self: Screen, className: T, properties: InstanceProperties & { [string]: any }) -> V"
+			)
+		end,
 	}
 end

@@ -15,7 +15,7 @@ return function(valueType: "Function", name: string, data: Types.FunctionData, w
 	assert(BASE_TYPES[name], `the 'GetPart' generator only works for the 4 part getting functions`)
 	assert(within == nil, "the 'GetPart' generator does not work for methods")
 
-	local lines = { `declare {name}:` }
+	local lines = {}
 
 	local index = 1
 	for objectName, _ in PILOT_DATA.classes.objects do
@@ -26,11 +26,17 @@ return function(valueType: "Function", name: string, data: Types.FunctionData, w
 	end
 	table.insert(lines, `\t& _{name}<string?, PilotObject>`)
 
-	local luauType = table.concat(lines, "\n")
+	local overloads = table.concat(lines, "\n")
+	local definitionType = `declare {name}:\n{overloads}`
+	local luauType = `local {name} = ( nil :: any ) :: \n{overloads}`
+
 	return {
-		Definition = luauType,
+		Definition = definitionType,
 		Luau = luauType,
 		InsertDefinition = function(output: Types.DefinitionOutput)
+			table.insert(output.LocalTypes, BASE_TYPES[name])
+		end,
+		InsertVanilla = function(output: Types.DefinitionOutput)
 			table.insert(output.LocalTypes, BASE_TYPES[name])
 		end,
 	}
