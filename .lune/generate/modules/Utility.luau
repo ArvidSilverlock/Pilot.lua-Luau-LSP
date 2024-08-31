@@ -4,6 +4,14 @@ local fs = require("@lune/fs")
 
 local Utility = {}
 
+function Utility.formatTime(seconds: number): string
+	return if seconds < 0.0001
+		then string.format("%.2f µs", seconds * 1e6)
+		elseif seconds < 1 then string.format("%.2f ms", seconds * 1e3)
+		elseif seconds < 60 then string.format("%.2f s", seconds)
+		else string.format("%d min %.2f s", seconds // 60, seconds % 60)
+end
+
 function Utility.indent(value: string?, amount: number?): string
 	if value == nil or value:match("^%s*$") then -- entirely whitespace
 		return ""
