@@ -14,7 +14,7 @@ local function parseFunctionType(data: Types.FunctionData, name: string?, isPlai
 
 	for index, parameterValue in data.Parameters do
 		local stringForm = if parameterValue.Name ~= "self" or isPlainLuau
-			then ParseParameter.typedName(parameterValue)
+			then ParseParameter.typedName(parameterValue, isPlainLuau)
 			else "self"
 
 		table.insert(output, stringForm)
@@ -92,15 +92,11 @@ local function generateWikiDescription(name: string, data: Types.FunctionData)
 	return table.concat(output, "\n")
 end
 
-function Function.parse(
-	data: Types.FunctionObject,
-	name: string?,
-	within: string?,
-	isPlainLuau: boolean?,
-	isMethod: boolean?
-)
+function Function.parse(data: Types.FunctionObject, name: string?, within: string?, isMethod: boolean?)
 	local output = ParseMiscellaneous.describable(data, {
-		Parameters = if within and isMethod then { { Name = "self", Type = within } } else {},
+		Parameters = if within and isMethod
+			then { { Name = "self", Type = { Luau = within, Definition = within } } }
+			else {},
 		Returns = {},
 	}) :: any
 
@@ -127,9 +123,11 @@ function Function.parse(
 	else
 		output.Type = { Unknown = data.unknowntype == true }
 
-		local functionType = parseFunctionType(output, name, isPlainLuau)
+		local plainFunctionType = parseFunctionType(output, name, true)
+		local functionType = parseFunctionType(output, name, false)
+
 		output.Type.Definition = `{if not within then "declare " else ""}{functionType}`
-		output.Type.Luau = functionType
+		output.Type.Luau = if not within then `local {plainFunctionType} = nil :: any` else plainFunctionType
 
 		if name then
 			output.Type.Wiki = generateWikiDescription(name, output)
