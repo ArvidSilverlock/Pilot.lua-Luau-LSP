@@ -9,7 +9,15 @@ local function getLuauType(valueType)
 	return if category == "Primitive"
 		then (if name == "bool" then "boolean" elseif name == "string" then "string" else "number")
 		elseif category == "Enum" then `Enum{name}`
-		elseif category == "DataType" and name == "Content" then "string"
+		elseif category == "Class" then name
+		elseif
+			name == "Content"
+			or name == "BinaryString"
+			or name == "SharedString"
+			or name == "ProtectedString"
+		then "string"
+		elseif name == "OptionalCoordinateFrame" then "CFrame"
+		elseif name == "Color3uint8" then "Color3"
 		else name
 end
 
@@ -32,7 +40,10 @@ local function canWriteProperty(member)
 		and member.Security.Write == "None"
 		and (
 			if member.Tags
-				then not table.find(member.Tags, "ReadOnly") and not table.find(member.Tags, "Deprecated")
+				then not table.find(member.Tags, "ReadOnly")
+					and not table.find(member.Tags, "Deprecated")
+					and not table.find(member.Tags, "NotScriptable")
+					and not table.find(member.Tags, "Hidden")
 				else true
 		)
 end
