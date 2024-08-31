@@ -20,7 +20,10 @@ function Type.parse(input: any)
 			local output = {}
 
 			for key, value in input do
-				local formattedKey = if key:match("^[_%a][_%w]*$") then key else `[{string.format("%q", key)}]`
+				local formattedKey = if key:sub(1, 1) == "[" and key:sub(-1, -1) == "]"
+					then key
+					elseif key:match("^[_%a][_%w]*$") then key
+					else `[{string.format("%q", key)}]`
 				table.insert(output, `{formattedKey}: {Type.parse(value)}`)
 			end
 
