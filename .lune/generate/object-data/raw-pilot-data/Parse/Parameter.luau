@@ -2,8 +2,12 @@ local Types = require("../../../modules/Types")
 
 local Parameter = {}
 
-function Parameter.typedName(parameter: Types.ParameterData): string
-	return if parameter.Name then `{parameter.Name}: {parameter.Type.Luau}` else parameter.Type.Luau
+function Parameter.typedName(parameter: Types.ParameterData, isPlainLuau: boolean?): string
+	return if parameter.Name
+		then (if parameter.Name == "..." and isPlainLuau
+			then `...{parameter.Type.Luau}`
+			else `{parameter.Name}: {parameter.Type.Luau}`)
+		else parameter.Type.Luau
 end
 
 function Parameter.invertedTypedName(parameter: Types.ParameterData): string
