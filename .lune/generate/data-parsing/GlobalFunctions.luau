@@ -17,12 +17,12 @@ function GlobalFunctions.parse(input: Types.RawPilotData, output: Types.PilotDat
 			})
 
 			for key, functionData in data.keys do
-				object.Functions[key] = ParseFunction.parse(functionData, key, name, true, false)
+				object.Functions[key] = ParseFunction.parse(functionData, key, name, false)
 			end
 
 			output.FunctionDictionaries[name] = object
 		else
-			output.Functions[name] = ParseFunction.parse(data, name, nil, false, false)
+			output.Functions[name] = ParseFunction.parse(data, name, nil, false)
 		end
 	end
 end

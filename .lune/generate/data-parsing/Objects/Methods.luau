@@ -16,7 +16,7 @@ local function ImplementMethods(objectName: string, output: { [string]: Types.Ob
 	local objectOutput = output[objectName]
 
 	for name, data in objectData.methods do
-		local method = ParseFunction.parse(data, name, objectName, false, true)
+		local method = ParseFunction.parse(data, name, objectName, true)
 
 		local memberReference = {
 			Name = name,
