@@ -51,9 +51,10 @@ local function generate(optionName: string, generatorName: string, default: bool
 	local shouldGenerate = if positive then true elseif negative then false else default
 
 	if not shouldGenerate then
-		stdio.write(`[{stdio.color("red")}Skipped{stdio.color("reset")}] {generatorName}\n`)
 		return
 	end
+
+	local startTime = os.clock()
 
 	local generator = require(`./generate/generators/{generatorName}`)
 
@@ -64,16 +65,32 @@ local function generate(optionName: string, generatorName: string, default: bool
 		generator.generate(options)
 	elseif generator.save then
 		generator.save(options)
-	else
-		stdio.write(`[{stdio.color("red")}Failed{stdio.color("reset")}] {generatorName}\n`)
 	end
 
+	local endTime = os.clock()
+
 	if generator.generate or generator.save then
-		stdio.write(`[{stdio.color("green")}Generated{stdio.color("reset")}] {generatorName}\n`)
+		stdio.write(
+			`- Generating {stdio.color("green")}{generatorName:lower()}{stdio.color("reset")} took {Utility.formatTime(endTime - startTime)}\n`
+		)
 	end
 end
 
-local startTime = os.clock()
+local robloxStart = os.clock()
+require("./generate/object-data/Roblox")
+local robloxEnd = os.clock()
+
+stdio.write(
+	`- Accessing {stdio.color("red")}ROBLOX documentation{stdio.color("reset")} took {Utility.formatTime(robloxEnd - robloxStart)}\n`
+)
+
+local pilotStart = os.clock()
+require("./generate/object-data/Pilot")
+local pilotEnd = os.clock()
+
+stdio.write(
+	`- Parsing {stdio.color("cyan")}Pilot.lua documentation{stdio.color("reset")} took {Utility.formatTime(pilotEnd - pilotStart)}\n`
+)
 
 Utility.makeDirectory(options.o)
 Utility.makeDirectory(`{options.o}/{options["types-dir"]}`)
@@ -89,7 +106,4 @@ generate("darklua", "Darklua", false)
 generate("rokit", "Rokit", false)
 
 generate("wiki", "Wiki", false)
-
-local endTime = os.clock()
-
-stdio.write(`{stdio.color("green")}Done!{stdio.color("reset")} Took {endTime - startTime}s.\n`)
+generate("vanilla", "Vanilla", false)
