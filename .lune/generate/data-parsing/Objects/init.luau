@@ -73,9 +73,6 @@ function Objects.parse(input: Types.RawPilotData, output: Types.PilotData)
 				and not (memberData.Group == "Events" and memberData.Reference.IsTemplate)
 				and not (memberData.Group == "Configurables" or memberData.Group == "Properties")
 			then
-				if objectName == "Warhead" then
-					print(memberName, memberData)
-				end
 				isProgrammable = true
 				break
 			end
