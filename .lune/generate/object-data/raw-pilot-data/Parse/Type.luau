@@ -17,7 +17,7 @@ function Type.parse(input: any)
 			local concatenation = table.concat(output, if operation:match("^and") then " & " else " | ")
 			return if operation:sub(-1, -1) == "?" then `({concatenation})?` else concatenation
 		elseif #input > 0 and typeof(input[1]) == "string" and input[1] == "?" then
-			return `({input})?`
+			return `({Type.parse(input[2])})?`
 		elseif typeof((next(input))) == "string" then
 			local output = {}
 
