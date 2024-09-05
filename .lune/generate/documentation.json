@@ -1860,19 +1860,22 @@
 				},
 				"methods": {
 					"GetAsync": {
-						"unknowntype": true
+						"unknowntype": true,
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/HttpService#GetAsync"
 					},
 					"GetRequest": {
 						"parameters": ["domain: string"],
 						"returns": ["string"]
 					},
 					"PostAsync": {
-						"unknowntype": true
+						"unknowntype": true,
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/HttpService#PostAsync"
 					},
 					"PostRequest": {
 						"parameters": ["domain: string", "data: string"]
 					},
 					"RealPostRequest": {
+						"deprecated": true,
 						"parameters": [
 							"domain: string",
 							"data: string",
@@ -1883,7 +1886,8 @@
 						"returns": ["{ response: string, success: boolean }"]
 					},
 					"RequestAsync": {
-						"unknowntype": true
+						"unknowntype": true,
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/HttpService#RequestAsync"
 					},
 					"SendLocalMessage": {
 						"unknowntype": true
