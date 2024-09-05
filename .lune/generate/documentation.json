@@ -1090,9 +1090,10 @@
 						"returns": ["any"]
 					},
 					"ReadAll": {
-						"unknowntype": true
+						"returns": ["{ [any]: any }"]
 					},
 					"ReadEntireDisk": {
+						"deprecated": "Use `:ReadAll` instead.",
 						"returns": ["{ [any]: any }"]
 					},
 					"Write": {
@@ -1631,11 +1632,11 @@
 					"UserInput": true,
 					"TextInputted": {
 						"parameters": [
-							"userId: number",
 							[
 								"text: string",
 								"The text that was inputted.\n**NOTE:** The text contains a newline character."
-							]
+							],
+							["player: string", "The player who type in the keyboard."]
 						]
 					}
 				},
@@ -1860,7 +1861,12 @@
 				},
 				"methods": {
 					"GetAsync": {
-						"unknowntype": true,
+						"parameters": [
+							"url: string",
+							"nocache: boolean?",
+							"headers: { [string]: any }?"
+						],
+						"returns": ["string"],
 						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/HttpService#GetAsync"
 					},
 					"GetRequest": {
@@ -1868,14 +1874,21 @@
 						"returns": ["string"]
 					},
 					"PostAsync": {
-						"unknowntype": true,
+						"parameters": [
+							"url: string",
+							"data: string",
+							"contentType: EnumHttpContentType?",
+							"compress: boolean?",
+							"headers: { [string]: any }?"
+						],
+						"returns": ["string"],
 						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/HttpService#PostAsync"
 					},
 					"PostRequest": {
 						"parameters": ["domain: string", "data: string"]
 					},
 					"RealPostRequest": {
-						"deprecated": true,
+						"deprecated": "Use `:PostAsync` instead.",
 						"parameters": [
 							"domain: string",
 							"data: string",
@@ -1886,17 +1899,20 @@
 						"returns": ["{ response: string, success: boolean }"]
 					},
 					"RequestAsync": {
-						"unknowntype": true,
+						"parameters": ["options: ModemRequest"],
+						"returns": ["ModemRequestResponse"],
 						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/HttpService#RequestAsync"
 					},
 					"SendLocalMessage": {
 						"unknowntype": true
 					},
 					"SendMessage": {
-						"parameters": ["data: string", "id: number"]
+						"parameters": ["data: string", "id: number?"]
 					},
 					"UrlEncode": {
-						"unknowntype": true
+						"parameters": ["input: string"],
+						"returns": ["string"],
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/HttpService#UrlEncode"
 					}
 				},
 				"properties": {
@@ -2086,7 +2102,7 @@
 					},
 					"PolysiliconMode": {
 						"description": "The mode of the Polysilicon. Each mode results in different behaviors for objects.",
-						"type": ["Activate", "Deactivate", "FlipFlop"]
+						"type": "PolysiliconMode"
 					}
 				}
 			},
@@ -2277,6 +2293,9 @@
 			},
 			"Reactor": {
 				"description": "Generates steam using water and heat from radiation.\nUp to 4 pieces of uranium can be inserted into the reactor as fuel.\nIf the temperature is above 400, it will begin to turn water into steam (rate dependent on temperature).\nIf the temperature exceeds 1200 F, a meltdown will occur.\nThe Reactor fuel status can be acquired through the :GetFuel() method with a microcontroller.\nPolysilicon is used to control a reactor, and fuel must be ejected manually:\n\nActivation lowers the control rods, decreasing reaction rate.\nDeactivation raises the control rods, allowing fuel to react.\nFlipFlop will eject fuel or waste from the fuel rod with the least fuel.",
+				"events": {
+					"Loop": true
+				},
 				"methods": {
 					"GetFuel": {
 						"returns": ["{ [number]: number }"]
@@ -2697,10 +2716,11 @@
 				},
 				"methods": {
 					"GetEfficiency": {
-						"unknowntype": true
+						"returns": ["number"]
 					},
 					"GetProductionRate": {
-						"unknowntype": true
+						"description": "The multiplier for the amount of steam consumption each tick, ranges between 1 and 10.",
+						"returns": ["number"]
 					}
 				}
 			},
@@ -2823,10 +2843,10 @@
 						"unknowntype": true
 					},
 					"GetTemp": {
-						"unknowntype": true
+						"returns": ["number"]
 					},
 					"GetTemperature": {
-						"unknowntype": true
+						"returns": ["number"]
 					}
 				},
 				"properties": {
@@ -2855,7 +2875,7 @@
 				},
 				"methods": {
 					"GetTemp": {
-						"unknowntype": true
+						"returns": ["number"]
 					}
 				},
 				"properties": {
@@ -3346,6 +3366,20 @@
 			}
 		},
 		"types": {
+			"ModemRequest": {
+				"Url": "string",
+				"Method": ["?", ["GET", "POST", "PUSH", "PATCH", "DELETE"]],
+				"Headers": "{ [string]: any }?",
+				"Body": "string?",
+				"Compress": "EnumHttpCompression?"
+			},
+			"ModemRequestResponse": {
+				"Success": "boolean",
+				"StatusCode": "number",
+				"StatusMessage": "string",
+				"Headers": "{ [string]: any }",
+				"Body": "any"
+			},
 			"ObjectDetectorHitData": {
 				"Durability": "number",
 				"isTerrain": "boolean",
