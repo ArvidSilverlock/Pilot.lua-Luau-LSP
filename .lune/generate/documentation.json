@@ -320,7 +320,7 @@
 						"parameters": ["componentName: string"]
 					},
 					"GetConfigurables": {
-						"description": "Gets information about the configurable properties of the object.",
+						"description": "Returns info about all the configurables that that *kind* of part has. Doesn't tell you what the actual values are, which is why it is public.",
 						"returns": ["{ [string]: ConfigurableData }"]
 					},
 					"GetDurability": {
@@ -371,7 +371,7 @@
 						"returns": ["boolean"]
 					},
 					"IsGrounded": {
-						"description": "Returns a boolean as to whether or not the object is grounded.",
+						"description": "Tells you if the part is grounded, meaning it does it have physics. If it is attached to terrain or an anchor for example, it will be grounded.",
 						"returns": ["boolean"]
 					},
 					"ListComponents": {
