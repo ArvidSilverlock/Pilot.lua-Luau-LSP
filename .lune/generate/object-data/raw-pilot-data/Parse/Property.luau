@@ -77,7 +77,7 @@ function Property.parse(
 	property.Type = { Unknown = data.unknowntype == true }
 
 	if data.unknowntype then
-		property.Type.Luau = "any?"
+		property.Type.Luau = "any"
 		property.Type.Wiki = `- *undocumented* {name}`
 	else
 		property.Type.Luau = ParseType.parse(data.type)
