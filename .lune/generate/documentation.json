@@ -295,7 +295,7 @@
 			"PilotObject": {
 				"description": "The object that all Waste of Space objects inherit from.",
 				"events": {
-					"Destroyed": {
+					"Destroying": {
 						"description": "Fires when the object is destroyed."
 					}
 				},
