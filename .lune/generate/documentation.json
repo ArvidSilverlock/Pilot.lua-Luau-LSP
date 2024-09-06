@@ -1402,9 +1402,17 @@
 				},
 				"methods": {
 					"PointAt": {
-						"description": "Points the gyro towards the specified position.",
+						"description": "Points the gyro towards the specified position. Pass `nil` or configure the gyro to stop pointing.",
 						"parameters": [
-							["position: Vector3", "The position for the gyro to look at."]
+							["position: Vector3", "The position for the gyro to look at."],
+							["up: Vector3?", "Optionally specify the upward direction (`up`) of the gyro with a default of `(0, 1, 0)`."]
+						]
+					},
+					"PointAlong": {
+						"description": "Points the gyro along the specified vector. Pass `nil` or configure the gyro to stop pointing.",
+						"parameters": [
+							["direction: Vector3", "The vector for the gyro to point along."],
+							["up: Vector3?", "Optionally specify the upward direction (`up`) of the gyro with a default of `(0, 1, 0)`."]
 						]
 					}
 				},
