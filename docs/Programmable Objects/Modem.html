@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.5.2">
 <title data-rh="true">Modem | Waste of Space Wiki</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/img/social-card.png"><meta data-rh="true" name="twitter:image" content="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/img/social-card.png"><meta data-rh="true" property="og:url" content="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/Modem"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Modem | Waste of Space Wiki"><meta data-rh="true" name="description" content="A computer networking object that allows you to send, save and get messages cross-region."><meta data-rh="true" property="og:description" content="A computer networking object that allows you to send, save and get messages cross-region."><link data-rh="true" rel="icon" href="/Pilot.lua-Luau-LSP/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/Modem"><link data-rh="true" rel="alternate" href="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/Modem" hreflang="en"><link data-rh="true" rel="alternate" href="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/Modem" hreflang="x-default"><link rel="stylesheet" href="/Pilot.lua-Luau-LSP/assets/css/styles.b6fe319b.css">
-<script src="/Pilot.lua-Luau-LSP/assets/js/runtime~main.b99f8e16.js" defer="defer"></script>
+<script src="/Pilot.lua-Luau-LSP/assets/js/runtime~main.8f3ca336.js" defer="defer"></script>
 <script src="/Pilot.lua-Luau-LSP/assets/js/main.8ed60dfc.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -135,7 +135,7 @@ RealPostRequest send a POST request to the real www &#x27;:(Domain, DataPassed, 
 </li>
 <li><em>string</em> ClassName<!-- -->
 <ul>
-<li>The class name of the object</li>
+<li>A string representing the type of the object.</li>
 </ul>
 </li>
 <li><em>Vector3</em> Orientation<!-- -->
@@ -206,7 +206,11 @@ RealPostRequest send a POST request to the real www &#x27;:(Domain, DataPassed, 
 <li>Fires when the object is updated by the game loop.</li>
 </ul>
 </li>
-<li><em>undocumented</em> MessageSent</li>
+<li>MessageSent(<em>string</em> data)<!-- -->
+<ul>
+<li>Fired when the Modem receives a message from another modem with the same <code>NetworkId</code>.</li>
+</ul>
+</li>
 </ul>
 <details class="details_lb9f alert alert--info details_b_Ee" data-collapsed="true"><summary>Inherited from <a href="/Pilot.lua-Luau-LSP/docs/Classes/PilotObject">PilotObject</a></summary><div><div class="collapsibleContent_i85q"><ul>
 <li>Destroying()<!-- -->

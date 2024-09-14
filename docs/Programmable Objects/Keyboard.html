@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.5.2">
 <title data-rh="true">Keyboard | Waste of Space Wiki</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/img/social-card.png"><meta data-rh="true" name="twitter:image" content="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/img/social-card.png"><meta data-rh="true" property="og:url" content="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/Keyboard"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Keyboard | Waste of Space Wiki"><meta data-rh="true" name="description" content="Similar to a button, except is programmable to take more than one key input."><meta data-rh="true" property="og:description" content="Similar to a button, except is programmable to take more than one key input."><link data-rh="true" rel="icon" href="/Pilot.lua-Luau-LSP/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/Keyboard"><link data-rh="true" rel="alternate" href="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/Keyboard" hreflang="en"><link data-rh="true" rel="alternate" href="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/Keyboard" hreflang="x-default"><link rel="stylesheet" href="/Pilot.lua-Luau-LSP/assets/css/styles.b6fe319b.css">
-<script src="/Pilot.lua-Luau-LSP/assets/js/runtime~main.b99f8e16.js" defer="defer"></script>
+<script src="/Pilot.lua-Luau-LSP/assets/js/runtime~main.8f3ca336.js" defer="defer"></script>
 <script src="/Pilot.lua-Luau-LSP/assets/js/main.8ed60dfc.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -12,8 +12,16 @@
 Can be attached to a vehicle seat or clicked by a player.</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="methods">Methods<a href="#methods" class="hash-link" aria-label="Direct link to Methods" title="Direct link to Methods">​</a></h2>
 <ul>
-<li>SimulateTextInput(<em>string?</em> input, <em>string</em> player)</li>
-<li>SimulateKeyPress(<em>string?</em> key, <em>string</em> player)</li>
+<li>SimulateTextInput(<em>string?</em> input, <em>string</em> player)<!-- -->
+<ul>
+<li>Simulates text input just like you would type in the keyboard and enter.</li>
+</ul>
+</li>
+<li>SimulateKeyPress(<em>string?</em> key, <em>string</em> player)<!-- -->
+<ul>
+<li>Simulates a key press just like you would press a key on the keyboard.</li>
+</ul>
+</li>
 <li><em>undocumented</em> SimulateUserInput</li>
 </ul>
 <details class="details_lb9f alert alert--info details_b_Ee" data-collapsed="true"><summary>Inherited from <a href="/Pilot.lua-Luau-LSP/docs/Classes/PilotObject">PilotObject</a></summary><div><div class="collapsibleContent_i85q"><ul>
@@ -112,7 +120,7 @@ Can be attached to a vehicle seat or clicked by a player.</p>
 </li>
 <li><em>string</em> ClassName<!-- -->
 <ul>
-<li>The class name of the object</li>
+<li>A string representing the type of the object.</li>
 </ul>
 </li>
 <li><em>Vector3</em> Orientation<!-- -->
@@ -179,7 +187,11 @@ Can be attached to a vehicle seat or clicked by a player.</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="events">Events<a href="#events" class="hash-link" aria-label="Direct link to Events" title="Direct link to Events">​</a></h2>
 <ul>
 <li>UserInput(<em>number</em> userId, <em>InputObject</em> inputObject)</li>
-<li>TextInputted(<em>string</em> text, <em>string</em> player)</li>
+<li>TextInputted(<em>string</em> text, <em>string</em> player)<!-- -->
+<ul>
+<li>An event that fires when a player inputs text and presses <code>Enter</code> (or <code>Return</code>) on the keyboard.</li>
+</ul>
+</li>
 <li>KeyPressed(<em>number</em> userId, <em>string</em> keyName)</li>
 </ul>
 <details class="details_lb9f alert alert--info details_b_Ee" data-collapsed="true"><summary>Inherited from <a href="/Pilot.lua-Luau-LSP/docs/Classes/PilotObject">PilotObject</a></summary><div><div class="collapsibleContent_i85q"><ul>

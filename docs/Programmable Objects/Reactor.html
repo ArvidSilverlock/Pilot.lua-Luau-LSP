@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.5.2">
 <title data-rh="true">Reactor | Waste of Space Wiki</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/img/social-card.png"><meta data-rh="true" name="twitter:image" content="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/img/social-card.png"><meta data-rh="true" property="og:url" content="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/Reactor"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Reactor | Waste of Space Wiki"><meta data-rh="true" name="description" content="Generates steam using water and heat from radiation."><meta data-rh="true" property="og:description" content="Generates steam using water and heat from radiation."><link data-rh="true" rel="icon" href="/Pilot.lua-Luau-LSP/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/Reactor"><link data-rh="true" rel="alternate" href="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/Reactor" hreflang="en"><link data-rh="true" rel="alternate" href="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/Reactor" hreflang="x-default"><link rel="stylesheet" href="/Pilot.lua-Luau-LSP/assets/css/styles.b6fe319b.css">
-<script src="/Pilot.lua-Luau-LSP/assets/js/runtime~main.b99f8e16.js" defer="defer"></script>
+<script src="/Pilot.lua-Luau-LSP/assets/js/runtime~main.8f3ca336.js" defer="defer"></script>
 <script src="/Pilot.lua-Luau-LSP/assets/js/main.8ed60dfc.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -19,8 +19,16 @@ Deactivation raises the control rods, allowing fuel to react.
 FlipFlop will eject fuel or waste from the fuel rod with the least fuel.</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="methods">Methods<a href="#methods" class="hash-link" aria-label="Direct link to Methods" title="Direct link to Methods">​</a></h2>
 <ul>
-<li>GetFuel() → <em>{ [number]: number }</em></li>
-<li>GetTemp() → <em>number</em></li>
+<li>GetFuel() → <em>{ number }</em>
+<ul>
+<li>Returns an array with four numeric values each representative of their fuel rod. The order is strict and goes from the first to the fourth fuel rod.</li>
+</ul>
+</li>
+<li>GetTemp() → <em>number</em>
+<ul>
+<li>Returns a numeric value representing the current temperature of the reactor in degrees fahrenheit.</li>
+</ul>
+</li>
 </ul>
 <details class="details_lb9f alert alert--info details_b_Ee" data-collapsed="true"><summary>Inherited from <a href="/Pilot.lua-Luau-LSP/docs/Classes/PilotObject">PilotObject</a></summary><div><div class="collapsibleContent_i85q"><ul>
 <li>IsDestroyed() → <em>boolean</em>
@@ -126,7 +134,7 @@ FlipFlop will eject fuel or waste from the fuel rod with the least fuel.</p>
 </li>
 <li><em>string</em> ClassName<!-- -->
 <ul>
-<li>The class name of the object</li>
+<li>A string representing the type of the object.</li>
 </ul>
 </li>
 <li><em>Vector3</em> Orientation<!-- -->

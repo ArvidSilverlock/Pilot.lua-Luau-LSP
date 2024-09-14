@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.5.2">
 <title data-rh="true">Speaker | Waste of Space Wiki</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/img/social-card.png"><meta data-rh="true" name="twitter:image" content="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/img/social-card.png"><meta data-rh="true" property="og:url" content="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/Speaker"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Speaker | Waste of Space Wiki"><meta data-rh="true" name="description" content="Plays audio of length up to 5 seconds, unless it is powered in which case it can play a full audio."><meta data-rh="true" property="og:description" content="Plays audio of length up to 5 seconds, unless it is powered in which case it can play a full audio."><link data-rh="true" rel="icon" href="/Pilot.lua-Luau-LSP/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/Speaker"><link data-rh="true" rel="alternate" href="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/Speaker" hreflang="en"><link data-rh="true" rel="alternate" href="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/Speaker" hreflang="x-default"><link rel="stylesheet" href="/Pilot.lua-Luau-LSP/assets/css/styles.b6fe319b.css">
-<script src="/Pilot.lua-Luau-LSP/assets/js/runtime~main.b99f8e16.js" defer="defer"></script>
+<script src="/Pilot.lua-Luau-LSP/assets/js/runtime~main.8f3ca336.js" defer="defer"></script>
 <script src="/Pilot.lua-Luau-LSP/assets/js/main.8ed60dfc.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -14,10 +14,26 @@ Speaker<!-- -->:LoadSound<!-- -->(SoundId) will return a Sound object
 A Sound object can be modified using properties SoundId, Looped, PlaybackSpeed, Pitch, TimePositionand the methods Play, Pause, Stop, Destroy</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="methods">Methods<a href="#methods" class="hash-link" aria-label="Direct link to Methods" title="Direct link to Methods">​</a></h2>
 <ul>
-<li>Chat(<em>string</em> message)</li>
-<li>PlaySound(<em>number</em> soundId)</li>
-<li><em>undocumented</em> LoadSound</li>
-<li><em>undocumented</em> ClearSounds</li>
+<li>LoadSound(<em>number</em> soundId) → <em>Sound</em>,<!-- -->
+<ul>
+<li>Returns a roblox <a href="https://create.roblox.com/docs/reference/engine/classes/Sound" target="_blank" rel="noopener noreferrer"><code>Sound</code></a> object with the given <code>soundId</code>.</li>
+</ul>
+</li>
+<li>Chat(<em>string</em> message)<!-- -->
+<ul>
+<li>Displays the <code>message</code> in a chat bubble just like if a player said it.</li>
+</ul>
+</li>
+<li>ClearSounds()<!-- -->
+<ul>
+<li>Stops and clears all sounds the speaker is currently playing.</li>
+</ul>
+</li>
+<li>PlaySound(<em>number?</em> soundId)<!-- -->
+<ul>
+<li>Plays a sound with the given <code>soundId</code>. If no <code>soundId</code> is provided it will default to the <code>Audio</code> configuration of the speaker.</li>
+</ul>
+</li>
 </ul>
 <details class="details_lb9f alert alert--info details_b_Ee" data-collapsed="true"><summary>Inherited from <a href="/Pilot.lua-Luau-LSP/docs/Classes/PilotObject">PilotObject</a></summary><div><div class="collapsibleContent_i85q"><ul>
 <li>IsDestroyed() → <em>boolean</em>
@@ -131,7 +147,7 @@ A Sound object can be modified using properties SoundId, Looped, PlaybackSpeed, 
 </li>
 <li><em>string</em> ClassName<!-- -->
 <ul>
-<li>The class name of the object</li>
+<li>A string representing the type of the object.</li>
 </ul>
 </li>
 <li><em>Vector3</em> Orientation<!-- -->

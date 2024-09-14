@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.5.2">
 <title data-rh="true">LifeSensor | Waste of Space Wiki</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/img/social-card.png"><meta data-rh="true" name="twitter:image" content="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/img/social-card.png"><meta data-rh="true" property="og:url" content="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/LifeSensor"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="LifeSensor | Waste of Space Wiki"><meta data-rh="true" name="description" content="Senses and detects organic life up to a distnace of 2000 studs. Used mainly in programming, as is used in alien technology to hunt down organisms such as players."><meta data-rh="true" property="og:description" content="Senses and detects organic life up to a distnace of 2000 studs. Used mainly in programming, as is used in alien technology to hunt down organisms such as players."><link data-rh="true" rel="icon" href="/Pilot.lua-Luau-LSP/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/LifeSensor"><link data-rh="true" rel="alternate" href="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/LifeSensor" hreflang="en"><link data-rh="true" rel="alternate" href="https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/docs/Programmable Objects/LifeSensor" hreflang="x-default"><link rel="stylesheet" href="/Pilot.lua-Luau-LSP/assets/css/styles.b6fe319b.css">
-<script src="/Pilot.lua-Luau-LSP/assets/js/runtime~main.b99f8e16.js" defer="defer"></script>
+<script src="/Pilot.lua-Luau-LSP/assets/js/runtime~main.8f3ca336.js" defer="defer"></script>
 <script src="/Pilot.lua-Luau-LSP/assets/js/main.8ed60dfc.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -18,17 +18,17 @@ Player1 = Vector3.new(5, 5, 5);
 <ul>
 <li>ListPlayers() → <em>{ number }</em>
 <ul>
-<li>Returns an array of player UserIds.</li>
+<li>Returns an array of player <code>UserId</code>s. Ignores the 2,000 stud range limit.</li>
 </ul>
 </li>
 <li>GetPlayers() → <em>{ [string]: Vector3 }</em>
 <ul>
-<li>Returns a table where the indexes are player names and the keys are player positions.</li>
+<li>Returns a table where the keys are <em>player</em> names and the values are <em>player</em> positions. Only has a 2,000 stud range.</li>
 </ul>
 </li>
 <li>GetReading() → <em>{ [string]: Vector3 }</em>
 <ul>
-<li>Returns a table where the indexes are humanoid names and the keys are humanoid positions.</li>
+<li>Returns a table where the keys are <em>humanoid</em> names and the values are <em>humanoid</em> positions. Only has a 2,000 stud range.</li>
 </ul>
 </li>
 </ul>
@@ -128,7 +128,7 @@ Player1 = Vector3.new(5, 5, 5);
 </li>
 <li><em>string</em> ClassName<!-- -->
 <ul>
-<li>The class name of the object</li>
+<li>A string representing the type of the object.</li>
 </ul>
 </li>
 <li><em>Vector3</em> Orientation<!-- -->
