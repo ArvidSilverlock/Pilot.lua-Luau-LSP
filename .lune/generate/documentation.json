@@ -410,7 +410,7 @@
 						"type": "CFrame"
 					},
 					"ClassName": {
-						"description": "The class name of the object",
+						"description": "A string representing the type of the object.",
 						"readonly": true,
 						"type": "string"
 					},
@@ -797,7 +797,7 @@
 				},
 				"methods": {
 					"GetLogs": {
-						"returns": ["RegionLog"]
+						"returns": ["{ RegionLog }"]
 					}
 				}
 			},
@@ -1194,6 +1194,7 @@
 						"unknowntype": true
 					},
 					"GetShieldHealth": {
+						"description": "Gets the current health of the shield.",
 						"returns": ["number"]
 					}
 				},
@@ -1405,14 +1406,20 @@
 						"description": "Points the gyro towards the specified position. Pass `nil` or configure the gyro to stop pointing.",
 						"parameters": [
 							["position: Vector3", "The position for the gyro to look at."],
-							["up: Vector3?", "Optionally specify the upward direction (`up`) of the gyro with a default of `(0, 1, 0)`."]
+							[
+								"up: Vector3?",
+								"Optionally specify the upward direction (`up`) of the gyro with a default of `(0, 1, 0)`."
+							]
 						]
 					},
 					"PointAlong": {
 						"description": "Points the gyro along the specified vector. Pass `nil` or configure the gyro to stop pointing.",
 						"parameters": [
 							["direction: Vector3", "The vector for the gyro to point along."],
-							["up: Vector3?", "Optionally specify the upward direction (`up`) of the gyro with a default of `(0, 1, 0)`."]
+							[
+								"up: Vector3?",
+								"Optionally specify the upward direction (`up`) of the gyro with a default of `(0, 1, 0)`."
+							]
 						]
 					}
 				},
@@ -1606,7 +1613,7 @@
 				},
 				"methods": {
 					"GetReading": {
-						"parameters": ["typeId: number"],
+						"parameters": ["typeId: number?"],
 						"returns": ["number | Vector3"]
 					}
 				},
@@ -1639,6 +1646,8 @@
 					"KeyPressed": true,
 					"UserInput": true,
 					"TextInputted": {
+						"description": "An event that fires when a player inputs text and presses <code>Enter</code> (or <code>Return</code>) on the keyboard.",
+						"codesample": "local telescope = GetPart(\"Telescope\")\nlocal keyboard = GetPart(\"Keyboard\")\n\nlocal repr = require(\"repr\")\n\nkeyboard:Connect(\"TextInputted\", function(text)\n  telescope.ViewCoordinates = text .. \", false\"\n  print(repr(telescope:GetCoordinate()))\nend)",
 						"parameters": [
 							[
 								"text: string",
@@ -1650,9 +1659,11 @@
 				},
 				"methods": {
 					"SimulateKeyPress": {
+						"description": "Simulates a key press just like you would press a key on the keyboard.",
 						"parameters": ["key: string?", "player: string"]
 					},
 					"SimulateTextInput": {
+						"description": "Simulates text input just like you would type in the keyboard and enter.",
 						"parameters": ["input: string?", "player: string"]
 					},
 					"SimulateUserInput": {
@@ -1693,7 +1704,7 @@
 				"description": "Senses and detects organic life up to a distnace of 2000 studs. Used mainly in programming, as is used in alien technology to hunt down organisms such as players.\nHas a special programmable event called 'GetReading()' which returns a table of all organisms, with their positions and names.\nExample:\n{\n\tPlayer1 = Vector3.new(5, 5, 5);\n}",
 				"methods": {
 					"GetPlayers": {
-						"description": "Returns a table where the indexes are player names and the keys are player positions.",
+						"description": "Returns a table where the keys are *player* names and the values are *player* positions. Only has a 2,000 stud range.",
 						"returns": [
 							[
 								"{ [string]: Vector3 }",
@@ -1702,7 +1713,7 @@
 						]
 					},
 					"GetReading": {
-						"description": "Returns a table where the indexes are humanoid names and the keys are humanoid positions.",
+						"description": "Returns a table where the keys are *humanoid* names and the values are *humanoid* positions. Only has a 2,000 stud range.",
 						"returns": [
 							[
 								"{ [string]: Vector3 }",
@@ -1711,7 +1722,7 @@
 						]
 					},
 					"ListPlayers": {
-						"description": "Returns an array of player UserIds.",
+						"description": "Returns an array of player <code>UserId</code>s. Ignores the 2,000 stud range limit.",
 						"returns": ["{ number }"]
 					}
 				}
@@ -1724,6 +1735,7 @@
 				},
 				"methods": {
 					"SetColor": {
+						"description": "Sets the color of the light.",
 						"parameters": ["color: Color3"]
 					}
 				},
@@ -1771,6 +1783,7 @@
 				"description": "Emits light when powered with electricity. Can be colored in different ways, changing the light color",
 				"methods": {
 					"SetColor": {
+						"description": "Sets the color of the light.",
 						"parameters": ["color: Color3"]
 					}
 				}
@@ -1843,6 +1856,7 @@
 			"Microphone": {
 				"categories": ["Logic"],
 				"description": "Used in programming. Takes user's inputs.",
+				"codesample": "local microphone = GetPart(\"Microphone\")\n\nlocal whitelisted = {\n\t[YOUR_USER_ID_HERE] = true,\n}\n\nlocal commands = {\n\techo = function(userId, arguments)\n\t\tprint(table.concat(arguments, \" \"))\n\tend,\n}\n\nmicrophone:Connect(\"Chatted\", function(userId, message)\n\tif not whitelisted[userId] then return end\n\n\tlocal arguments = message:split(\" \")\n\tlocal command = table.remove(arguments)\n\n\tlocal callback = commands[command]\n\tif callback then\n\t\tcallback(userId, arguments)\n\tend\nend)",
 				"events": {
 					"Chatted": {
 						"description": "Fires when a user speaks in chat. Also registers hidden commands like '/e dance' or '/console'.",
@@ -1864,7 +1878,8 @@
 				"events": {
 					"Loop": true,
 					"MessageSent": {
-						"unknowntype": true
+						"parameters": ["data: string"],
+						"description": "Fired when the Modem receives a message from another modem with the same <code>NetworkId</code>."
 					}
 				},
 				"methods": {
@@ -2306,9 +2321,11 @@
 				},
 				"methods": {
 					"GetFuel": {
-						"returns": ["{ [number]: number }"]
+						"description": "Returns an array with four numeric values each representative of their fuel rod. The order is strict and goes from the first to the fourth fuel rod.",
+						"returns": ["{ number }"]
 					},
 					"GetTemp": {
+						"description": "Returns a numeric value representing the current temperature of the reactor in degrees fahrenheit.",
 						"returns": ["number"]
 					}
 				},
@@ -2508,6 +2525,7 @@
 				},
 				"methods": {
 					"SetAngle": {
+						"description": "Sets the angle of a servo just as if you would be configuring it.",
 						"parameters": ["angle: number"]
 					}
 				},
@@ -2633,16 +2651,20 @@
 				},
 				"methods": {
 					"Chat": {
+						"description": "Displays the <code>message</code> in a chat bubble just like if a player said it.",
 						"parameters": ["message: string"]
 					},
 					"ClearSounds": {
-						"unknowntype": true
+						"description": "Stops and clears all sounds the speaker is currently playing."
 					},
 					"LoadSound": {
-						"unknowntype": true
+						"description": "Returns a roblox [<code>Sound</code>](https://create.roblox.com/docs/reference/engine/classes/Sound) object with the given <code>soundId</code>.",
+						"parameters": ["soundId: number"],
+						"returns": ["Sound"]
 					},
 					"PlaySound": {
-						"parameters": ["soundId: number"]
+						"description": "Plays a sound with the given <code>soundId</code>. If no <code>soundId</code> is provided it will default to the <code>Audio</code> configuration of the speaker.",
+						"parameters": ["soundId: number?"]
 					}
 				},
 				"properties": {
@@ -2669,6 +2691,7 @@
 				"description": "Emits light in a cone when powered with electricity. Color emition can be changed by coloring it.",
 				"methods": {
 					"SetColor": {
+						"description": "Sets the color of the light.",
 						"parameters": ["color: Color3"]
 					}
 				}
@@ -3004,7 +3027,8 @@
 				"description": "Sends trigger signals upon contact with another player or another object.",
 				"events": {
 					"Touched": {
-						"unknowntype": true
+						"description": "Fires when the touch sensor is touched by something. The object or the touch sensor itself must be unanchored.",
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/BasePart#Touched"
 					}
 				}
 			},
@@ -3608,7 +3632,6 @@
 				"Freezing",
 				"Melting"
 			],
-			"RegionLogs": "{ RegionLog }",
 			"RelayMode": ["Send", "Receive"],
 			"StarType": ["Red", "Orange", "Yellow", "Blue", "Neutron"],
 			"TemperatureUnit": ["K", "F", "C"],
