@@ -1074,10 +1074,10 @@
 				},
 				"methods": {
 					"Clear": {
-						"unknowntype": true
+						"description": "Clears all the contents of the disk."
 					},
 					"ClearDisk": {
-						"unknowntype": true
+						"deprecated": "Use `:Clear` instead."
 					},
 					"Compress": {
 						"unknowntype": true
@@ -1086,10 +1086,12 @@
 						"unknowntype": true
 					},
 					"Read": {
+						"description": "Reads the specified key from the disk and returns the value.",
 						"parameters": ["key: any"],
 						"returns": ["any"]
 					},
 					"ReadAll": {
+						"description": "Reads the entire content of the disk and outputs it as a dictionary.",
 						"returns": ["{ [any]: any }"]
 					},
 					"ReadEntireDisk": {
@@ -1097,7 +1099,8 @@
 						"returns": ["{ [any]: any }"]
 					},
 					"Write": {
-						"parameters": ["key: any", "data: any"]
+						"description": "Write the specified key with the specified value to the disk.",
+						"parameters": ["key: any", "value: any"]
 					},
 					"WriteAll": {
 						"unknowntype": true
@@ -1114,7 +1117,7 @@
 				},
 				"methods": {
 					"Dispense": {
-						"description": "Dispenses a single item."
+						"description": "Dispenses a single item instantly."
 					}
 				},
 				"properties": {
@@ -1704,11 +1707,11 @@
 				"description": "Senses and detects organic life up to a distnace of 2000 studs. Used mainly in programming, as is used in alien technology to hunt down organisms such as players.\nHas a special programmable event called 'GetReading()' which returns a table of all organisms, with their positions and names.\nExample:\n{\n\tPlayer1 = Vector3.new(5, 5, 5);\n}",
 				"methods": {
 					"GetPlayers": {
-						"description": "Returns a table where the keys are *player* names and the values are *player* positions. Only has a 2,000 stud range.",
+						"description": "Returns a table where the keys are *player* <code>UserId</code>s and the values are *player* positions. Only has a 2,000 stud range.",
 						"returns": [
 							[
-								"{ [string]: Vector3 }",
-								"A dictionary of player usernames to their world positions."
+								"{ [number]: Vector3 }",
+								"A dictionary of player <code>UserId</code>s to their world positions."
 							]
 						]
 					},
@@ -2988,7 +2991,6 @@
 					}
 				},
 				"extends": "Screen",
-				"learnmore": "https://github.com/iimurpyh/pilot-lua/wiki/TouchScreen",
 				"methods": {
 					"GetCursor": {
 						"description": "Gets the specified player's cursor.",
@@ -3271,7 +3273,7 @@
 			]
 		},
 		"UserInput": {
-			"parameters": ["userId: number", "inputObject: InputObject"]
+			"parameters": ["inputObject: InputObject", "userId: number"]
 		}
 	},
 	"globals": {
@@ -3448,6 +3450,7 @@
 			"Coordinate": "typeof(setmetatable({} :: { InPlanet: boolean, SolarCoordinates: Vector2, UniverseCoordinates: Vector2, }, {} :: CoordinateMetatable))",
 			"Cursor": {
 				"Player": "string",
+				"UserId": "number",
 				"Pressed": "boolean",
 				"X": "number",
 				"Y": "number"
