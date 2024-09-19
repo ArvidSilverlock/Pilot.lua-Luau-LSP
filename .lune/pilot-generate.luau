@@ -3,6 +3,8 @@ local stdio = require("@lune/stdio")
 
 local Utility = require("./generate/modules/Utility")
 
+local CHECK_MARK = stdio.color("green") .. "✔" .. stdio.color("reset")
+
 local options = Utility.mergeTables(Utility.parseArguments(process.args, "o"), {
 	o = "./workspace",
 	["types-dir"] = "types",
@@ -71,7 +73,9 @@ local function generate(optionName: string, generatorName: string, default: bool
 
 	if generator.generate or generator.save then
 		stdio.write(
-			`- Generating {stdio.color("green")}{generatorName:lower()}{stdio.color("reset")} took {Utility.formatTime(endTime - startTime)}\n`
+			`{CHECK_MARK} Generating {stdio.color("green")}{generatorName:lower()}{stdio.color("reset")} took {Utility.formatTime(
+				endTime - startTime
+			)}\n`
 		)
 	end
 end
@@ -80,8 +84,12 @@ local robloxStart = os.clock()
 require("./generate/object-data/Roblox")
 local robloxEnd = os.clock()
 
+stdio.write("\n")
+
 stdio.write(
-	`- Accessing {stdio.color("red")}ROBLOX documentation{stdio.color("reset")} took {Utility.formatTime(robloxEnd - robloxStart)}\n`
+	`{CHECK_MARK} Accessing {stdio.color("red")}ROBLOX documentation{stdio.color("reset")} took {Utility.formatTime(
+		robloxEnd - robloxStart
+	)}\n`
 )
 
 local pilotStart = os.clock()
@@ -89,8 +97,12 @@ require("./generate/object-data/Pilot")
 local pilotEnd = os.clock()
 
 stdio.write(
-	`- Parsing {stdio.color("cyan")}Pilot.lua documentation{stdio.color("reset")} took {Utility.formatTime(pilotEnd - pilotStart)}\n`
+	`{CHECK_MARK} Parsing {stdio.color("cyan")}Pilot.lua documentation{stdio.color("reset")} took {Utility.formatTime(
+		pilotEnd - pilotStart
+	)}\n`
 )
+
+stdio.write("\n")
 
 Utility.makeDirectory(options.o)
 Utility.makeDirectory(`{options.o}/{options["types-dir"]}`)
