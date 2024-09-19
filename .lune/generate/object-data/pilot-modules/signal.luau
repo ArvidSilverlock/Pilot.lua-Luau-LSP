@@ -33,6 +33,17 @@ export type Signal<T...> = {
 	Wait: (self: Signal<T...>) -> T...,
 }
 
+export type StrictSignal<T = (...any) -> (), U... = ...any> = {
+	Fire: (self: StrictSignal<T, U...>, U...) -> (),
+	FireDeferred: (self: StrictSignal<T, U...>, U...) -> (),
+	Connect: (self: StrictSignal<T, U...>, fn: T) -> Connection,
+	Once: (self: StrictSignal<T, U...>, fn: T) -> Connection,
+	DisconnectAll: (self: StrictSignal<T, U...>) -> (),
+	GetConnections: (self: StrictSignal<T, U...>) -> { Connection },
+	Destroy: (self: StrictSignal<T, U...>) -> (),
+	Wait: (self: StrictSignal<T, U...>) -> U...,
+}
+
 -- The currently idle thread to run the next handler on
 local freeRunnerThread = nil
 
