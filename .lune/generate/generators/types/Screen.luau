@@ -12,6 +12,7 @@ local function getLuauType(valueType)
 		elseif category == "Class" then name
 		elseif
 			name == "Content"
+			or name == "ContentId"
 			or name == "BinaryString"
 			or name == "SharedString"
 			or name == "ProtectedString"
@@ -82,7 +83,9 @@ local function parseClass(class, classes, types, methods, scrappedClasses, addMe
 	if #properties > 0 then
 		table.insert(
 			types,
-			`export type {class.Name}Properties = \{ {table.concat(properties, ", ")} }{if propertiesSource then ` & {propertiesSource}Properties` else ""}`
+			`export type {class.Name}Properties = \{ {table.concat(properties, ", ")} }{if propertiesSource
+				then ` & {propertiesSource}Properties`
+				else ""}`
 		)
 		propertiesSource = class.Name
 	end
