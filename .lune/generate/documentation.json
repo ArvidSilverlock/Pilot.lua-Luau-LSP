@@ -664,7 +664,18 @@
 					"Loop": true
 				},
 				"methods": {
+					"Craft": {
+						"description": "Will pause and craft the desired item at the next available point, returning a boolean representing whether or not the item was successfully crafted.\n\nThis uses a queue under the hood, the first thing to call it gets to craft first, and then finally the assembler performs its configured craft if nothing else is queued.",
+						"parameters": ["itemName: string"],
+						"returns": ["boolean"]
+					},
+					"GetRecipe": {
+						"description": "Returns the resource(s) required to craft the given item, or nil if the item doesn't have a recipe/doesn't exist.",
+						"parameters": ["itemName: string"],
+						"returns": ["{[string]: number}"]
+					},
 					"CalculateCraftingRecipe": {
+						"deprecated": "Use `Assembler:GetRecipe` instead",
 						"parameters": [
 							[
 								"items: { string } | { [string]: number }",
@@ -674,12 +685,15 @@
 						"returns": ["{ Power: number, [string]: number }"]
 					},
 					"CraftItems": {
+						"deprecated": "Use `Assembler:Craft` instead.",
 						"parameters": ["items: { string } | { [string]: number }"]
 					},
 					"GetCraftCooldown": {
+						"deprecated": "`Assembler:GetCraftCooldown()` has been deprecated and always returns 0",
 						"returns": ["number"]
 					},
 					"GetInventory": {
+						"deprecated": "`Assembler:GetInventory()` has been deprecated and always returns an empty, frozen table",
 						"returns": ["{ [string]: number }"]
 					}
 				},
