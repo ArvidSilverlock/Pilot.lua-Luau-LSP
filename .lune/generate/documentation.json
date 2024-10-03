@@ -675,7 +675,7 @@
 						"returns": ["{[string]: number}"]
 					},
 					"CalculateCraftingRecipe": {
-						"deprecated": "Use `Assembler:Craft` instead",
+						"deprecated": "Use `Assembler:GetRecipe` instead",
 						"parameters": [
 							[
 								"items: { string } | { [string]: number }",
