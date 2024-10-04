@@ -1721,11 +1721,11 @@
 				"description": "Senses and detects organic life up to a distnace of 2000 studs. Used mainly in programming, as is used in alien technology to hunt down organisms such as players.\nHas a special programmable event called 'GetReading()' which returns a table of all organisms, with their positions and names.\nExample:\n{\n\tPlayer1 = Vector3.new(5, 5, 5);\n}",
 				"methods": {
 					"GetPlayers": {
-						"description": "Returns a table where the keys are *player* <code>UserId</code>s and the values are *player* positions. Only has a 2,000 stud range.",
+						"description": "Returns a table where the keys are *player* <code>UserId</code>s and the values are *player* CFrames. Only has a 2,000 stud range.",
 						"returns": [
 							[
-								"{ [number]: Vector3 }",
-								"A dictionary of player <code>UserId</code>s to their world positions."
+								"{ [number]: CFrame }",
+								"A dictionary of player <code>UserId</code>s to their world CFrames."
 							]
 						]
 					},
