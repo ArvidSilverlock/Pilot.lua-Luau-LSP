@@ -2872,7 +2872,7 @@
 						"returns": ["Coordinate"]
 					},
 					"WhenRegionLoads": {
-						"parameters": ["callback: (regionData: any) -> ()"]
+						"parameters": ["callback: (regionInfo: CompleteRegionInfo) -> ()"]
 					}
 				},
 				"properties": {
@@ -3652,7 +3652,93 @@
 			"RelayMode": ["Send", "Receive"],
 			"StarType": ["Red", "Orange", "Yellow", "Blue", "Neutron"],
 			"TemperatureUnit": ["K", "F", "C"],
-			"VehicleSeatMode": ["Horizontal", "Full", "Mouse"]
+			"VehicleSeatMode": ["Horizontal", "Full", "Mouse"],
+			"PlayableRegionInfo": {
+				"Name": "string",
+				"StringCoordinate": "string",
+				"Coordinate": { "InPlanet": "boolean" },
+				"EnterLocation": "RegionEnterLocation",
+				"RegionSeed": "number",
+				"RegionServer": "string"
+			},
+			"CompleteRegionInfo": [
+				"or",
+				"OrbitRegionInfo",
+				"SpaceRegionInfo",
+				"BlackHoleRegionInfo",
+				"StarRegionInfo",
+				"PlanetRegionInfo"
+			],
+			"OrbitRegionInfo": [
+				"and",
+				{
+					"RegionType": "\"Orbit\"",
+					"OrbitBody": [
+						"or",
+						"BlackHoleRegionInfo",
+						"StarRegionInfo",
+						"PlanetRegionInfo"
+					]
+				},
+				"PlayableRegionInfo"
+			],
+			"SpaceRegionInfo": [
+				"and",
+				{
+					"RegionType": "\"Space\""
+				},
+				"PlayableRegionInfo"
+			],
+			"PlanetRegionInfo": [
+				"and",
+				{
+					"PlanetData": {
+						"PlanetType": "PlanetType",
+						"Atmosphere": "boolean",
+						"DayCycleIncrement": "number",
+						"EnterLocation": "RegionEnterLocation",
+						"GenerationHeightScale": "number",
+						"Gravity": "number",
+						"PlanetMaterial": "string",
+						"PrimaryColor": "RegionColor",
+						"SecondaryColor": "RegionColor",
+						"Resources": "{ string }",
+						"StartingTime": "number",
+						"Temperature": "number",
+						"Rings": "RingData?",
+						"TerrainConfig": "TerrainData"
+					},
+
+					"StarSize": "nil",
+					"StarType": "nil",
+					"BlackHoleSize": "nil"
+				},
+				"PlayableRegionInfo"
+			],
+			"StarRegionInfo": [
+				"and",
+				{
+					"EnterLocation": "RegionEnterLocation",
+					"StarSize": "number",
+					"StarType": "StarType",
+
+					"PlanetData": "nil",
+					"BlackHoleSize": "nil"
+				},
+				"PlayableRegionInfo"
+			],
+			"BlackHoleRegionInfo": [
+				"and",
+				{
+					"EnterLocation": "RegionEnterLocation",
+					"BlackHoleSize": "number",
+
+					"PlanetData": "nil",
+					"StarSize": "nil",
+					"StarType": "nil"
+				},
+				"PlayableRegionInfo"
+			]
 		},
 		"values": {
 			"Network": {
@@ -3695,6 +3781,45 @@
 			"Name": "string?",
 			"Type": "string?"
 		},
-		"primitive": "string | number | boolean | { primitive } | { [primitive]: primitive }"
+		"primitive": "string | number | boolean | { primitive } | { [primitive]: primitive }",
+		"TerrainDataRange": "{ number }",
+		"TreeDataRange": {
+			"height": "number",
+			"width": "number"
+		},
+		"RingData": {
+			"RingStart": "number",
+			"RingsAmount": "number",
+			"RingsEnd": "number",
+			"RingsType": "string"
+		},
+		"TreeData": {
+			"amount_of_branches": "TerrainDataRange",
+			"amount_of_splits": "TerrainDataRange",
+			"branch_angles": "TerrainDataRange",
+			"branch_offset": "TerrainDataRange",
+			"branch_size_percentage": {
+				"min": "TreeDataRange",
+				"max": "TreeDataRange"
+			},
+			"trunk_size": {
+				"min": "TreeDataRange",
+				"max": "TreeDataRange"
+			}
+		},
+		"TerrainData": {
+			"Life": "boolean",
+			"TreeSettings": "TreeData",
+			"Water": "boolean",
+			"WaterLevel": "number",
+			"Height": "TerrainDataRange",
+			"MountainDensity": "TerrainDataRange",
+			"RockDensity": "TerrainDataRange",
+			"Roughness": "TerrainDataRange",
+			"Slopes": "TerrainDataRange",
+			"Temperature": "TerrainDataRange"
+		},
+		"RegionEnterLocation": { "X": "number", "Y": "number", "Z": "number" },
+		"RegionColor": { "R": "number", "G": "number", "B": "number" }
 	}
 }
