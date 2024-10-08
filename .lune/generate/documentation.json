@@ -2336,6 +2336,9 @@
 					"Loop": true
 				},
 				"methods": {
+					"GetEfficiency": {
+						"returns": ["number"]
+					},
 					"GetFuel": {
 						"description": "Returns an array with four numeric values each representative of their fuel rod. The order is strict and goes from the first to the fourth fuel rod.",
 						"returns": ["{ number }"]
