@@ -11,7 +11,7 @@
 					"CameraType": {
 						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/Camera#CameraType",
 						"readonly": true,
-						"type": "EnumCameraType"
+						"type": "Enum.CameraType"
 					},
 					"DiagonalFieldOfView": {
 						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/Camera#DiagonalFieldOfView",
@@ -26,7 +26,7 @@
 					"FieldOfViewMode": {
 						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/Camera#FieldOfViewMode",
 						"readonly": true,
-						"type": "EnumFieldOfViewMode"
+						"type": "Enum.FieldOfViewMode"
 					},
 					"Focus": {
 						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/Camera#Focus",
@@ -83,7 +83,7 @@
 					"Gamepad": {
 						"description": "An dictionary of <code>Enum.UserInputType.GamepadX</code> keys to an array of <code>InputObjects</code> representing the current state of all available inputs for said gamepad as values.",
 						"learnmore": "https://discord.com/channels/616089055532417036/823313507167502336/1038621144397381692",
-						"type": "{ [EnumUserInputType]: { InputObject } }"
+						"type": "{ [Enum.UserInputType]: { InputObject } }"
 					},
 					"VREnabled": {
 						"description": "This property describes whether the user is using a virtual reality (VR) device.",
@@ -107,7 +107,7 @@
 					"LastInputType": {
 						"description": "The 'Enum.UserInputType` associated with the user's most recent input.",
 						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#GetLastInputType",
-						"type": "EnumUserInputType"
+						"type": "Enum.UserInputType"
 					}
 				}
 			},
@@ -455,7 +455,7 @@
 						"description": "The material of the object.",
 						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/BasePart#Material",
 						"readonly": true,
-						"type": "EnumMaterial"
+						"type": "Enum.Material"
 					},
 					"Orientation": {
 						"description": "The current orientation of the object.",
@@ -1917,7 +1917,7 @@
 						"parameters": [
 							"url: string",
 							"data: string",
-							"contentType: EnumHttpContentType?",
+							"contentType: Enum.HttpContentType?",
 							"compress: boolean?",
 							"headers: { [string]: any }?"
 						],
@@ -3419,7 +3419,7 @@
 				"Method": ["?", ["GET", "POST", "PUSH", "PATCH", "DELETE"]],
 				"Headers": "{ [string]: any }?",
 				"Body": "string?",
-				"Compress": "EnumHttpCompression?"
+				"Compress": "Enum.HttpCompression?"
 			},
 			"ModemRequestResponse": {
 				"Success": "boolean",

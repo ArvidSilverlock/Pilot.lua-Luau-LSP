@@ -8,7 +8,7 @@ local function getLuauType(valueType)
 	local name = valueType.Name
 	return if category == "Primitive"
 		then (if name == "bool" then "boolean" elseif name == "string" then "string" else "number")
-		elseif category == "Enum" then `Enum{name}`
+		elseif category == "Enum" then `Enum.{name}`
 		elseif category == "Class" then name
 		elseif
 			name == "Content"
