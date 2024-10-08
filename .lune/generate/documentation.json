@@ -67,50 +67,6 @@
 					}
 				}
 			},
-			"UserInput": {
-				"learnmore": "https://discord.com/channels/616089055532417036/823313507167502336/1038620936896790538",
-				"properties": {
-					"Mouse": {
-						"description": "An array of <code>InputObjects</code> corresponding to the mouse buttons currently being currently held down.",
-						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#GetMouseButtonsPressed",
-						"type": "{ InputObject }"
-					},
-					"Keyboard": {
-						"description": "An array of <code>InputObjects</code> associated with the keys currently being pressed.",
-						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#GetKeysPressed",
-						"type": "{ InputObject }"
-					},
-					"Gamepad": {
-						"description": "An dictionary of <code>Enum.UserInputType.GamepadX</code> keys to an array of <code>InputObjects</code> representing the current state of all available inputs for said gamepad as values.",
-						"learnmore": "https://discord.com/channels/616089055532417036/823313507167502336/1038621144397381692",
-						"type": "{ [Enum.UserInputType]: { InputObject } }"
-					},
-					"VREnabled": {
-						"description": "This property describes whether the user is using a virtual reality (VR) device.",
-						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#VREnabled",
-						"type": "boolean"
-					},
-					"KeyboardEnabled": {
-						"description": "This property describes whether the user's device has a keyboard available. This property is <code>true</code> when the user's device has an available keyboard, and <code>false</code> when it does not.",
-						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#KeyboardEnabled",
-						"type": "boolean"
-					},
-					"TouchEnabled": {
-						"description": "This property describes whether the user's current device has a touch screen available.",
-						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#TouchEnabled",
-						"type": "boolean"
-					},
-					"GamepadEnabled": {
-						"description": "This property describes whether the device being used by a user has an available gamepad. If gamepads are available.",
-						"type": "boolean"
-					},
-					"LastInputType": {
-						"description": "The 'Enum.UserInputType` associated with the user's most recent input.",
-						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#GetLastInputType",
-						"type": "Enum.UserInputType"
-					}
-				}
-			},
 			"ARCursor": {
 				"properties": {
 					"Camera": {
@@ -489,6 +445,50 @@
 			},
 			"Tool": {
 				"extends": "PilotObject"
+			},
+			"UserInput": {
+				"learnmore": "https://discord.com/channels/616089055532417036/823313507167502336/1038620936896790538",
+				"properties": {
+					"Gamepad": {
+						"description": "An dictionary of <code>Enum.UserInputType.GamepadX</code> keys to an array of <code>InputObjects</code> representing the current state of all available inputs for said gamepad as values.",
+						"learnmore": "https://discord.com/channels/616089055532417036/823313507167502336/1038621144397381692",
+						"type": "{ [Enum.UserInputType]: { InputObject } }"
+					},
+					"GamepadEnabled": {
+						"description": "This property describes whether the device being used by a user has an available gamepad. If gamepads are available.",
+						"type": "boolean"
+					},
+					"Keyboard": {
+						"description": "An array of <code>InputObjects</code> associated with the keys currently being pressed.",
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#GetKeysPressed",
+						"type": "{ InputObject }"
+					},
+					"KeyboardEnabled": {
+						"description": "This property describes whether the user's device has a keyboard available. This property is <code>true</code> when the user's device has an available keyboard, and <code>false</code> when it does not.",
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#KeyboardEnabled",
+						"type": "boolean"
+					},
+					"LastInputType": {
+						"description": "The 'Enum.UserInputType` associated with the user's most recent input.",
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#GetLastInputType",
+						"type": "Enum.UserInputType"
+					},
+					"Mouse": {
+						"description": "An array of <code>InputObjects</code> corresponding to the mouse buttons currently being currently held down.",
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#GetMouseButtonsPressed",
+						"type": "{ InputObject }"
+					},
+					"TouchEnabled": {
+						"description": "This property describes whether the user's current device has a touch screen available.",
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#TouchEnabled",
+						"type": "boolean"
+					},
+					"VREnabled": {
+						"description": "This property describes whether the user is using a virtual reality (VR) device.",
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/UserInputService#VREnabled",
+						"type": "boolean"
+					}
+				}
 			}
 		},
 		"components": ["ClickButton", "KeyButton", "Door", "Blade", "Hull"],
@@ -501,6 +501,7 @@
 				}
 			},
 			"ARController": {
+				"categories": ["Logic", "Electrical"],
 				"events": {
 					"Configured": true,
 					"CursorMoved": {
@@ -583,7 +584,7 @@
 				}
 			},
 			"AlienCore": {
-				"categories": ["Resources"],
+				"categories": ["Resources", "Electrical"],
 				"description": "A mysterious piece of technology found within many robotic aliens.\nAlthough its precise function is unknown, it manages to be extremely useful in advanced technologies.\nIt seems to emanate raw power on its own, but only these robotic constructions seem to know .\nGenerally, more powerful aliens will utilize more alien cores."
 			},
 			"Aluminum": {
@@ -605,7 +606,7 @@
 				}
 			},
 			"Antenna": {
-				"categories": ["Logic"],
+				"categories": ["Logic", "Starter", "Electrical"],
 				"description": "A wireless transmitter that can transmit electricity from wires and trigger signals from trigger wires and buttons.",
 				"properties": {
 					"AntennaID": {
@@ -644,6 +645,7 @@
 				}
 			},
 			"Artillery": {
+				"categories": ["Weapons"],
 				"description": "Fires a fast-moving metal shell upon being triggered.\nThis metal shell generates a small explosion upon impact.\nCosts 15 iron per shot.",
 				"events": {
 					"OnClick": true,
@@ -657,23 +659,13 @@
 				}
 			},
 			"Assembler": {
-				"categories": ["Electrical"],
+				"categories": ["Electrical", "Starter"],
 				"description": "Assembles items as configured when the structure is supplied with the required power and resources.",
 				"events": {
 					"Configured": true,
 					"Loop": true
 				},
 				"methods": {
-					"Craft": {
-						"description": "Will pause and craft the desired item at the next available point, returning a boolean representing whether or not the item was successfully crafted.\n\nThis uses a queue under the hood, the first thing to call it gets to craft first, and then finally the assembler performs its configured craft if nothing else is queued.",
-						"parameters": ["itemName: string"],
-						"returns": ["boolean"]
-					},
-					"GetRecipe": {
-						"description": "Returns the resource(s) required to craft the given item, or nil if the item doesn't have a recipe/doesn't exist.",
-						"parameters": ["itemName: string"],
-						"returns": ["{[string]: number}"]
-					},
 					"CalculateCraftingRecipe": {
 						"deprecated": "Use `Assembler:GetRecipe` instead",
 						"parameters": [
@@ -683,6 +675,11 @@
 							]
 						],
 						"returns": ["{ Power: number, [string]: number }"]
+					},
+					"Craft": {
+						"description": "Will pause and craft the desired item at the next available point, returning a boolean representing whether or not the item was successfully crafted.\n\nThis uses a queue under the hood, the first thing to call it gets to craft first, and then finally the assembler performs its configured craft if nothing else is queued.",
+						"parameters": ["itemName: string"],
+						"returns": ["boolean"]
 					},
 					"CraftItems": {
 						"deprecated": "Use `Assembler:Craft` instead.",
@@ -695,6 +692,11 @@
 					"GetInventory": {
 						"deprecated": "`Assembler:GetInventory()` has been deprecated and always returns an empty, frozen table",
 						"returns": ["{ [string]: number }"]
+					},
+					"GetRecipe": {
+						"description": "Returns the resource(s) required to craft the given item, or nil if the item doesn't have a recipe/doesn't exist.",
+						"parameters": ["itemName: string"],
+						"returns": ["{[string]: number}"]
 					}
 				},
 				"properties": {
@@ -781,6 +783,7 @@
 				"description": "A lightweight metal only found on Barren planets used for preventing plutonium cores from going supercritical until detonated."
 			},
 			"Bin": {
+				"categories": ["Starter", "Storage"],
 				"description": "Stores solid items such as Aluminum, Iron, Faucets, etc. \nCan store up to 1000 items. When destroyed, every item inside will also be destroyed. \nThe value increases as more items are added to it.\n\nBins can also be used as crafting recipes, with the resources inside being used.\nYou can also configure a bin to prevent items from being crafted from it, allowing for bins to be strictly for machine storage.\n\t",
 				"events": {
 					"OnClick": true
@@ -814,10 +817,6 @@
 						"returns": ["{ RegionLog }"]
 					}
 				}
-			},
-			"Blade": {
-				"categories": ["Templates"],
-				"description": "A sharp object that can pierce through objects if the material is durable and strong."
 			},
 			"BlastingCap": {
 				"description": "A component used in crafting recipes for more advanced explosive devices."
@@ -853,7 +852,7 @@
 				}
 			},
 			"BurnerGenerator": {
-				"categories": ["Electrical"],
+				"categories": ["Electrical", "Starter"],
 				"description": "Creates electricity when fueled with coal.",
 				"events": {
 					"Loop": true
@@ -902,14 +901,24 @@
 				"description": "A modern material useful for pavement."
 			},
 			"Chute": {
+				"categories": ["Starter", "Storage"],
 				"description": "Is able to transfer solid parts between objects such as bins and extractors.\n**Contrary to popular belief, chutes can transfer more than one type of object.**\n**This means you can mix assemblers and extractors into the same system, no need for different chutes for each object. You can just make one long chute and connect your factory to it.**"
 			},
 			"Cleat": {
 				"description": "A textile resource similar to Rubber, except it has a high amount of friction and low bounciness. It can be used in physical machines such as the feet of mechs, etc."
 			},
 			"CloningBay": {
-				"categories": ["Electrical"],
-				"description": "Similar to a SpawnPoint, but allows players to respawn at the location from far away even at another region.\nIt is pretty much a cross region spawnpoint. However, you can only have one cloning bay at a time.\nWhen powered, it will appear in your death menu when you die and you can click it to spawn at this location.\nHowever, you should pair the CloningBay with a spawn point next to it to ensure you spawn at the cloning bay."
+				"categories": ["Electrical", "Starter"],
+				"description": "Similar to a SpawnPoint, but allows players to respawn at the location from far away even at another region.\nIt is pretty much a cross region spawnpoint. However, you can only have one cloning bay at a time.\nWhen powered, it will appear in your death menu when you die and you can click it to spawn at this location.\nHowever, you should pair the CloningBay with a spawn point next to it to ensure you spawn at the cloning bay.",
+				"properties": {
+					"Name": {
+						"constraints": {
+							"default": "CloningBay"
+						},
+						"description": "The name of the cloning bay.",
+						"type": "string"
+					}
+				}
 			},
 			"Cloth": {
 				"description": "A soft thin fabric that can soak up liquids."
@@ -1049,7 +1058,6 @@
 					"Loop": true
 				}
 			},
-			"Decoupler": "When triggered, it breaks welds and falls off of anything attached.\nCan be used to separate things.\nThe trigger signals will pass through the decoupler as it is decoupled.",
 			"DelayWire": {
 				"categories": ["Logic"],
 				"description": "Similar to a regular trigger wire, but depending on the configuration will wait x seconds before the trigger signal passes through.",
@@ -1076,7 +1084,7 @@
 				"categories": ["Resources"]
 			},
 			"Diode": {
-				"categories": ["Electrical"],
+				"categories": ["Electrical", "Storage"],
 				"description": "Allows electrical objects to interact with each other when connected by the diode, but only in its direction as depicted by an arrow."
 			},
 			"Disk": {
@@ -1140,16 +1148,6 @@
 						},
 						"description": "Which kinds of resources to drop, separated by commas.",
 						"type": "string"
-					}
-				}
-			},
-			"Door": {
-				"categories": ["Templates"],
-				"description": "When triggered, it will open, and if triggered again will close.",
-				"properties": {
-					"DoorSwitch": {
-						"description": "Determines if the door is open.",
-						"type": "boolean"
 					}
 				}
 			},
@@ -1278,7 +1276,7 @@
 				}
 			},
 			"Extractor": {
-				"categories": ["Electrical"],
+				"categories": ["Electrical", "Starter"],
 				"description": "Extracts and harvests materials from connected terrain such as mountains and ore deposits. \nFor example, to extract coal you attach it to the coal deposit, and configure the extractor to extract Coal.\n\nThe extractor must be powered in order to work. Will not work if there's another powered extractor 50 studs away.\nIf connected to a bin, it will supply that bin with the given material it is tasked to extract.\nTwo powered extractors cannot be on the same ore deposit, or else they both will not function. \n\nIf the materials can't be added to a bin, they will spawn in front of the hole on the front of the extractor.\nHowever, if the extractor is blocked by an object, it will not spew out any materials which prevents an increase on lag.\n\t\t\nWhen tasked to extract wood, it will extract any trees near it.",
 				"events": {
 					"Loop": true
@@ -1295,9 +1293,11 @@
 				"extends": "Dispenser"
 			},
 			"Fence": {
+				"categories": ["Decoration"],
 				"description": "A metal fence. Primarily used to set up walls and gaurd structures and bases."
 			},
 			"Filter": {
+				"categories": ["Storage"],
 				"description": "Similar to a chute and a pipe, but only lets certain materials pass through.",
 				"properties": {
 					"Filter": {
@@ -1325,6 +1325,7 @@
 				}
 			},
 			"Flamethrower": {
+				"categories": ["Weapons"],
 				"description": "Shoots a stream of flaming gasoline to ignite your foes.",
 				"events": {
 					"Loop": true,
@@ -1337,7 +1338,7 @@
 				"description": "Useful for lighting up flammable materials.\nSimply rub it against a flammable material and it will set it on fire."
 			},
 			"FloatDevice": {
-				"categories": ["Electrical"],
+				"categories": ["Electrical", "Propulsion"],
 				"description": "Defies gravity when powered. Allows for vehicles such as space ships to float."
 			},
 			"Food": {
@@ -1368,10 +1369,6 @@
 			"Gear": "A mechanical component commonly used in crafting recipes for many objects.",
 			"GeigerCounter": {
 				"categories": {}
-			},
-			"Generator": {
-				"categories": ["Electrical"],
-				"description": "Creates energy from rotation."
 			},
 			"Glass": {
 				"categories": ["Resources"],
@@ -1418,20 +1415,20 @@
 					"Loop": true
 				},
 				"methods": {
-					"PointAt": {
-						"description": "Points the gyro towards the specified position. Pass `nil` or configure the gyro to stop pointing.",
+					"PointAlong": {
+						"description": "Points the gyro along the specified vector. Pass `nil` or configure the gyro to stop pointing.",
 						"parameters": [
-							["position: Vector3", "The position for the gyro to look at."],
+							["direction: Vector3", "The vector for the gyro to point along."],
 							[
 								"up: Vector3?",
 								"Optionally specify the upward direction (`up`) of the gyro with a default of `(0, 1, 0)`."
 							]
 						]
 					},
-					"PointAlong": {
-						"description": "Points the gyro along the specified vector. Pass `nil` or configure the gyro to stop pointing.",
+					"PointAt": {
+						"description": "Points the gyro towards the specified position. Pass `nil` or configure the gyro to stop pointing.",
 						"parameters": [
-							["direction: Vector3", "The vector for the gyro to point along."],
+							["position: Vector3", "The position for the gyro to look at."],
 							[
 								"up: Vector3?",
 								"Optionally specify the upward direction (`up`) of the gyro with a default of `(0, 1, 0)`."
@@ -1511,11 +1508,24 @@
 				"description": ""
 			},
 			"HeatPump": {
+				"categories": ["Electrical"],
 				"events": {
 					"Loop": true
+				},
+				"properties": {
+					"TransferRate": {
+						"constraints": {
+							"default": 4000,
+							"max": 4000,
+							"min": 0
+						},
+						"description": "How many kW of heat energy to pump.",
+						"type": "number"
+					}
 				}
 			},
 			"HeatValve": {
+				"categories": ["Logic"],
 				"events": {
 					"Configured": true,
 					"OnClick": true
@@ -1530,10 +1540,6 @@
 			"Heater": {
 				"categories": ["Electrical"],
 				"description": "Generated heat when powered by electricity. Glows red hot while functioning.\nCan be used as insulation in cold environments. Heat amount is based on size 10 * X * Y * Z / 16"
-			},
-			"Heatshield": {
-				"categories": ["Electrical"],
-				"description": "Generates a 300 stud radius area that protects all players and **only players** within the vicinity from temperature damage."
 			},
 			"Helium": {
 				"categories": ["Resources"],
@@ -1558,10 +1564,6 @@
 					}
 				}
 			},
-			"Hull": {
-				"categories": ["Templates"],
-				"description": "Is able to float in the water, as well as carry objects attached to it. Primarily used for creating boats and other water craft."
-			},
 			"Hydrogen": {
 				"categories": ["Resources"],
 				"description": "A gas commonly found in stars and gas giants."
@@ -1583,7 +1585,7 @@
 				}
 			},
 			"HyperDrive": {
-				"categories": ["Propulsion"],
+				"categories": ["Propulsion", "Starter"],
 				"description": "A device used to travel at faster than light speeds to other regions of the universe. \nSimply input the coordinates to your destination and have a sufficient amount of fuel, and you'll be on your way to your destination.\nTo initiate warping, power the hyperdrive and trigger it. When warping, the hyperdrive will be anchored to prevent any movement.\n\nThe power required for warping will be dependent on the distance travelled, as well as the size of the object being transported.\nThe amount of power required will be displayed in the hyper drive, shown in the red text. \n\nAll of the parts connected to the hyperdrive and every player sitting will be teleported, however any free floating parts or standing up players will be sucked into the vaccum of space, so be careful.\n\nThe red text at the bottom of the hyperdrive indicates how much power is needed to perform the jump.\n\nMake sure the numbers on the hyperdrive is facing up to ensure correct stud alignment.",
 				"events": {
 					"Configured": true,
@@ -1644,7 +1646,7 @@
 				"description": ""
 			},
 			"IonRocket": {
-				"categories": ["Electrical"],
+				"categories": ["Electrical", "Starter", "Propulsion"],
 				"description": "An IonRocket allows space flight. When powered, it will propel force dependent on the Propulsion setting, which you can configure with the hammer tool. \n\t\tThe arrow indicates the direction the ionrocket will propel to when powered.",
 				"extends": "Thruster"
 			},
@@ -1660,10 +1662,9 @@
 				"description": "Similar to a button, except is programmable to take more than one key input.\nCan be attached to a vehicle seat or clicked by a player.",
 				"events": {
 					"KeyPressed": true,
-					"UserInput": true,
 					"TextInputted": {
-						"description": "An event that fires when a player inputs text and presses <code>Enter</code> (or <code>Return</code>) on the keyboard.",
 						"codesample": "local telescope = GetPart(\"Telescope\")\nlocal keyboard = GetPart(\"Keyboard\")\n\nlocal repr = require(\"repr\")\n\nkeyboard:Connect(\"TextInputted\", function(text)\n  telescope.ViewCoordinates = text .. \", false\"\n  print(repr(telescope:GetCoordinate()))\nend)",
+						"description": "An event that fires when a player inputs text and presses <code>Enter</code> (or <code>Return</code>) on the keyboard.",
 						"parameters": [
 							[
 								"text: string",
@@ -1671,7 +1672,8 @@
 							],
 							["player: string", "The player who type in the keyboard."]
 						]
-					}
+					},
+					"UserInput": true
 				},
 				"methods": {
 					"SimulateKeyPress": {
@@ -1688,7 +1690,7 @@
 				}
 			},
 			"Kiln": {
-				"categories": ["Electrical"],
+				"categories": ["Electrical", "Starter"],
 				"description": "Turns attached sand bins into glass.",
 				"events": {
 					"Loop": true
@@ -1828,8 +1830,8 @@
 				},
 				"methods": {
 					"Receive": {
-						"description": "Waits for data to be received.",
 						"codesample": "-- Microcontroller A\nlocal function receive(sender: Microcontroller, command: string, ...: any)\n    if command == \"Tell me a joke.\" then\n        sender:Send(\"Why did the chicken cross the road?\")\n    elseif command == \"I don't know, why?\" then\n        sender:Send(\"To get to the other side.\")\n    end\nend\n\nwhile true do\n    receive(Microcontroller:Receive())\nend\n\n-- Microcontroller B\nlocal otherMicrocontroller = GetPartFromPort(1, \"Microcontroller\")\n\nlocal function receive(sender: Microcontroller, command: string, ...: any)\n    if command == \"Why did the chicken cross the road?\" then\n        sender:Send(\"I don't know, why?\")\n    elseif command == \"To get to the other side.\" then\n        sender:Send(\"HAHAHA that's SO FUNNY!!!!\")\n        sender:Shutdown() -- kill enemy\n    end\nend\n\ntask.spawn(function()\n    while true do\n        receive(Microcontroller:Receive())\n    end\nend)\n\notherMicrocontroller:Send(\"Tell me a joke.\")",
+						"description": "Waits for data to be received.",
 						"returns": [
 							[
 								"sender: Microcontroller",
@@ -1842,8 +1844,8 @@
 						]
 					},
 					"Send": {
-						"description": "Sends the data you provide to a remote microcontroller. Parts you pass will be based on your microcontroller's context.",
 						"codesample": "-- Microcontroller A\nlocal function receive(sender: Microcontroller, command: string, ...: any)\n    if command == \"Tell me a joke.\" then\n        sender:Send(\"Why did the chicken cross the road?\")\n    elseif command == \"I don't know, why?\" then\n        sender:Send(\"To get to the other side.\")\n    end\nend\n\nwhile true do\n    receive(Microcontroller:Receive())\nend\n\n-- Microcontroller B\nlocal otherMicrocontroller = GetPartFromPort(1, \"Microcontroller\")\n\nlocal function receive(sender: Microcontroller, command: string, ...: any)\n    if command == \"Why did the chicken cross the road?\" then\n        sender:Send(\"I don't know, why?\")\n    elseif command == \"To get to the other side.\" then\n        sender:Send(\"HAHAHA that's SO FUNNY!!!!\")\n        sender:Shutdown() -- kill enemy\n    end\nend\n\ntask.spawn(function()\n    while true do\n        receive(Microcontroller:Receive())\n    end\nend)\n\notherMicrocontroller:Send(\"Tell me a joke.\")",
+						"description": "Sends the data you provide to a remote microcontroller. Parts you pass will be based on your microcontroller's context.",
 						"parameters": [
 							[
 								"...: any",
@@ -1871,8 +1873,8 @@
 			},
 			"Microphone": {
 				"categories": ["Logic"],
-				"description": "Used in programming. Takes user's inputs.",
 				"codesample": "local microphone = GetPart(\"Microphone\")\n\nlocal whitelisted = {\n\t[YOUR_USER_ID_HERE] = true,\n}\n\nlocal commands = {\n\techo = function(userId, arguments)\n\t\tprint(table.concat(arguments, \" \"))\n\tend,\n}\n\nmicrophone:Connect(\"Chatted\", function(userId, message)\n\tif not whitelisted[userId] then return end\n\n\tlocal arguments = message:split(\" \")\n\tlocal command = table.remove(arguments)\n\n\tlocal callback = commands[command]\n\tif callback then\n\t\tcallback(userId, arguments)\n\tend\nend)",
+				"description": "Used in programming. Takes user's inputs.",
 				"events": {
 					"Chatted": {
 						"description": "Fires when a user speaks in chat. Also registers hidden commands like '/e dance' or '/console'.",
@@ -1889,30 +1891,31 @@
 				"extends": "Extractor"
 			},
 			"Modem": {
-				"categories": ["Electrical"],
+				"categories": ["Electrical", "Logic"],
 				"description": "A computer networking object that allows you to send, save and get messages cross-region.\nThis is an incredibly useful part to set up an internet of sorts and send data to other computers.\n\nThe modem has 5 programmable functions to it.\nSendMessage(Data, NetworkId defaults to 0) sends a message (specifically through messaging service) carrying data.\nMessageSent is a special event that can be connected to via Connect. Has one argument called Data which is the data received. \nPostRequest saves a string of data to the WoS internet ':PostRequest(Domain, Data)' (modem must be locked)\nGetRequest gets a string of data from the WoS internet ':GetRequest(Domain)'\nRealPostRequest send a POST request to the real www ':(Domain, DataPassed, AsyncBool, FuncToSendResultsTo, OptionalHeaders)'",
 				"events": {
 					"Loop": true,
 					"MessageSent": {
-						"parameters": ["data: string"],
-						"description": "Fired when the Modem receives a message from another modem with the same <code>NetworkId</code>."
+						"description": "Fired when the Modem receives a message from another modem with the same <code>NetworkId</code>.",
+						"parameters": ["data: string"]
 					}
 				},
 				"methods": {
 					"GetAsync": {
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/HttpService#GetAsync",
 						"parameters": [
 							"url: string",
 							"nocache: boolean?",
 							"headers: { [string]: any }?"
 						],
-						"returns": ["string"],
-						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/HttpService#GetAsync"
+						"returns": ["string"]
 					},
 					"GetRequest": {
 						"parameters": ["domain: string"],
 						"returns": ["string"]
 					},
 					"PostAsync": {
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/HttpService#PostAsync",
 						"parameters": [
 							"url: string",
 							"data: string",
@@ -1920,8 +1923,7 @@
 							"compress: boolean?",
 							"headers: { [string]: any }?"
 						],
-						"returns": ["string"],
-						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/HttpService#PostAsync"
+						"returns": ["string"]
 					},
 					"PostRequest": {
 						"parameters": ["domain: string", "data: string"]
@@ -1938,9 +1940,9 @@
 						"returns": ["{ response: string, success: boolean }"]
 					},
 					"RequestAsync": {
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/HttpService#RequestAsync",
 						"parameters": ["options: ModemRequest"],
-						"returns": ["ModemRequestResponse"],
-						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/HttpService#RequestAsync"
+						"returns": ["ModemRequestResponse"]
 					},
 					"SendLocalMessage": {
 						"unknowntype": true
@@ -1949,9 +1951,9 @@
 						"parameters": ["data: string", "id: number?"]
 					},
 					"UrlEncode": {
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/HttpService#UrlEncode",
 						"parameters": ["input: string"],
-						"returns": ["string"],
-						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/HttpService#UrlEncode"
+						"returns": ["string"]
 					}
 				},
 				"properties": {
@@ -2016,6 +2018,7 @@
 				}
 			},
 			"ObjectDetector": {
+				"categories": ["Logic", "Electrical"],
 				"methods": {
 					"GetLastHitData": {
 						"type": "ObjectDetectorHitData"
@@ -2057,6 +2060,7 @@
 				"description": "A gas used for creating plastic."
 			},
 			"Pipe": {
+				"categories": ["Storage"],
 				"description": "Is able to transfer liquids and gases between containers and other objects when connected by pipes."
 			},
 			"Piston": {
@@ -2123,7 +2127,7 @@
 				"description": "A volatile core close to going supercritical used in recipes for Nuclear explosives."
 			},
 			"Polysilicon": {
-				"categories": ["Logic"],
+				"categories": ["Logic", "Starter"],
 				"description": "A special electronic material used to send special signals to certain objects.\n\nHas a special configuration called Frequency which dictates how many times the polysilicon will repeat a trigger.\nFor example, if a polysilicon was attached to a pulley, having a frequency of 5 and triggered, the pulley will be activated 5 times.",
 				"events": {
 					"Configured": true
@@ -2192,6 +2196,7 @@
 				}
 			},
 			"ProximityButton": {
+				"categories": ["Logic"],
 				"events": {
 					"Configured": true,
 					"PromptButtonHoldBegan": {
@@ -2369,19 +2374,6 @@
 			"ReinforcedGlass": {
 				"description": "A stronger version of glass, however is less malleable."
 			},
-			"Relay": {
-				"description": "A powerful transmitter capable of transmitting trigger signals and resources/power between different regions.\nIt is a more powerful version of the antenna and transporter.\n\nUnlike the antenna, the relay has 2 modes, mode 0 and mode 1.\nMode 0 sends resources/power and trigger signals, while mode 1 receives it.\n\nUnlike the antenna, it can also transfer power in inactive regions or regions without players in them.\nThis means that you can connect a relay to your main base, warp away without anyone in the base, and still have the relay get the sufficient amount of power.\n\nHowever, you should have only one sending relay per coordinate, as conflicts can occur if there are 2 or more relays in the region/coordinates sending power or signalsith the same ID.\nOn the other hand, there can be an infinite number of receivers but the power/resources will be distributed evenly among them.\n\nFor example, let's say a relay network has a total output of 500 power and 25 iron. If there are 5 active receivers, each of them will get 100 power and 5 iron.\n\nWhen the relay is red, it means it not functioning. When it turns green, it is properly linked up to another relay or is sending signals.\n\t",
-				"properties": {
-					"LinkerID": {
-						"description": "The ID of the relay, to send or take materials to or from other relays with the same ID.\n\n**Range:** 1 to 10000000000\n\n**Default:** 1",
-						"type": "number"
-					},
-					"Mode": {
-						"description": "The mode of the relay. Send outputs materials to other receiving relays; Receive receives materials from sending relays.",
-						"type": "RelayMode"
-					}
-				}
-			},
 			"RemoteControl": {
 				"categories": ["Logic"],
 				"description": "Similar to an antenna, but sends trigger signals forward wirelessly when triggered.",
@@ -2422,6 +2414,7 @@
 				"description": "A block rounded inwards on one edge."
 			},
 			"Router": {
+				"categories": ["Logic", "Electrical"],
 				"description": "",
 				"properties": {
 					"RouterID": {
@@ -2456,6 +2449,7 @@
 				"description": "An abundant resource that can be found in the shores of terra and forest planets, the sea floors of ocean planets and in the dunes of desert planets. When burnt, the sand becomes glass."
 			},
 			"Scanner": {
+				"categories": ["Logic", "Electrical"],
 				"methods": {
 					"CalculateCost": {
 						"description": "Calculates the cost of performing a scan with the given range.",
@@ -2578,10 +2572,6 @@
 					}
 				}
 			},
-			"Shotgun": {
-				"categories": ["Weapons"],
-				"description": "Fires a shot of harmful pellets when triggered.\nMust be supplied with ammo in order to function.\nFor example, you need an iron bin with 1 or more iron directly attached to it to work."
-			},
 			"Sign": {
 				"description": "Displays text or images. To display an image, configure it to id:imageid ",
 				"events": {
@@ -2634,6 +2624,7 @@
 				}
 			},
 			"Sorter": {
+				"categories": ["Electrical", "Storage"],
 				"events": {
 					"Loop": true
 				},
@@ -2659,10 +2650,11 @@
 				"description": "A SoundMuffler will silences the sounds of machinery around it."
 			},
 			"SpawnPoint": {
+				"categories": ["Starter"],
 				"description": "Acts as a spawn location for the player who locked it."
 			},
 			"Speaker": {
-				"categories": ["Electrical"],
+				"categories": ["Electrical", "Logic"],
 				"description": "Plays audio of length up to 5 seconds, unless it is powered in which case it can play a full audio.\nWhen clicked or triggered, it will toggle playing music and will play the song id you give it.\nSpeaker:LoadSound(SoundId) will return a Sound object\nA Sound object can be modified using properties SoundId, Looped, PlaybackSpeed, Pitch, TimePositionand the methods Play, Pause, Stop, Destroy",
 				"events": {
 					"Configured": true,
@@ -2702,11 +2694,20 @@
 						},
 						"description": "The pitch at which to play the audio.",
 						"type": "number"
+					},
+					"Volume": {
+						"constraints": {
+							"default": 1,
+							"max": 1,
+							"min": 0
+						},
+						"description": "The volume the audio plays at. The maximum volume is determined by the size of the speaker.",
+						"type": "number"
 					}
 				}
 			},
 			"Spotlight": {
-				"categories": ["Electrical"],
+				"categories": ["Electrical", "Decoration"],
 				"description": "Emits light in a cone when powered with electricity. Color emition can be changed by coloring it.",
 				"methods": {
 					"SetColor": {
@@ -2716,6 +2717,7 @@
 				}
 			},
 			"Stanlium": {
+				"categories": ["Resources"],
 				"description": ""
 			},
 			"StarMap": {
@@ -2825,10 +2827,27 @@
 				}
 			},
 			"Tank": {
+				"categories": ["Starter", "Storage"],
 				"events": {
 					"OnClick": true
 				},
-				"extends": "ContainerObject"
+				"extends": "ContainerObject",
+				"properties": {
+					"CanBeCraftedFrom": {
+						"constraints": {
+							"default": true
+						},
+						"description": "Determines whether this tank can be used by nearby players to craft objects.",
+						"type": "boolean"
+					},
+					"Resource": {
+						"constraints": {
+							"default": ""
+						},
+						"description": "The kind of resource the tank can hold. You can set this to Any to allow the tank to accept anything.",
+						"type": "string"
+					}
+				}
 			},
 			"Teleporter": {
 				"description": "A device used to transport players across regions.\nWhen powered and triggered, it will teleport all players in the beam to the given coordinates and teleporter id.\nIt will warp the player to a teleporter in the region with the given teleporter id.\n\nWhen warping to a teleporter inside of a planet, set the last value to true. For example,\n50, -50, 85, -75, true\n\nMake sure you set the correct coordinates OR YOU WILL BE STRANDED!\n\nCosts 1000 energy per teleport. Teleporter uses Energy regardless if a player is on the Teleporter at the moment it gets triggered.\n",
@@ -2885,6 +2904,7 @@
 				}
 			},
 			"TemperatureGate": {
+				"categories": ["Logic"],
 				"events": {
 					"Configured": true
 				},
@@ -2943,7 +2963,7 @@
 				"description": "A tetrahedron template made of 3 perpendicular right triangles."
 			},
 			"Thruster": {
-				"categories": ["Propulsion", "Electrical"],
+				"categories": ["Propulsion", "Electrical", "Starter"],
 				"description": "A device that creates forward propulsion depending on its size when powered.\nThe size of the thruster will determine the max thrust speed it can have, with a larger thruster being capable of higher speeds.\n\nThe speed setting of the thruster can also be configured from -100 (full backward) to 100 (full forward).\n\nThe maximum speed of a thruster is dependent on its volume.\nThrusters will generate more heat the larger and more powerful the thruster is. A 10x10x10 thruster, for example, would need about 8 coolers to operate.\nThe power required by a thruster is proportional to its actual speed output.\n\nThrusters can be heated to a temperature of around <200 degrees before overheating and combusting.",
 				"events": {
 					"Configured": true
@@ -3051,6 +3071,7 @@
 				}
 			},
 			"TractorBeam": {
+				"categories": ["Weapons", "Propulsion", "Electrical"],
 				"description": "",
 				"properties": {
 					"PowerPercent": {
@@ -3084,6 +3105,7 @@
 				}
 			},
 			"Transistor": {
+				"categories": ["Electrical"],
 				"events": {
 					"Configured": true,
 					"OnClick": true
@@ -3096,6 +3118,7 @@
 				}
 			},
 			"Transporter": {
+				"categories": ["Logic", "Starter"],
 				"description": "Acts as an antenna but for bins and objects containing materials such as liquids and solids. \nUseful for creating large factory bases with many extractors without using long chutes.\n\t",
 				"properties": {
 					"TransporterID": {
@@ -3108,7 +3131,7 @@
 				}
 			},
 			"Treads": {
-				"categories": ["Electrical"],
+				"categories": ["Electrical", "Propulsion"],
 				"description": "When touching in contact with a solid surface, it will move forward. Must be connected to an engine or motor similar to a drivebox to function.",
 				"events": {
 					"Loop": true
@@ -3126,16 +3149,6 @@
 			"Truss": {
 				"categories": ["Templates"],
 				"description": "Used as a ladder."
-			},
-			"Turbofan": {
-				"categories": ["Propulsion"],
-				"description": "Generates thrust from crude Oil, similar to a Thruster.\nIf a motor is attached to the front, it instead acts like an engine and rotates it.",
-				"properties": {
-					"TurboFanSpeed": {
-						"description": "Determines the speed at which the turbofan is driven, or the speed at which it travels.\n\n**Range:** 0 to 100",
-						"type": "number"
-					}
-				}
 			},
 			"Uranium": {
 				"categories": ["Resources"],
@@ -3236,7 +3249,7 @@
 				}
 			},
 			"Wire": {
-				"categories": ["Electrical"],
+				"categories": ["Electrical", "Starter"],
 				"description": "Allows electrical objects to interact with each other when connected by wires. For example, attaching a wire between a powercell and a light will allow electricity to move through the wire, allowing the light to function causing a source of light to be created."
 			},
 			"WirelessButton": {
@@ -3251,7 +3264,7 @@
 				"description": "**A natural resource found in trees and flora.** It is a simple and yet effective material that is used for simple objects and structures. These can be mainly found in terra and forest planets, but can occasionally be found in temperate tundra and desert planets."
 			},
 			"ZapWire": {
-				"categories": ["Logic", "Weapons", "Electrical"],
+				"categories": ["Logic", "Weapons", "Electrical", "Decoration"],
 				"description": "Allows electrical objects to interact with each other when connected by wires.\nIf a flammable object is touched, it will be lit on fire."
 			}
 		}
@@ -3260,18 +3273,6 @@
 		"Configured": {
 			"description": "Fires when the object is configured.",
 			"parameters": ["configurerId: number"]
-		},
-		"Loop": {
-			"description": "Fires when the object is updated by the game loop.",
-			"parameters": ["deltaTime: number"]
-		},
-		"OnClick": {
-			"description": "Fires when the object is clicked.",
-			"parameters": ["clickerId: number"]
-		},
-		"Triggered": {
-			"description": "Fires when the object is triggered.",
-			"parameters": ["otherPart: PilotObject"]
 		},
 		"Damaged": {
 			"unknowntype": true
@@ -3287,6 +3288,18 @@
 					"The letter of the key that was pressed. If the key is non-printable (i.e. shift or backspace) keyString will be an empty string."
 				]
 			]
+		},
+		"Loop": {
+			"description": "Fires when the object is updated by the game loop.",
+			"parameters": ["deltaTime: number"]
+		},
+		"OnClick": {
+			"description": "Fires when the object is clicked.",
+			"parameters": ["clickerId: number"]
+		},
+		"Triggered": {
+			"description": "Fires when the object is triggered.",
+			"parameters": ["otherPart: PilotObject"]
 		},
 		"UserInput": {
 			"parameters": ["inputObject: InputObject", "userId: number"]
@@ -3416,32 +3429,27 @@
 			}
 		},
 		"types": {
-			"ModemRequest": {
-				"Url": "string",
-				"Method": ["?", ["GET", "POST", "PUSH", "PATCH", "DELETE"]],
-				"Headers": "{ [string]: any }?",
-				"Body": "string?",
-				"Compress": "Enum.HttpCompression?"
-			},
-			"ModemRequestResponse": {
-				"Success": "boolean",
-				"StatusCode": "number",
-				"StatusMessage": "string",
-				"Headers": "{ [string]: any }",
-				"Body": "any"
-			},
-			"ObjectDetectorHitData": {
-				"Durability": "number",
-				"isTerrain": "boolean",
-				"Name": "string",
-				"Position": "Vector3",
-				"Color": "Color3",
-				"Distance": "number",
-				"CreatedBy": "number",
-				"[string]": "any"
-			},
+			"BlackHoleRegionInfo": [
+				"and",
+				{
+					"BlackHoleSize": "number",
+					"EnterLocation": "RegionEnterLocation",
+					"PlanetData": "nil",
+					"StarSize": "nil",
+					"StarType": "nil"
+				},
+				"PlayableRegionInfo"
+			],
 			"CanvasContext": ["2D", "3D"],
 			"CelestialBodyType": ["Planet", "BlackHole", "Star"],
+			"CompleteRegionInfo": [
+				"or",
+				"OrbitRegionInfo",
+				"SpaceRegionInfo",
+				"BlackHoleRegionInfo",
+				"StarRegionInfo",
+				"PlanetRegionInfo"
+			],
 			"ConfigurableData": {
 				"DefaultValue": "any?",
 				"Description": "string",
@@ -3449,25 +3457,25 @@
 				"Options": "({ string } | { number })?",
 				"Type": "string"
 			},
+			"Coordinate": "typeof(setmetatable({} :: { InPlanet: boolean, SolarCoordinates: Vector2, UniverseCoordinates: Vector2, }, {} :: CoordinateMetatable))",
 			"CoordinateMetatable": {
 				"Clone": "(self: Coordinate) -> ()",
 				"CoordStringWithoutPlanet": "(self: Coordinate, arg1: any) -> string",
 				"GetRandom": "(self: Coordinate, arg2: any) -> Random",
 				"GetSeed": "(self: Coordinate, arg2: any) -> number",
 				"ToArray": "(self: Coordinate, arg2: any) -> {number | boolean}",
-				"__index": "CoordinateMetatable",
 				"__add": "(Coordinate) -> Coordinate",
 				"__div": "(Coordinate) -> Coordinate",
 				"__eq": "(Coordinate) -> Coordinate",
+				"__index": "CoordinateMetatable",
 				"__mul": "(Coordinate) -> Coordinate",
 				"__tostring": "(Coordinate) -> string",
 				"type": "\"Coordinate\""
 			},
-			"Coordinate": "typeof(setmetatable({} :: { InPlanet: boolean, SolarCoordinates: Vector2, UniverseCoordinates: Vector2, }, {} :: CoordinateMetatable))",
 			"Cursor": {
 				"Player": "string",
-				"UserId": "number",
 				"Pressed": "boolean",
+				"UserId": "number",
 				"X": "number",
 				"Y": "number"
 			},
@@ -3564,6 +3572,43 @@
 				"Name": "string",
 				"Results": "{ MethodParameter }"
 			},
+			"ModemRequest": {
+				"Body": "string?",
+				"Compress": "Enum.HttpCompression?",
+				"Headers": "{ [string]: any }?",
+				"Method": ["?", ["GET", "POST", "PUSH", "PATCH", "DELETE"]],
+				"Url": "string"
+			},
+			"ModemRequestResponse": {
+				"Body": "any",
+				"Headers": "{ [string]: any }",
+				"StatusCode": "number",
+				"StatusMessage": "string",
+				"Success": "boolean"
+			},
+			"ObjectDetectorHitData": {
+				"Color": "Color3",
+				"CreatedBy": "number",
+				"Distance": "number",
+				"Durability": "number",
+				"Name": "string",
+				"Position": "Vector3",
+				"[string]": "any",
+				"isTerrain": "boolean"
+			},
+			"OrbitRegionInfo": [
+				"and",
+				{
+					"OrbitBody": [
+						"or",
+						"BlackHoleRegionInfo",
+						"StarRegionInfo",
+						"PlanetRegionInfo"
+					],
+					"RegionType": "\"Orbit\""
+				},
+				"PlayableRegionInfo"
+			],
 			"Permission": [
 				"Modify",
 				"Unlock",
@@ -3571,6 +3616,31 @@
 				"Configure",
 				"Interact",
 				"Attach"
+			],
+			"PlanetRegionInfo": [
+				"and",
+				{
+					"BlackHoleSize": "nil",
+					"PlanetData": {
+						"Atmosphere": "boolean",
+						"DayCycleIncrement": "number",
+						"EnterLocation": "RegionEnterLocation",
+						"GenerationHeightScale": "number",
+						"Gravity": "number",
+						"PlanetMaterial": "string",
+						"PlanetType": "PlanetType",
+						"PrimaryColor": "RegionColor",
+						"Resources": "{ string }",
+						"Rings": "RingData?",
+						"SecondaryColor": "RegionColor",
+						"StartingTime": "number",
+						"Temperature": "number",
+						"TerrainConfig": "TerrainData"
+					},
+					"StarSize": "nil",
+					"StarType": "nil"
+				},
+				"PlayableRegionInfo"
 			],
 			"PlanetType": [
 				"Desert",
@@ -3585,6 +3655,16 @@
 				"RobotDepot",
 				"RobotFactory"
 			],
+			"PlayableRegionInfo": {
+				"Coordinate": {
+					"InPlanet": "boolean"
+				},
+				"EnterLocation": "RegionEnterLocation",
+				"Name": "string",
+				"RegionSeed": "number",
+				"RegionServer": "string",
+				"StringCoordinate": "string"
+			},
 			"PolysiliconMode": ["Activate", "Deactivate", "FlipFlop"],
 			"RawFileSystem": {
 				"Device": "(device: any, attributes: FileAttributes) -> FileSystemDevice",
@@ -3651,39 +3731,6 @@
 				"Freezing",
 				"Melting"
 			],
-			"RelayMode": ["Send", "Receive"],
-			"StarType": ["Red", "Orange", "Yellow", "Blue", "Neutron"],
-			"TemperatureUnit": ["K", "F", "C"],
-			"VehicleSeatMode": ["Horizontal", "Full", "Mouse"],
-			"PlayableRegionInfo": {
-				"Name": "string",
-				"StringCoordinate": "string",
-				"Coordinate": { "InPlanet": "boolean" },
-				"EnterLocation": "RegionEnterLocation",
-				"RegionSeed": "number",
-				"RegionServer": "string"
-			},
-			"CompleteRegionInfo": [
-				"or",
-				"OrbitRegionInfo",
-				"SpaceRegionInfo",
-				"BlackHoleRegionInfo",
-				"StarRegionInfo",
-				"PlanetRegionInfo"
-			],
-			"OrbitRegionInfo": [
-				"and",
-				{
-					"RegionType": "\"Orbit\"",
-					"OrbitBody": [
-						"or",
-						"BlackHoleRegionInfo",
-						"StarRegionInfo",
-						"PlanetRegionInfo"
-					]
-				},
-				"PlayableRegionInfo"
-			],
 			"SpaceRegionInfo": [
 				"and",
 				{
@@ -3691,61 +3738,22 @@
 				},
 				"PlayableRegionInfo"
 			],
-			"PlanetRegionInfo": [
-				"and",
-				{
-					"PlanetData": {
-						"PlanetType": "PlanetType",
-						"Atmosphere": "boolean",
-						"DayCycleIncrement": "number",
-						"EnterLocation": "RegionEnterLocation",
-						"GenerationHeightScale": "number",
-						"Gravity": "number",
-						"PlanetMaterial": "string",
-						"PrimaryColor": "RegionColor",
-						"SecondaryColor": "RegionColor",
-						"Resources": "{ string }",
-						"StartingTime": "number",
-						"Temperature": "number",
-						"Rings": "RingData?",
-						"TerrainConfig": "TerrainData"
-					},
-
-					"StarSize": "nil",
-					"StarType": "nil",
-					"BlackHoleSize": "nil"
-				},
-				"PlayableRegionInfo"
-			],
 			"StarRegionInfo": [
 				"and",
 				{
+					"BlackHoleSize": "nil",
 					"EnterLocation": "RegionEnterLocation",
-					"StarSize": "number",
-					"StarType": "StarType",
-
 					"PlanetData": "nil",
-					"BlackHoleSize": "nil"
+					"StarSize": "number",
+					"StarType": "StarType"
 				},
 				"PlayableRegionInfo"
 			],
-			"BlackHoleRegionInfo": [
-				"and",
-				{
-					"EnterLocation": "RegionEnterLocation",
-					"BlackHoleSize": "number",
-
-					"PlanetData": "nil",
-					"StarSize": "nil",
-					"StarType": "nil"
-				},
-				"PlayableRegionInfo"
-			]
+			"StarType": ["Red", "Orange", "Yellow", "Blue", "Neutron"],
+			"TemperatureUnit": ["K", "F", "C"],
+			"VehicleSeatMode": ["Horizontal", "Full", "Mouse"]
 		},
 		"values": {
-			"Network": {
-				"type": "any"
-			},
 			"FileSystem": {
 				"type": "FileSystem"
 			},
@@ -3753,6 +3761,9 @@
 				"description": "The microcontroller object the program is running in.",
 				"readonly": true,
 				"type": "Microcontroller"
+			},
+			"Network": {
+				"type": "any"
 			},
 			"RawFileSystem": {
 				"type": "RawFileSystem"
@@ -3783,11 +3794,15 @@
 			"Name": "string?",
 			"Type": "string?"
 		},
-		"primitive": "string | number | boolean | { primitive } | { [primitive]: primitive }",
-		"TerrainDataRange": "{ number }",
-		"TreeDataRange": {
-			"height": "number",
-			"width": "number"
+		"RegionColor": {
+			"B": "number",
+			"G": "number",
+			"R": "number"
+		},
+		"RegionEnterLocation": {
+			"X": "number",
+			"Y": "number",
+			"Z": "number"
 		},
 		"RingData": {
 			"RingStart": "number",
@@ -3795,33 +3810,37 @@
 			"RingsEnd": "number",
 			"RingsType": "string"
 		},
+		"TerrainData": {
+			"Height": "TerrainDataRange",
+			"Life": "boolean",
+			"MountainDensity": "TerrainDataRange",
+			"RockDensity": "TerrainDataRange",
+			"Roughness": "TerrainDataRange",
+			"Slopes": "TerrainDataRange",
+			"Temperature": "TerrainDataRange",
+			"TreeSettings": "TreeData",
+			"Water": "boolean",
+			"WaterLevel": "number"
+		},
+		"TerrainDataRange": "{ number }",
 		"TreeData": {
 			"amount_of_branches": "TerrainDataRange",
 			"amount_of_splits": "TerrainDataRange",
 			"branch_angles": "TerrainDataRange",
 			"branch_offset": "TerrainDataRange",
 			"branch_size_percentage": {
-				"min": "TreeDataRange",
-				"max": "TreeDataRange"
+				"max": "TreeDataRange",
+				"min": "TreeDataRange"
 			},
 			"trunk_size": {
-				"min": "TreeDataRange",
-				"max": "TreeDataRange"
+				"max": "TreeDataRange",
+				"min": "TreeDataRange"
 			}
 		},
-		"TerrainData": {
-			"Life": "boolean",
-			"TreeSettings": "TreeData",
-			"Water": "boolean",
-			"WaterLevel": "number",
-			"Height": "TerrainDataRange",
-			"MountainDensity": "TerrainDataRange",
-			"RockDensity": "TerrainDataRange",
-			"Roughness": "TerrainDataRange",
-			"Slopes": "TerrainDataRange",
-			"Temperature": "TerrainDataRange"
+		"TreeDataRange": {
+			"height": "number",
+			"width": "number"
 		},
-		"RegionEnterLocation": { "X": "number", "Y": "number", "Z": "number" },
-		"RegionColor": { "R": "number", "G": "number", "B": "number" }
+		"primitive": "string | number | boolean | { primitive } | { [primitive]: primitive }"
 	}
 }
