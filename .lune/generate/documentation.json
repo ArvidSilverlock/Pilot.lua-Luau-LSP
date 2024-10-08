@@ -958,7 +958,6 @@
 					}
 				}
 			},
-			"Container": "Stores liquids and gases. When a liquid or gas touches the Container, the container will automatically store it.",
 			"Controller": {
 				"categories": ["Logic"],
 				"description": "Alters the speed of attached Controllable objects which include: Engine, Motor, BallastTank, IonDrive, IonRocket, Thruster, Rocket. Must use a polysilicon between this controller and \n\tan object that emits a trigger signal(like a button) to use the same events as clicking the UI. For example, FlipFlop will set the speed of the Controllable objects to 0, Deactivate will subtract 5 from the current speed, etc.",
