@@ -125,7 +125,7 @@ function Wiki.generate(options)
 			local sectionOutput = {}
 
 			local hasAddedTitle = addSection(section, objectName, false, false)
-			for _, object in objectData.InheritenceChain do
+			for _, object in objectData.InheritanceChain do
 				hasAddedTitle = addSection(section, object, true, hasAddedTitle)
 			end
 

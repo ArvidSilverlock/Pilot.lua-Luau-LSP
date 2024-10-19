@@ -18,8 +18,8 @@ local OBJECTS do
 	add("objects")
 end
 
-local inheritenceChainCache = {}
-local inheritenceCache = {}
+local inheritanceChainCache = {}
+local inheritanceCache = {}
 
 local PilotData = {}
 
@@ -32,8 +32,8 @@ function PilotData.getObject(name): { name: string, data: Types.Object, category
 end
 
 function PilotData.getParentClasses(objectName: string)
-	if inheritenceCache[objectName] then
-		return inheritenceCache[objectName]
+	if inheritanceCache[objectName] then
+		return inheritanceCache[objectName]
 	end
 
 	local object = PilotData.getObject(objectName)
@@ -45,7 +45,7 @@ function PilotData.getParentClasses(objectName: string)
 		elseif typeof(data.extends) == "table" then data.extends
 		else {}
 
-	inheritenceCache[objectName] = extends
+	inheritanceCache[objectName] = extends
 
 	return extends
 end
@@ -78,7 +78,7 @@ function PilotData.iterateObjects(): () -> (string, { name: string, category: st
 	end
 end
 
-function PilotData.getInheritenceChain(objectName: string)
+function PilotData.getInheritanceChain(objectName: string)
 	assert(OBJECTS[objectName], `unknown object {objectName}`)
 
 	local queue = { objectName }
@@ -95,12 +95,12 @@ function PilotData.getInheritenceChain(objectName: string)
 
 		for _, parentClass in PilotData.getParentClasses(node) do
 			if visited[parentClass] then
-				error(`possibly cyclic inheritence chain {table.concat(chain, "->")}`)
+				error(`possibly cyclic inheritance chain {table.concat(chain, "->")}`)
 			end
 
 			visited[parentClass] = true
 
-			local cached = inheritenceChainCache[parentClass]
+			local cached = inheritanceChainCache[parentClass]
 			if cached then
 				visited[parentClass] = true
 				table.insert(chain, parentClass)
@@ -117,7 +117,7 @@ function PilotData.getInheritenceChain(objectName: string)
 
 	table.freeze(chain)
 
-	inheritenceChainCache[objectName] = chain
+	inheritanceChainCache[objectName] = chain
 	return chain
 end
 
