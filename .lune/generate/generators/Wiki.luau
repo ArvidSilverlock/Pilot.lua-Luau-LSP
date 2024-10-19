@@ -152,11 +152,20 @@ function Wiki.generate(options)
 end
 
 local function recursiveWrite(pages, path)
+	if not fs.isDir(path) then
+		fs.writeDir(path)
+	end
+
 	for name, value in pages do
 		if typeof(value) == "table" then
-			fs.removeDir(`{path}/{name}`)
-			fs.writeDir(`{path}/{name}`)
-			recursiveWrite(value, `{path}/{name}`)
+			local subpath = `{path}/{name}`
+
+			if fs.isDir(subpath) then
+				fs.removeDir(subpath)
+			end
+			fs.writeDir(subpath)
+
+			recursiveWrite(value, subpath)
 		else
 			fs.writeFile(`{path}/{name}.md`, value)
 		end
