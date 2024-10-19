@@ -36,7 +36,7 @@ function Objects.parse(input: Types.RawPilotData, output: Types.PilotData)
 
 		table.insert(output.ObjectDefinitionOrder, objectName)
 
-		local inheritenceChain = Read.getInheritenceChain(objectName)
+		local inheritanceChain = Read.getInheritanceChain(objectName)
 
 		local object = ParseMiscellaneous.describable(objectData, {
 			Name = if not objectName:match("^[_%a][_%w]*$") then "_" .. objectName:gsub("[^%w_]", "") else objectName,
@@ -44,7 +44,7 @@ function Objects.parse(input: Types.RawPilotData, output: Types.PilotData)
 			Group = value.category,
 
 			Inherits = Read.getParentClasses(objectName),
-			InheritenceChain = inheritenceChain,
+			InheritanceChain = inheritanceChain,
 
 			Categories = if objectData.categories then table.clone(objectData.categories) else {},
 
@@ -58,8 +58,8 @@ function Objects.parse(input: Types.RawPilotData, output: Types.PilotData)
 
 		objects[objectName] = object
 
-		for index = #inheritenceChain, 1, -1 do
-			mergeObjects(inheritenceChain[index], objectName, objects)
+		for index = #inheritanceChain, 1, -1 do
+			mergeObjects(inheritanceChain[index], objectName, objects)
 		end
 
 		implementProperties(objectName, objects)

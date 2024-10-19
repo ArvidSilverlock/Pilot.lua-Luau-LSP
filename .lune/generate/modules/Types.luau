@@ -142,7 +142,7 @@ export type ObjectData = {
 	Name: string,
 
 	Inherits: { string },
-	InheritenceChain: { string },
+	InheritanceChain: { string },
 
 	Categories: { string },
 	Members: { [string]: MemberData },
