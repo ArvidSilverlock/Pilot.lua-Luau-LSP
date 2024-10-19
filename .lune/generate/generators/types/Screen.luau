@@ -80,13 +80,10 @@ local function parseClass(class, classes, types, methods, scrappedClasses, addMe
 	end
 
 	local propertiesSource = if superclass.Name ~= class.Name then superclass.Name else nil
-	if #properties > 0 then
-		table.insert(
-			types,
-			`export type {class.Name}Properties = \{ {table.concat(properties, ", ")} }{if propertiesSource
-				then ` & {propertiesSource}Properties`
-				else ""}`
-		)
+	if #properties > 0 or class.Superclass == "<<<ROOT>>>" then
+		local propertyString = if #properties > 0 then `\{ {table.concat(properties, ", ")} }` else "{}"
+		local inheritanceString = if propertiesSource then ` & {propertiesSource}Properties` else ""
+		table.insert(types, `export type {class.Name}Properties = {propertyString}{inheritanceString}`)
 		propertiesSource = class.Name
 	end
 
