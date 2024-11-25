@@ -1028,6 +1028,24 @@
 						"description": "The ID of this coupler.",
 						"type": "string"
 					}
+				},
+				"events": {
+					"Couple": {
+						"description": "Fires when the coupler couples with another coupler."
+					},
+					"Decouple": {
+						"description": "Fires when the coupler decouples."
+					}
+				},
+				"methods": {
+					"IsCoupled": {
+						"description": "Returns whether or not the coupler is currently attached to another coupler.",
+						"returns": ["boolean"]
+					},
+					"GetAttachedCoupler": {
+						"description": "Returns a reference to the current connected coupler, will return <code>nil</code> if no other coupler is connected.",
+						"returns": ["Coupler?"]
+					}
 				}
 			},
 			"CrudeWing": {
@@ -2529,7 +2547,26 @@
 				}
 			},
 			"Seat": {
-				"categories": {}
+				"events": {
+					"OccupantChanged": {
+						"description": "Fires when the seat's occupant changes.",
+						"parameters": [
+							[
+								"userId: number?",
+								"The <code>UserID</code> of the player who sat in the seat, it will be <code>nil</code> if the occupant got up."
+							]
+						]
+					}
+				},
+				"methods": {
+					"GetOccupant": {
+						"description": "Retrieves the <code>UserID</code> of the seat's occupant, it will be <code>nil</code> if there is no occupant.",
+						"returns": ["number?"]
+					},
+					"EjectOccupant": {
+						"description": "Ejects the seat occupant."
+					}
+				}
 			},
 			"Servo": {
 				"categories": ["Electrical"],
@@ -3067,7 +3104,13 @@
 				"events": {
 					"Touched": {
 						"description": "Fires when the touch sensor is touched by something. The object or the touch sensor itself must be unanchored.",
-						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/BasePart#Touched"
+						"learnmore": "https://create.roblox.com/docs/reference/engine/classes/BasePart#Touched",
+						"parameters": [
+							[
+								"hitObject: number | PilotObject?",
+								"Will be a <code>UserId</code> for players, a <code>PilotObject</code> for referenceable objects objects, otherwise it will be <code>nil</code>."
+							]
+						]
 					}
 				}
 			},
@@ -3160,7 +3203,26 @@
 				"description": "Acts as a pipe when active/gray, but when black or inactive it acts as a normal object.",
 				"extends": "Switch"
 			},
+			"Solenoid": {
+				"description": ""
+			},
+			"HeatCell": {
+				"description": ""
+			},
+			"RepairLaser": {
+				"description": ""
+			},
+			"HeatSink": {
+				"description": ""
+			},
+			"ImpactPlate": {
+				"description": "When it gets damaged, it redistributes the damage to the parts attached to its top (cyan) surface, weighted by the remaining health of each part.\nHas a 25% resistance to <code>Kinetic</code> damage (guns, cannons, explosions, blades)\nCan't be chained/share damage with other <code>ImpactPlate</code>s (they'll be ignored completely)."
+			},
+			"RepairPlate": {
+				"description": "When it gets repaired while active (must be charged at at least 90% capacity), it distributes the health to the parts attached to its top (green) surface, weighted by the amount of missing health of each part.\nPower cannot be inserted or removed from it - Despite it being a container, it must charge itself, and cannot be used to power devices\nConstantly consumes 2.5 power per second as an operating cost, regardless of its charge status.\nConsumes 1 power per second while charging and contributes it to the internal storage of the plate.\nDoes not currently have a visual indicator of any kind for its charge state, but you can use F3 to view its charge - If it exceeds 27 power (90% full) it is charged."
+			},
 			"VehicleSeat": {
+				"extends": "Seat",
 				"description": "Allows players to control vehicles by rotating when sat on.\nIt is incredibly important to have when creating vehicles.\n\nAttaching buttons to the vehicleseat will allow the player sitting on it to trigger the button by pressing a key.\nSimply attach the button to the vehicle seat, configure it to the keybind you would like, and it will allow you to trigger that button by pressing the key when sitting down in the seat.\n\t",
 				"events": {
 					"Configured": true
@@ -3240,6 +3302,14 @@
 						},
 						"description": "The minimum length in studs of the rope.",
 						"type": "number"
+					}
+				},
+				"methods": {
+					"SetLength": {
+						"parameters": ["length: number"]
+					},
+					"AdjustLength": {
+						"parameters": ["adjustment: number"]
 					}
 				}
 			},
