@@ -1631,8 +1631,9 @@
 				},
 				"methods": {
 					"GetReading": {
-						"parameters": ["typeId: number?"],
-						"returns": ["number | Vector3"]
+						"parameters": ["type: (InstrumentType | number)?"],
+                        "description": "Passing a number to `GetReading` is deprecated. Use the string name of the reading instead.",
+						"returns": ["number | Vector3 | string"]
 					}
 				},
 				"properties": {
