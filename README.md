@@ -52,6 +52,7 @@ The source code for several roblox related projects are included within the `pil
 - [evaera/roblox-lua-promise](https://eryn.io/roblox-lua-promise/), under an MIT license.
 - [Ozzypig/repr](https://github.com/Ozzypig/repr/), under a WTFPL license.
 - [jaipack17/Nature2D](https://jaipack17.github.io/Nature2D/), under an MIT license.
+- [Sleitnick/rbxts-octo-tree](https://github.com/Sleitnick/rbxts-octo-tree/), under an MIT license (which is listed [here](https://www.npmjs.com/package/@rbxts/octo-tree) rather than on the github).
 
 The following are from [Sleitnick/RbxUtil](https://github.com/Sleitnick/RbxUtil) and are all under an MIT license.
 
