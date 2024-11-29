@@ -2,7 +2,7 @@
 
 Install the [Luau LSP](https://marketplace.visualstudio.com/items?itemName=JohnnyMorganz.luau-lsp) visual studio code extension. If you are running a version <1.33.1 you will need to find and replace `Enum.` with `Enum` in the `global.d.luau` file, make sure you are not in regex mode, as that would cause issues.
 
-Install [lune](https://lune-org.github.io/docs), a luau runtime.
+Install [lune](https://lune-org.github.io/docs), a luau runtime, note, only install this when the steps require you to, and install it _within_ the specified directory.
 
 ### Optional
 
