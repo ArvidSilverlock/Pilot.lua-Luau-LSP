@@ -43,3 +43,19 @@ Due to lune you have to add `--` after `pilot-generate` for any command options 
 - `--wiki` - generates all the wiki markdown files in the wiki docs directory.
 - `-o <path>` - location to generate everything in, defaults to `./workspace`.
 - `--types-dir=<type-directory>` - subdirectory of the output location to place the types, docs and modules in, defaults to `types`.
+
+## Credits
+
+The source code for several roblox related projects are included within the `pilot-modules` directory, these include:
+
+- [cxmeel/sift](https://cxmeel.github.io/sift/), under an MIT license.
+- [evaera/roblox-lua-promise](https://eryn.io/roblox-lua-promise/), under an MIT license.
+- [Ozzypig/repr](https://github.com/Ozzypig/repr/), under a WTFPL license.
+- [jaipack17/Nature2D](https://jaipack17.github.io/Nature2D/), under an MIT license.
+
+The following are from [Sleitnick/RbxUtil](https://github.com/Sleitnick/RbxUtil) and are all under an MIT license.
+
+- Signal
+- Symbol
+- TableUtil
+- Trove
