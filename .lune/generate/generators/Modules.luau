@@ -17,11 +17,17 @@ function Modules.save(options)
 	local fileRequireAliases = {}
 	for _, module in fs.readDir(MODULE_SOURCE_DIRECTORY) do
 		local modulePath = `{outputDirectory}/{typesDirectory}/modules/{module}`
+		local filePath
+
 		if fs.isFile(modulePath) then
 			fs.removeFile(modulePath)
+			filePath = `./{typesDirectory}/modules/{module}`
+		elseif fs.isDir(modulePath) then
+			fs.removeDir(modulePath)
+			filePath = `./{typesDirectory}/modules/{module}/init.luau`
 		end
 
-		fileRequireAliases[Utility.stripFileExtension(module)] = `./{typesDirectory}/modules/{module}`
+		fileRequireAliases[Utility.stripFileExtension(module)] = filePath
 		fs.copy(`{MODULE_SOURCE_DIRECTORY}/{module}`, modulePath)
 	end
 end
