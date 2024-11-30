@@ -2529,7 +2529,16 @@
 				}
 			},
 			"Seat": {
-				"categories": {}
+				"categories": {},
+                "methods": {
+                    "GetOccupant": {
+                        "description": "Returns the `UserID` of the seat's occupant.",
+                        "returns": ["number"]
+                    },
+                    "EjectOccupant": {
+                        "description": "Ejects the current occupant from the seat."
+                    }
+                }
 			},
 			"Servo": {
 				"categories": ["Electrical"],
@@ -3161,6 +3170,7 @@
 				"extends": "Switch"
 			},
 			"VehicleSeat": {
+                "extends": "Seat",
 				"description": "Allows players to control vehicles by rotating when sat on.\nIt is incredibly important to have when creating vehicles.\n\nAttaching buttons to the vehicleseat will allow the player sitting on it to trigger the button by pressing a key.\nSimply attach the button to the vehicle seat, configure it to the keybind you would like, and it will allow you to trigger that button by pressing the key when sitting down in the seat.\n\t",
 				"events": {
 					"Configured": true
