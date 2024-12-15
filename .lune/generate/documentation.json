@@ -332,6 +332,9 @@
 					},
 					"ListComponents": {
 						"returns": ["{ string }"]
+					},
+					"Trigger": {
+						"description": "Triggers the object."
 					}
 				},
 				"properties": {
