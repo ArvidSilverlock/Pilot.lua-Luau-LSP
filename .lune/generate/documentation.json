@@ -1653,7 +1653,7 @@
 				"methods": {
 					"GetReading": {
 						"parameters": ["type: (InstrumentType | number)?"],
-                        "description": "Passing a number to `GetReading` is deprecated. Use the string name of the reading instead.",
+						"description": "Passing a number to `GetReading` is deprecated. Use the string name of the reading instead.",
 						"returns": ["number | Vector3 | string"]
 					}
 				},
@@ -2669,6 +2669,12 @@
 				"events": {
 					"Loop": true
 				},
+				"methods": {
+					"Sort": {
+						"description": "Tells the sorter to move the given amount of resources, or the sort quantity config if unspecified.",
+						"parameters": ["amount: number?"]
+					}
+				},
 				"properties": {
 					"Rate": {
 						"constraints": {
@@ -2676,6 +2682,14 @@
 							"step": 1
 						},
 						"description": "How much of the resource to push per second. May be inf (or math.huge in a Microcontroller).",
+						"type": "number"
+					},
+					"TriggerQuantity": {
+						"constraints": {
+							"min": 0,
+							"step": 1
+						},
+						"description": "How much of the resource to push when triggered. May be inf (or math.huge in a Microcontroller).",
 						"type": "number"
 					},
 					"Resource": {
