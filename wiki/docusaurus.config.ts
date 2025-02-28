@@ -4,7 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Waste of Space Wiki',
-  tagline: 'RIP Arvid',
+  tagline: 'RIP Arvid.',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
