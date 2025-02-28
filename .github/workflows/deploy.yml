@@ -12,6 +12,8 @@ jobs:
     name: Build Docusaurus
     runs-on: ubuntu-latest
     steps:
+      - name: Change directory
+        run: cd wiki
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -19,8 +21,6 @@ jobs:
         with:
           node-version: 18
           cache: yarn
-      - name: Change directory
-        run: cd wiki
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Build website
