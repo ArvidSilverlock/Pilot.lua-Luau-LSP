@@ -3,8 +3,8 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-  title: 'Waste of Space Wiki',
-  tagline: 'Unstable just a week away!',
+  title: 'Waste Of Space Wiki',
+  tagline: 'RIP Arvid',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
