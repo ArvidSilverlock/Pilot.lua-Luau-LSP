@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - "wiki/*"
     # Review gh actions docs if you want to further define triggers, paths, etc
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
 
@@ -13,6 +11,9 @@ jobs:
   build:
     name: Build Docusaurus
     runs-on: ubuntu-latest
+    defaults:
+      run:
+       working-directory: wiki
     steps:
       - uses: actions/checkout@v4
         with:
