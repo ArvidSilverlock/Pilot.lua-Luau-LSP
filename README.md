@@ -15,7 +15,7 @@ Install [darklua](https://darklua.com), which has a luau file bundler.
 ### Steps
 
 ```
-git clone https://github.com/ArvidSilverlock/Pilot.lua-Luau-LSP.git
+git clone https://github.com/regexman1/Pilot.lua-Luau-LSP.git
 cd Pilot.lua-Luau-LSP
 ```
 
