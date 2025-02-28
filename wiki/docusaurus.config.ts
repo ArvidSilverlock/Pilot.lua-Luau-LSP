@@ -4,7 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Waste of Space Wiki',
-  tagline: 'Unstable just a week away!',
+  tagline: 'RIP Arvid',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -40,7 +40,7 @@ const config: Config = {
         theme: {
           customCss: './src/css/custom.css',
         },
-      } satisfies Preset.Options,
+      } sfies Preset.Options,
     ],
   ],
 
@@ -71,7 +71,7 @@ const config: Config = {
       links: [
         {
           title: 'Docs',
-          items: [
+         items: [
             {
               label: 'Documentation',
               to: '/docs/Globals',
