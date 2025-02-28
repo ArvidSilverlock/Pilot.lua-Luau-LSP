@@ -11,7 +11,7 @@ const config: Config = {
   url: 'https://regexman1.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/Pilot.LSP/',
+  baseUrl: '/Pilot.lua-Luau-LSP/',
   trailingSlash: false,
 
   // GitHub pages deployment config.
