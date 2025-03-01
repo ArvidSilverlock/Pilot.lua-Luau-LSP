@@ -28,7 +28,7 @@ jobs:
       - name: Run wiki generatiom
         run: lune run pilot-generate -- --wiki
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install
         working-directory: ./wiki
       - name: Build website
         run: yarn build
