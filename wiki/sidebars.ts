@@ -15,7 +15,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category', 
       label: 'Globals',
-      link: {type: 'doc', id: 'docs/Globals'
+      link: {type: 'doc', id: 'docs/Globals'}
     },
     {
       type: 'category',
