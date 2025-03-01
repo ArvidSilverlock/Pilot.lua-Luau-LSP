@@ -26,7 +26,7 @@ jobs:
       - name: Install lune
         run: rokit install
       - name: Run wiki generatiom
-        run: lune run pilot-generate --wiki
+        run: lune run pilot-generate -- --wiki
       - name: Install dependencies
         run: yarn install --frozen-lockfile
         working-directory: ./wiki
