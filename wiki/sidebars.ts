@@ -21,7 +21,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Classes',
-      link: {type: 'doc', id: 'Classes'},
+      link: {type: 'doc', id: 'Classes/ARCamera'},
       items: []
     }
   ],
