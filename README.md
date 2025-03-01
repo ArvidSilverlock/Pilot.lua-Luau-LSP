@@ -1,3 +1,6 @@
+## WOS wiki & types
+Project originally made by arvid. Continued by regexman since arvid left WOS.
+
 ## Installation
 
 Install the [Luau LSP](https://marketplace.visualstudio.com/items?itemName=JohnnyMorganz.luau-lsp) visual studio code extension. If you are running a version <1.33.1 you will need to find and replace `Enum.` with `Enum` in the `global.d.luau` file, make sure you are not in regex mode, as that would cause issues.
