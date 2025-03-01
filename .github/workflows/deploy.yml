@@ -20,9 +20,11 @@ jobs:
         with:
           node-version: 18
       - name: Trust lune
-        run: rokit trust lune-org/lune
+        run: |
+           rokit trust lune-org/lune
+           rokit trust JohnnyMorganz/StyLua
       - name: Install lune
-        run: rokit install lune-org/lune
+        run: rokit install
       - name: Run wiki generatiom
         run: lune run pilot-generate --wiki
       - name: Install dependencies
