@@ -22,7 +22,7 @@ jobs:
       - name: Trust lune
         run: rokit trust lune-org/lune
       - name: Install lune
-        run: rokit add lune-org/lune
+        run: rokit install lune-org/lune
       - name: Run wiki generatiom
         run: lune run pilot-generate --wiki
       - name: Install dependencies
