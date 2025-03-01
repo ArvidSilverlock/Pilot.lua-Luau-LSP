@@ -15,13 +15,13 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category', 
       label: 'Globals',
-      link: {type: 'doc', id: 'docs/Globals'},
+      link: {type: 'doc', id: 'Globals'},
       items: []
     },
     {
       type: 'category',
       label: 'Classes',
-      link: {type: 'doc', id: 'docs/Classes'},
+      link: {type: 'doc', id: 'Classes'},
       items: []
     }
   ],
