@@ -60,12 +60,12 @@ const config: Config = {
         src: 'img/logo.png',
       },
       items: [
-				{
-					type: 'docSidebar',
-					sidebarId: 'referencesSidebar',
-					position: 'left',
-					label: 'References'
-				},
+	{
+	  type: 'docSidebar',
+	  sidebarId: 'classesSidebar',
+	  position: 'left',
+	  label: 'Classes'
+	},
         {
           type: 'docSidebar',
           sidebarId: 'documentationSidebar',
