@@ -2,6 +2,9 @@ name: Deploy to GitHub Pages
 
 on:
   push:
+    paths:
+      - wiki/**
+      - .lune
     branches:
       - master
     # Review gh actions docs if you want to further define triggers, paths, etc
