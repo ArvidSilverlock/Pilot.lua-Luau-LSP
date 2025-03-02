@@ -949,7 +949,14 @@
 				},
 				"methods": {
 					"CalculateModelRecipe": {
-						"unknowntype": true
+						"description": "Returns the resource(s) required to craft the provided model.",
+						"parameters": [
+							[
+								"modelCode: string?",
+								"The model data of the model. Defaults to the constructor's `ModelCode` if not provided."
+							]
+						],
+						"returns": ["{[string]: number}"]
 					}
 				},
 				"properties": {
