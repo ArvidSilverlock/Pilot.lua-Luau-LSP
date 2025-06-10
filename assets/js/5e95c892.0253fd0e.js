@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkwaste_of_space_wiki=self.webpackChunkwaste_of_space_wiki||[]).push([[9647],{7121:(e,s,a)=>{a.r(s),a.d(s,{default:()=>p});a(6540);var r=a(4164),c=a(5660),t=a(6578),u=a(2831),i=a(7990),n=a(4848);function p(e){return(0,n.jsx)(c.e3,{className:(0,r.A)(t.G.wrapper.docsPages),children:(0,n.jsx)(i.A,{children:(0,u.v)(e.route.routes)})})}}}]);
