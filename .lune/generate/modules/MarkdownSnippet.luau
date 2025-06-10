@@ -97,10 +97,22 @@ local function createMultilineWrapper(block: string, blockEnd: string?)
 		return function(self, ...)
 			self:PushLine(block):Push(...):PushLine(blockEnd)
 			return self
+		end, function(self)
+			self:PushLine(block)
+			return self
+		end, function(self)
+			self:PushLine(blockEnd)
+			return self
 		end
 	else
 		return function(self, ...)
 			self:MultilineWrap(block, ...)
+			return self
+		end, function(self)
+			self:BlockStart(block)
+			return self
+		end, function(self)
+			self:BlockEnd(block)
 			return self
 		end
 	end
@@ -117,7 +129,7 @@ end
 
 MarkdownSnippet.Bold = createInlineWrapper("b")
 MarkdownSnippet.Italic = createInlineWrapper("i")
-MarkdownSnippet.Code = createMultilineWrapper("```lua", "```")
+MarkdownSnippet.Code, MarkdownSnippet.CodeStart, MarkdownSnippet.CodeEnd = createMultilineWrapper("```lua", "```")
 MarkdownSnippet.InlineCode = createInlineWrapper("code")
 MarkdownSnippet.Strikethrough = createInlineWrapper("del")
 
