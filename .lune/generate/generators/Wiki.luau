@@ -1,81 +1,288 @@
-local WIKI_DIRECTORY = "./wiki/docs"
-
-local serde = require("@lune/serde")
 local fs = require("@lune/fs")
+local serde = require("@lune/serde")
 
-local PilotData = require("../object-data/Pilot")
-local ParseMiscellaneous = require("../object-data/raw-pilot-data/Parse/Miscellaneous")
-local Utility = require("../modules/Utility")
-local Types = require("../modules/Types")
+local luauTypes = require("../modules/LuauType")
+local MarkdownSnippet = require("../modules/MarkdownSnippet")
 
-local function createDocumentationSection()
-	return {
-		Normal = { Documented = {}, Undocumented = {} },
-		Deprecated = { Documented = {}, Undocumented = {} },
-	}
+local partDocumentation = serde.decode("yaml", fs.readFile("./.lune/generate/documentation.yaml")) :: any
+local rawPartData = serde.decode("json", fs.readFile("./.lune/generate/partdata.json")) :: any
+
+local WIKI_DIRECTORY = "./wiki/docs/"
+
+local function getType(value)
+	local output = MarkdownSnippet.new()
+	luauTypes.write(output, value, { isRoot = true, context = "type", define = false } :: any)
+	return tostring(output)
 end
 
-local function createDocumentationSections()
-	return {
-		Methods = createDocumentationSection(),
-		Configurables = createDocumentationSection(),
-		Properties = createDocumentationSection(),
-		Events = createDocumentationSection(),
-	}
+local function sortedIterate<T>(dictionary: { [string]: T }, deprioritizeDeprecated: boolean?): () -> (string, T)
+	local primary, secondary = {}, {}
+	for key, value in dictionary do
+		if deprioritizeDeprecated and value.documentation and value.documentation.deprecated then
+			table.insert(secondary, key)
+		else
+			table.insert(primary, key)
+		end
+	end
+
+	table.sort(primary)
+	if deprioritizeDeprecated then
+		table.sort(secondary)
+	end
+
+	local index = 0
+	return function()
+		index += 1
+		local key = primary[index] or secondary[index - #primary]
+		return key, dictionary[key]
+	end
 end
 
-local function insertSection(source, output, paths)
-	return function(sectionName, sourceObject, isInherited, hasAddedTitle)
-		if not source[sourceObject] or not source[sourceObject][sectionName] then
-			return false
+-- Hardcoded indefinite articles for all uses. This is to avoid non-phonetic spellings messing with the articles.
+local indefiniteArticles = {
+	arcursor = "an",
+	blade = "a",
+	boolean = "a",
+	canvas = "a",
+	cframe = "a",
+	color = "a",
+	component = "a",
+	coordinates = "a",
+	coupler = "a",
+	cursor = "a",
+	enum = "an",
+	folder = "a",
+	frame = "a",
+	handle = "a",
+	instance = "an",
+	instrument = "an",
+	microcontroller = "a",
+	modem = "a",
+	number = "a",
+	object = "an",
+	one = "a", -- not used anywhere, but included just in case
+	part = "a",
+	permission = "a",
+	pilot = "a",
+	player = "a",
+	polysilicon = "a",
+	region = "a",
+	relay = "a",
+	remote = "a",
+	resource = "a",
+	scanner = "a",
+	sound = "a",
+	string = "a",
+	user = "a",
+	vector = "a",
+	vehicle = "a",
+	world = "a",
+}
+
+local function determineIndefiniteArticle(str)
+	local firstWord = (str:match("^%u*%l*") or str):lower()
+	local indefiniteArticle = indefiniteArticles[firstWord]
+
+	-- Guess the indefinite article based on the first letter, not reliable ('an umbrella' vs 'a uniform').
+	if not indefiniteArticle then
+		warn(`No guarantee the used indefinite article of '{firstWord}' is correct.`)
+		return if table.find({ "a", "e", "i", "o" }, str:sub(1, 1):lower()) then "an" else "a"
+	end
+
+	return indefiniteArticle
+end
+
+local function numberToOrdinalWord(number)
+	-- stylua: ignore start
+	local UNITS = { "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth" }
+	local TEENS = { "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth", "seventeenth", "eighteenth", "nineteenth" }
+	local TENS = { "tenth", "twentieth", "thirtieth", "fortieth", "fiftieth", "sixtieth", "seventieth", "eightieth", "ninetieth" }
+	local TENS_PREFIX = { "", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" }
+	-- stylua: ignore end
+
+	assert(number < 1 or number > 99, "number must be between 1 and 99")
+
+	if number <= 9 then
+		return UNITS[number]
+	elseif number == 10 then
+		return TENS[1]
+	elseif number >= 11 and number <= 19 then
+		return TEENS[number - 10]
+	elseif number % 10 == 0 then
+		return TENS[number / 10]
+	else
+		return TENS_PREFIX[number // 10] .. "-" .. UNITS[number % 10]
+	end
+end
+
+local function escapeMarkdown(text)
+	local markdownCharacters = [[\`*_{}[%]()#+-.!|<>]]
+	return (text:gsub("([" .. markdownCharacters .. "])", "\\%1"))
+end
+
+local function getMarkdownType(value)
+	return escapeMarkdown(getType(value):gsub("\n\t*", " "):gsub(", }", " }"))
+end
+
+local function formatSize(x, y, z)
+	return (string.format("%.2fx%.2fx%.2f", x, y, z):gsub("%.00", ""):gsub("(%.%d)0*", "%1"))
+end
+
+local function findPossibleSizes(malleability)
+	local sizes = {}
+
+	for i = 1, math.min(math.sqrt(malleability), 2048) do
+		if malleability % i == 0 then
+			local remaining = malleability / i
+			for j = i, math.min(math.sqrt(remaining), 2048) do
+				if remaining % j == 0 then
+					local k = remaining / j
+
+					local order = { i, j, k }
+					table.sort(order)
+
+					local formatted = formatSize(unpack(order))
+					if k <= 2048 and not table.find(sizes, formatted) then
+						table.insert(sizes, formatted)
+					end
+				end
+			end
+		end
+	end
+
+	return sizes
+end
+
+local function writeParameters(output, objectName, memberName, parameters, groupName, groupNamePlural)
+	for parameterIndex, parameter in parameters do
+		if #parameters == 1 then
+			output:Push("\n\nThe ")
+			if parameter.name == "..." then
+				output:Push(`variadic {groupName}`)
+			elseif parameter.name then
+				output:Push(`<b>{parameter.name}</b> {groupName}`)
+			else
+				output:Push(`only {groupName}`)
+			end
+		else
+			if parameterIndex == 1 then
+				output:Push(`\n\nThe {groupNamePlural} for <code>{memberName}</code> are as follows:\n`)
+			end
+
+			output:Push("- The ")
+			if parameter.name == "..." then
+				output:Push(`variadic {groupName}`)
+			elseif parameter.name then
+				output:Push(`<b>{parameter.name}</b> {groupName}`)
+			else
+				output:Push(`{numberToOrdinalWord(parameterIndex)} {groupName}`)
+			end
 		end
 
-		local sectionOutput = {}
-
-		local function insertGroup(group)
-			local values = source[sourceObject][sectionName][group]
-			local documented, undocumented = values.Documented, values.Undocumented
-
-			local groupOutput = {}
-
-			if documented and #documented > 0 then
-				table.insert(groupOutput, table.concat(documented, "\n"))
-			end
-
-			if undocumented and #undocumented > 0 then
-				table.insert(groupOutput, table.concat(undocumented, "\n"))
-			end
-
-			if #groupOutput > 0 then
-				local groupString = table.concat(groupOutput, "\n")
-				table.insert(
-					sectionOutput,
-					if group == "Deprecated"
-						then Utility.markdownDropdown("Deprecated", groupString)
-						else table.concat(groupOutput, "\n")
-				)
-			end
+		local description = if typeof(parameter.documentation) == "table"
+			then parameter.documentation.description
+			else parameter.documentation
+		if description then
+			output:Push(" is ", description:gsub("^%u", string.lower):gsub("\n+", " "), " It")
 		end
 
-		insertGroup("Normal")
-		insertGroup("Deprecated")
+		local base = assert(
+			luauTypes.getTypeState(parameter, {
+				isRoot = true,
+				name = parameter.name or "_" .. tostring(parameterIndex),
+				context = "type",
+				define = false,
+			}),
+			"no type state"
+		).base
+		local context = base.context
 
-		if #sectionOutput > 0 then
-			local stringForm = table.concat(sectionOutput, "\n")
-
-			local formatted = if isInherited
-				then Utility.markdownDropdown(`Inherited from [{sourceObject}]({paths[sourceObject]})`, stringForm)
-				else stringForm
-
-			if not hasAddedTitle then
-				table.insert(output, `## {sectionName}`)
-				hasAddedTitle = true
+		if context.style == "union" then
+			if context.isString then
+				if context.isOpenString then
+					output:Push(" can be any string, some <i>example</i> possibilities include: ")
+				else
+					output:Push(" is a string that can be ")
+				end
+				for index, value in base.value do
+					if index == #base.value then
+						if #base.value > 2 then
+							output:Push(", ")
+						end
+						output:Push(" or ")
+					elseif index > 1 then
+						output:Push(", ")
+					end
+					output:InlineCode(string.format("%q", value):sub(2, -2))
+				end
+			else
+				output:Push(" can be any of the following types:\n"):BulletPointUp()
+				for index, value in base.value do
+					output:InlineCode(getMarkdownType(value)):NewLine()
+				end
+				output:BulletPointDown():Push("\n")
 			end
+		elseif context.style == "type" and typeof(base.value) == "table" and typeof((next(base.value))) == "table" then
+			local indexer, value = next(base.value)
 
-			table.insert(output, formatted)
+			output
+				:Push(" is a dictionary with keys that are")
+				:InlineCode(indexer[1])
+				:Push("s and values that are ")
+				:InlineCode(getMarkdownType(value))
+				:Push("s.")
+		elseif context.style == "type" and typeof(base.value) == "string" then
+			if base.value == "any" then
+				output:Push(" can be anything.")
+			elseif context.isArray then
+				output
+					:Push(" is an array of ", determineIndefiniteArticle(base.value), " ")
+					:InlineCode(base.value)
+					:Push("s.")
+			elseif context.isString then
+				output:Push(" is the string "):InlineCode(base.value):Push(".")
+			else
+				output:Push(" is ", determineIndefiniteArticle(base.value), " "):InlineCode(base.value):Push(".")
+			end
+		elseif context.style == "type" then
+			output:PushLine(" is a dictionary:")
+			output:BulletPointUp()
+			for key, value in sortedIterate(base.value) do
+				local t = getMarkdownType(value)
+				output:InlineCode(key):Push(" is ", determineIndefiniteArticle(t), " "):InlineCode(t):PushLine(".")
+			end
+			output:BulletPointDown()
+		elseif context.style == "function" then
+			output:Push(" is a function of type "):InlineCode(getMarkdownType(parameter)):Push(".")
+		else
+			error(`{objectName}.{groupNamePlural}.{parameter.name or parameterIndex}`)
 		end
 
-		return hasAddedTitle
+		if context.isNullable then
+			if output._lines[#output._lines]:sub(-1, -1) ~= "\n" then
+				output:Push(" ")
+			end
+			output:Push("It can also be <code>nil</code>.")
+		end
+
+		output:Push("\n")
+
+		-- output:Push(luauType)
+	end
+end
+
+local function addCodeSamples(output, data)
+	if typeof(data.documentation) == "table" then
+		local codeSamples = data.documentation["code-samples"] or {}
+		if data.documentation["code-sample"] then
+			table.insert(codeSamples, 1, data.documentation["code-sample"])
+		end
+
+		for _, codeSample in codeSamples do
+			output:Push("\n```lua\n")
+			output:Push(codeSample)
+			output:Push("\n```")
+		end
 	end
 end
 
@@ -83,69 +290,477 @@ local Wiki = {}
 
 function Wiki.generate(options)
 	local generatedPages = {
-		["Objects"] = {},
-		["Classes"] = {},
-		["Programmable Objects"] = {},
+		objects = {},
 	}
-	local paths = {}
 
-	for _, objectName in PilotData.ObjectDefinitionOrder do
-		local objectData = PilotData.Objects[objectName]
+	for objectName, object in partDocumentation.classes do
+		if not object.hydrator then
+			continue
+		end
 
-		local pageOutput = {}
+		objectName = object.hydrator["class-name"] or objectName
+
+		local output = MarkdownSnippet.new(objectName)
 		local metadata = {}
 
-		if #objectData.Categories > 0 then
-			metadata.tags = table.clone(objectData.Categories)
+		local tableOfContents = {}
+
+		local function writeGroupHeader(header: string)
+			output:MemberHeader(header)
+			table.insert(tableOfContents, `\{value: "{header}", id: "{header}", "level": 2\}`)
 		end
 
-		for _, member in objectData.Members do
-			local source = pageOutput[member.Source]
-			if not source then
-				source = createDocumentationSections()
-				pageOutput[member.Source] = source
-			end
-
-			local value = member.Reference
-			local isUnknownType = value.Type.Unknown == true
-			local isDeprecated = not not value.Deprecated
-
-			local documentedKey = if isUnknownType then "Undocumented" else "Documented"
-			local deprecatedKey = if isDeprecated then "Deprecated" else "Normal"
-
-			local group = source[member.Group][deprecatedKey][documentedKey]
-			table.insert(group, value.Type.Wiki or `- {member.Name}`)
+		local function writeMemberHeader(
+			header: string,
+			group: "method" | "event" | "configurable" | "property",
+			id: string
+		)
+			output:MemberHeader(id, header, group)
+			table.insert(
+				tableOfContents,
+				`\{value: "{id .. if group == "method" then "()" else ""}", id: "{id}", "level": 3\}`
+			)
 		end
 
-		local plainDescription = ParseMiscellaneous.plainDescription(objectData)
-		local output = if plainDescription then { Utility.escapeMarkdown(plainDescription) } else {}
+		if objectName == "PilotObject" then
+			metadata.sidebar_position = 1
+		end
 
-		local addSection = insertSection(pageOutput, output, paths)
-		for _, section in { "Methods", "Configurables", "Properties", "Events" } do
-			local sectionOutput = {}
+		if object.documentation and typeof(object.documentation) == "table" then
+			local documentation = object.documentation
+			metadata.tags = if documentation.categories then table.clone(documentation.categories) else {}
 
-			local hasAddedTitle = addSection(section, objectName, false, false)
-			for _, object in objectData.InheritanceChain do
-				hasAddedTitle = addSection(section, object, true, hasAddedTitle)
+			if documentation.description then
+				output:Push(documentation.description:gsub("\n+$", "") .. "\n")
+			end
+			addCodeSamples(output, object)
+		elseif typeof(object.documentation) == "string" then
+			output:Push(object.documentation:gsub("\n+$", "") .. "\n")
+		end
+
+		if not metadata.tags then
+			metadata.tags = {}
+		end
+
+		local rawData = rawPartData.Parts[objectName]
+		if rawData then
+			output:Push("\n")
+
+			output:Push(
+				`It is a{if rawData.Craftable and rawData.Spawnable
+					then " craftable and spawnable"
+					elseif rawData.Craftable then " craftable"
+					elseif rawData.Spawnable then " spawnable"
+					else ""} {if rawData.Flammable then "flammable" else "non-flammable"} {if rawData.ClassState
+					then rawData.ClassState:lower()
+					else "object"}.\n\n`
+			)
+
+			if rawData.Malleability == 0 then
+				output:Push(`It cannot be resized.\n\n`)
+			elseif rawData.Malleability then
+				local sizes = findPossibleSizes(rawData.Malleability)
+				if #sizes > 0 then
+					output:Push(
+						`Here is a list of possible sizes that reach the maximum malleability ({rawData.Malleability}) that have integer components: `
+					)
+					output:Push(table.concat(sizes, ", "))
+					output:Push("\n\n")
+				else
+					output:Push(
+						"It has a malleability of ",
+						rawData.Malleability,
+						". You cannot reach this size with only integer components.\n\n"
+					)
+				end
 			end
 
-			if #sectionOutput > 0 then
-				table.insert(output, `## {section}`)
-				table.insert(output, table.concat(sectionOutput, "\n"))
+			local defaultSize = formatSize(unpack(rawData.BaseSize))
+
+			if rawData.BaseDurability == "inf" then
+				output:Push("It has infinite durability and a default size of ", defaultSize, ".\n\n")
+			elseif rawData.BaseDurability then
+				local baseVolume = rawData.BaseSize[1] * rawData.BaseSize[2] * rawData.BaseSize[3]
+				output:Push("At its default size (", defaultSize, ") it has a durability of ", rawData.BaseDurability)
+
+				if rawData.Malleability and rawData.Malleability > 0 then
+					output:Push(
+						", at its maximum size it has a durability of ",
+						math.floor((rawData.Malleability / baseVolume) ^ (1 / 3) * rawData.BaseDurability + 1)
+					)
+				end
+
+				output:Push(".\n\n")
+			elseif rawData.BaseSize then
+				output:PushLine("It has a default size of ", defaultSize, ".\n\n")
 			end
+
+			if rawData.Color then
+				local hex = string.format("%02x%02x%02x", unpack(rawData.Color))
+				output:PushLine(
+					"By default, its colour is <span style={{color: '#{",
+					hex:upper(),
+					"'}}>#",
+					hex,
+					"</span>.\n"
+				)
+			end
+
+			if rawData.Recipe then
+				local recipe = { "It requires " }
+				for key, value in sortedIterate(rawData.Recipe) do
+					table.insert(recipe, `{value} <code>{key}</code>`)
+					if #recipe > 1 then
+						table.insert(recipe, ", ")
+					end
+				end
+
+				if #recipe > 3 then
+					recipe[#recipe - 2] = if #recipe == 5 then " and " else ", and "
+					recipe[#recipe] = " "
+				end
+				table.insert(recipe, "to be crafted.")
+
+				output:Push(table.concat(recipe) .. "\n\n")
+			end
+		end
+
+		if typeof(object.hydrator) == "table" then
+			local isProgrammable = false
+			local isConfigurable = false
+
+			if object.hydrator.methods and next(object.hydrator.methods) then
+				isProgrammable = true
+
+				local methods = object.hydrator.methods
+				writeGroupHeader("Methods")
+				for methodName, methodData in sortedIterate(methods, true) do
+					local isDeprecated = if typeof(methodData.documentation) == "table"
+						then methodData.documentation.deprecated
+						else false
+
+					if methodData.overloads then
+						local parameterNames = {}
+						for index, parameter in methodData.parameters or {} do
+							table.insert(parameterNames, parameter.name or `<i>{string.char(96 + index)}</i>`)
+						end
+
+						local returnNames = {}
+						for index, value in methodData.returns or {} do
+							table.insert(returnNames, value.name or `<i>{string.char(96 + index)}</i>`)
+						end
+
+						writeMemberHeader(
+							(if isDeprecated then "<del><i>" else "")
+								.. methodName
+								.. (if isDeprecated then "</i></del>" else ""),
+							"method",
+							methodName
+						)
+
+						if isDeprecated then
+							output:Push("\n:::warning\n\n")
+							output:Push("This method is deprecated.")
+							if typeof(isDeprecated) == "string" then
+								output:Push(" " .. isDeprecated)
+							end
+							output:Push("\n\n:::\n\n")
+						end
+
+						if typeof(methodData.documentation) == "table" then
+							if methodData.documentation.description then
+								output:Push(methodData.documentation.description)
+							end
+						elseif methodData.documentation then
+							output:Push(methodData.documentation)
+						end
+
+						for index, overload in methodData.overloads do
+							local parameterNames = {}
+							for index, parameter in overload.parameters or {} do
+								table.insert(parameterNames, parameter.name or `<i>{string.char(96 + index)}</i>`)
+							end
+
+							local returnNames = {}
+							for index, value in overload.returns or {} do
+								table.insert(returnNames, value.name or `<i>{string.char(96 + index)}</i>`)
+							end
+
+							output:Push(
+								"\n\n#### Overload ",
+								string.char(64 + index),
+								" – (",
+								table.concat(parameterNames, ", "),
+								")",
+								if #returnNames > 1
+									then " → (" .. table.concat(returnNames, ", ") .. ")"
+									elseif #returnNames > 0 then " → " .. returnNames[1]
+									else "",
+								"\n"
+							)
+
+							if typeof(overload.documentation) == "table" then
+								if overload.documentation.description then
+									output:Push(overload.documentation.description)
+								end
+							elseif overload.documentation then
+								output:Push(overload.documentation)
+							end
+
+							if overload.parameters then
+								writeParameters(
+									output,
+									objectName,
+									methodName,
+									overload.parameters,
+									"parameter",
+									"parameters"
+								)
+							end
+
+							if overload.returns then
+								writeParameters(output, objectName, methodName, overload.returns, "return", "returns")
+							end
+
+							addCodeSamples(output, methodData)
+						end
+					else
+						local parameterNames = {}
+						for index, parameter in methodData.parameters or {} do
+							if not parameter.name then
+								print(`{objectName}.{methodName}.parameters.{index}`)
+							end
+							table.insert(parameterNames, parameter.name or `<i>{string.char(96 + index)}</i>`)
+						end
+
+						local returnNames = {}
+						for index, value in methodData.returns or {} do
+							if not value.name then
+								print(`{objectName}.{methodName}.returns.{index}`)
+							end
+							table.insert(returnNames, value.name or `<i>{string.char(96 + index)}</i>`)
+						end
+
+						writeMemberHeader(
+							(if isDeprecated then "<del><i>" else "")
+								.. methodName
+								.. "("
+								.. table.concat(parameterNames, ", ")
+								.. ")"
+								.. (if #returnNames > 1
+									then " → (" .. table.concat(returnNames, ", ") .. ")"
+									elseif #returnNames > 0 then " → " .. returnNames[1]
+									else "")
+								.. (if isDeprecated then "</i></del>" else ""),
+							"method",
+							methodName
+						)
+
+						if isDeprecated then
+							output:AdmonitionStart("warning")
+							output:Push("This method is deprecated.")
+							if typeof(isDeprecated) == "string" then
+								output:Push(" " .. isDeprecated)
+							end
+							output:AdmonitionEnd()
+						end
+
+						if typeof(methodData.documentation) == "table" then
+							if methodData.documentation.description then
+								output:Push(methodData.documentation.description)
+							end
+						elseif methodData.documentation then
+							output:Push(methodData.documentation)
+						end
+
+						if methodData.parameters then
+							writeParameters(
+								output,
+								objectName,
+								methodName,
+								methodData.parameters,
+								"parameter",
+								"parameters"
+							)
+						end
+
+						if methodData.returns then
+							writeParameters(output, objectName, methodName, methodData.returns, "return", "returns")
+						end
+
+						addCodeSamples(output, methodData)
+					end
+				end
+			end
+
+			if object.hydrator.configurables and next(object.hydrator.configurables) then
+				isConfigurable = true
+
+				local configurables = object.hydrator.configurables
+				writeGroupHeader("Configurables")
+				for configurableName, configurableData in sortedIterate(configurables, true) do
+					writeMemberHeader(configurableName, "configurable", configurableName)
+
+					local configurableDocs = configurableData.documentation
+					local typeString = getType(configurableData) or "unknown"
+					local configurableType =
+						`It is {determineIndefiniteArticle(typeString)} <code>{escapeMarkdown(typeString)}</code>.`
+
+					if typeof(configurableDocs) == "table" then
+						if configurableDocs.description then
+							output:Push(configurableDocs.description)
+							output:Push(" " .. configurableType)
+						else
+							output:Push(configurableType)
+						end
+
+						local incrementSuffix = if configurableDocs.increment
+							then ", and an increment of " .. configurableDocs.increment
+							else ""
+						if configurableDocs.minimum then
+							output:Push("\nIt has a minimum value of ", configurableDocs.minimum, incrementSuffix, ".")
+						elseif configurableDocs.maximum then
+							output:Push("\nIt has a maximum value of ", configurableDocs.maximum, incrementSuffix, ".")
+						elseif configurableDocs.range then
+							output:Push(
+								"\nIt ranges between ",
+								configurableDocs.range[1],
+								" and ",
+								configurableDocs.range[2],
+								"."
+							)
+							if configurableDocs.increment then
+								output:Push(" It increments by ", configurableDocs.increment, ".")
+							end
+						elseif configurableDocs.increment then
+							output:Push("\nIt increments by ", configurableDocs.increment, ".")
+						end
+					elseif configurableDocs then
+						output:Push(configurableDocs, " ", configurableType)
+					else
+						output:Push(configurableType)
+					end
+
+					addCodeSamples(output, configurableData)
+				end
+			end
+
+			if object.hydrator.properties and next(object.hydrator.properties) then
+				local properties = object.hydrator.properties
+				writeGroupHeader("Properties")
+				for propertyName, propertyData in sortedIterate(properties, true) do
+					writeMemberHeader(propertyName, "property", propertyName)
+
+					local configurableDocs = propertyData.documentation
+					local typeString = getType(propertyData) or "unknown"
+					local configurableType =
+						`It is {determineIndefiniteArticle(typeString)} <code>{escapeMarkdown(typeString)}</code>.`
+
+					if typeof(configurableDocs) == "table" then
+						if configurableDocs.description then
+							output:Push(configurableDocs.description, " ", configurableType)
+						else
+							output:Push(configurableType)
+						end
+
+						local incrementSuffix = if configurableDocs.increment
+							then ", and an increment of " .. configurableDocs.increment
+							else ""
+						if configurableDocs.minimum then
+							output:Push("\nIt has a minimum value of ", configurableDocs.minimum, incrementSuffix, ".")
+						elseif configurableDocs.maximum then
+							output:Push("\nIt has a maximum value of ", configurableDocs.maximum, incrementSuffix, ".")
+						elseif configurableDocs.range then
+							output:Push(
+								"\nIt ranges between ",
+								configurableDocs.range[1],
+								" and ",
+								configurableDocs.range[2],
+								"."
+							)
+						elseif configurableDocs.increment then
+							output:Push("\nIt increments by ", configurableDocs.increment, ".")
+						end
+					elseif configurableDocs then
+						output:Push(configurableDocs, " ", configurableType)
+					else
+						output:Push(configurableType)
+					end
+
+					addCodeSamples(output, propertyData)
+				end
+			end
+
+			if object.hydrator.events and next(object.hydrator.events) then
+				local events = object.hydrator.events
+
+				local badEvents = { "Configured", "Damaged", "Loop", "OnClick", "Triggered" }
+				for event, _ in events do
+					if not table.find(badEvents, event) then
+						isProgrammable = true
+					end
+				end
+				writeGroupHeader("Events")
+				for eventName, eventData in sortedIterate(events, true) do
+					local parameterNames = {}
+					for index, parameter in eventData.parameters or {} do
+						table.insert(parameterNames, parameter.name or `<i>{string.char(96 + index)}</i>`)
+					end
+
+					local header = eventName
+						.. if #parameterNames > 0 then `({table.concat(parameterNames, ", ")})` else ""
+					writeMemberHeader(header, "event", eventName)
+
+					if typeof(eventData.documentation) == "table" then
+						if eventData.documentation.description then
+							output:Push("\n" .. eventData.documentation.description)
+						end
+					elseif eventData.documentation then
+						output:Push("\n" .. eventData.documentation)
+					end
+
+					if eventData.parameters then
+						writeParameters(output, objectName, eventName, eventData.parameters, "parameter", "parameters")
+					end
+					addCodeSamples(output, eventData)
+				end
+			end
+
+			table.insert(metadata.tags, if isProgrammable then "Programmable" else "Non-Programmable")
+			table.insert(metadata.tags, if isConfigurable then "Configurable" else "Non-Configurable")
+		else
+			table.insert(metadata.tags, "Non-Programmable")
+			table.insert(metadata.tags, "Non-Configurable")
+		end
+
+		local extension
+		if #tableOfContents > 0 then
+			output:Insert(1, `\nexport const toc = [{table.concat(tableOfContents, ",")}]\n\n`)
+			output:Insert(1, '\nimport Member from "@theme/Member";\n\n')
+			extension = ".mdx"
+		else
+			extension = ".md"
 		end
 
 		if next(metadata) then
-			table.insert(output, 1, `---\n{serde.encode("yaml", metadata)}---`)
+			output:Insert(1, `---\n{serde.encode("yaml", metadata)}---\n`)
 		end
 
-		local section = if objectData.Group == "abstractclasses"
-			then "Classes"
-			elseif objectData.IsProgrammable then "Programmable Objects"
-			else "Objects"
+		local text = tostring(output)
 
-		paths[objectName] = `/docs/{section}/{objectName}.md`
-		generatedPages[section][objectName] = table.concat(output, "\n\n")
+		for match in text:gmatch("<code>(.-)</code>") do
+			if partDocumentation.classes[match] then
+				text = text:gsub(
+					"<code>" .. match .. "</code>",
+					`<code><a href="/Pilot.lua-Luau-LSP/objects/{match}">{match}</a></code>`,
+					1
+				)
+			end
+		end
+
+		generatedPages.objects[objectName .. extension] = text
+
+		-- print(table.concat(output))
 	end
 
 	return generatedPages
@@ -167,13 +782,25 @@ local function recursiveWrite(pages, path)
 
 			recursiveWrite(value, subpath)
 		else
-			fs.writeFile(`{path}/{name}.md`, value)
+			fs.writeFile(`{path}/{name}`, value)
 		end
 	end
 end
 
 function Wiki.save(options, generatedPages)
 	recursiveWrite(generatedPages, WIKI_DIRECTORY)
+
+	local rawDocumentation = fs.readFile("./.lune/generate/documentation.yaml")
+	local rawDocumentationSnippet = MarkdownSnippet.new(rawDocumentation)
+
+	rawDocumentationSnippet
+		:PushLine("Use Ctrl+F, or ⌘+F on Mac to search for information you need.")
+		:NewLine()
+		:PushLine("```yaml")
+		:PushLine(rawDocumentation)
+		:PushLine("```")
+
+	fs.writeFile("./wiki/docs/raw-documentation.md", tostring(rawDocumentationSnippet))
 end
 
 return Wiki
