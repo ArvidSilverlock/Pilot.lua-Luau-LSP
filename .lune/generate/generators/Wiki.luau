@@ -362,24 +362,41 @@ function writeIndividualTypeDescription(output, name, state: luauTypes.State, de
 
 	if context.style == "type" then
 		if typeof(state.base.value) == "table" then
+			if context.isArray then
+				output:PushLine("It is an array of dictionaries of the form:")
+			end
+
 			for memberName, memberValue in sortedIterate(state.base.value) do
 				writeWithoutState(output, memberName, memberValue, state, depth + 1)
 			end
 		elseif context.isString then
-			output:Push("It is always the string "):InlineCode(state.base.value):Push(".")
+			output:Push("It is always ")
+			if context.isArray then
+				output:Push("an array of ")
+			end
+			output:Push("the string "):InlineCode(state.base.value):Push(".")
 		else
-			output:Push("It is of type "):InlineCode(state.base.value):Push(".")
+			output:Push("It is ")
+			if context.isArray then
+				output:Push("an array whose values are ")
+			end
+			output:Push("of the type "):InlineCode(state.base.value):Push(".")
 		end
 	elseif context.style == "function" then
-		output:InlineCode(name):PushLine("()")
+		output:Push("It is a function, and I am too lazy to generate a description for it as of right now ❤️✨.")
 	elseif context.style == "method" then
-		output:InlineCode(name):PushLine("() (method)")
+		output:Push("It is a method, and I am too lazy to generate a description for it as of right now ❤️✨.")
 	elseif context.style == "union" then
 		if context.isString then
-			if context.isOpenString then
-				output:Push(name, " can be any string, some "):Italic("example"):Push(" possibilities include: ")
+			if context.isArray then
+				output:Push("It is an array whose values ")
 			else
-				output:Push(name, " can be any of the following strings: ")
+				output:Push("It ")
+			end
+			if context.isOpenString then
+				output:Push("can be any string, some "):Italic("example"):Push(" possibilities include: ")
+			else
+				output:Push("can be any of the following strings: ")
 			end
 			for index, memberValue in state.base.value do
 				output:InlineCode(memberValue)
@@ -389,18 +406,30 @@ function writeIndividualTypeDescription(output, name, state: luauTypes.State, de
 			end
 			output:PushLine(".")
 		else
-			output:PushLine("It is one (not all) of the following types:")
+			output:Push("It is ")
+			if context.isArray then
+				output:Push("an array whose values are all ")
+			end
+			output:PushLine("one (not all) of the following types:")
 			for index, memberValue in state.base.value do
 				writeWithoutState(output, `Subtype {string.char(64 + index)}`, memberValue, state, depth + 1)
 			end
 		end
 	elseif context.style == "intersection" then
-		output:PushLine("It is the combination of the following types:")
+		output:Push("It is ")
+		if context.isArray then
+			output:Push("an array whose values are all ")
+		end
+		output:PushLine("the combination of the following types:")
 		for index, memberValue in state.base.value do
 			writeWithoutState(output, `Subtype {string.char(64 + index)}`, memberValue, state, depth + 1)
 		end
 	else
 		error(`Unknown context style: {context.style}`)
+	end
+
+	if context.isNullable then
+		output:Push("It may also be <code>nil</code>.")
 	end
 
 	appendDocumentation(output, source, nil, true)
