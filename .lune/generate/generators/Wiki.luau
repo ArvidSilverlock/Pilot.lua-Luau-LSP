@@ -374,18 +374,20 @@ function writeIndividualTypeDescription(output, name, state: luauTypes.State, de
 			if context.isArray then
 				output:Push("an array of ")
 			end
-			output:Push("the string "):InlineCode(state.base.value):Push(".")
+			output:Push("the string "):InlineCode(state.base.value):PushLine(".")
 		else
 			output:Push("It is ")
 			if context.isArray then
 				output:Push("an array whose values are ")
 			end
-			output:Push("of the type "):InlineCode(state.base.value):Push(".")
+			output:Push("of the type "):InlineCode(state.base.value):PushLine(".")
 		end
 	elseif context.style == "function" then
-		output:Push("It is a function, and I am too lazy to generate a description for it as of right now ❤️✨.")
+		output:PushLine(
+			"It is a function, and I am too lazy to generate a description for it as of right now ❤️✨."
+		)
 	elseif context.style == "method" then
-		output:Push("It is a method, and I am too lazy to generate a description for it as of right now ❤️✨.")
+		output:PushLine("It is a method, and I am too lazy to generate a description for it as of right now ❤️✨.")
 	elseif context.style == "union" then
 		if context.isString then
 			if context.isArray then
@@ -429,7 +431,7 @@ function writeIndividualTypeDescription(output, name, state: luauTypes.State, de
 	end
 
 	if context.isNullable then
-		output:Push("It may also be <code>nil</code>.")
+		output:PushLine("It may also be <code>nil</code>.")
 	end
 
 	appendDocumentation(output, source, nil, true)
