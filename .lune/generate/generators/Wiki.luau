@@ -448,8 +448,6 @@ local function generateTypePage(key: string, value: any, parent, path: string, g
 	})
 
 	if typeState then
-		print(`{path}/{key}`)
-
 		local snippet = MarkdownSnippet.new()
 
 		snippet:PushLine('\nimport Member from "@theme/Member";\n\n')
