@@ -360,6 +360,7 @@ types:
         _eventName:
           type: Name
         Callback:
+          documentation: The function that will be called when the event is fired.
           type: Callback
       metatable:
         type: EventConnectionMetatable
@@ -378,6 +379,7 @@ types:
                 type: unknown
       type:
         Disconnect:
+          documentation: Disconnects the event connection, meaning the callback will no longer be ran when the event is fired.
           method: {}
         Unbind:
           method: {}
@@ -408,6 +410,7 @@ types:
         _eventName:
           type: Name
         Connect:
+          documentation: Connect the provided callback to be called when the event is fired.
           method:
             parameters:
               - name: callback
@@ -422,6 +425,7 @@ types:
   JSON:
     JSONValue:
       export: false
+      documentation: An individual JSON value, can be a string, number, boolean, buffer.
       union:
         - type: string
         - type: number
@@ -429,10 +433,12 @@ types:
         - type: buffer
     JSON:
       export: false
+      documentation: A full JSON value, can be a string, number, boolean, buffer, a JSON array, or another JSON dictionary.
       union:
         - type:
             [JSONValue]:
               type: JSON
+        - array-type: JSONValue
         - type: JSONValue
 
   Universe Info:
@@ -501,19 +507,24 @@ types:
           Provides the ability to do mathematical operations on coordinates, such as addition, subtraction and even multiplication.
         type:
           InPlanet:
+            documentation: Whether the coordinates are within a planet's atmosphere.
             type: boolean
           SolarCoordinates:
+            documentation: The coordinates within the solar system, i.e., the coordinates relative to the parent star or black hole.
             type: Vector2
           UniverseCoordinates:
+            documentation: The coordinates in the universe, i.e., the coordinates of the solar system.
             type: Vector2
         metatable-type: CoordinatesMetatable
     Universe Enums:
       CelestialBodyType:
+        documentation: The type of a celestial body.
         string-union:
           - Planet
           - BlackHole
           - Star
       PlanetType:
+        documentation: The type of a planet.
         string-union:
           - Desert
           - Terra
@@ -527,6 +538,7 @@ types:
           - RobotDepot
           - RobotFactory
       StarType:
+        documentation: The type of a star.
         string-union:
           - Red
           - Orange
@@ -535,6 +547,7 @@ types:
           - Neutron
     Complex Region Info:
       RegionColor:
+        documentation: The color of the region, used for planets.
         export: false
         type:
           R:
@@ -553,6 +566,7 @@ types:
               range: [0, 1]
             type: number
       RegionEntryLocation:
+        documentation: The location where the player warps into a region.
         export: false
         type:
           X:
@@ -574,6 +588,7 @@ types:
               increment: 1
             type: number
       RingData:
+        documentation: The data about the rings of a planet, if it has any.
         export: false
         type:
           RingStart:
@@ -598,6 +613,7 @@ types:
               - Ice
               - Stone
       TerrainData:
+        documentation: The data about how the terrain of a planet generates.
         export: false
         type:
           Height:
@@ -678,18 +694,23 @@ types:
             type: boolean
 
       PlayableRegionInfo:
+        documentation: A region that can be entered by the player, say, the orbit of a planet, the planet itself or a space region.
         type:
           Coordinate:
+            documentation: The coordinates of the region in the non-serialisable <code>Coordinates</code> format.
             type: Coordinates
           EnterLocation:
+            documentation: The location where the player warps into the region.
             type: RegionEntryLocation
           Name:
+            documentation: The name of the region.
             type: string
           RegionSeed:
             type: number
           RegionServer:
             type: string
           StringCoordinate:
+            documentation: The coordinates of the region as a string (i.e., <code>0, 0, 0, 0, false</code>).
             type: string
       OrbitRegionInfo:
         intersection:
@@ -703,12 +724,14 @@ types:
                 string-type: Orbit
           - type: PlayableRegionInfo
       SpaceRegionInfo:
+        documentation: The region info format of an empty region of space.
         intersection:
           - type:
               RegionType:
                 string-type: Space
           - type: PlayableRegionInfo
       BlackHoleRegionInfo:
+        documentation: The region info format of a black hole.
         intersection:
           - type:
               BlackHoleSize:
@@ -726,6 +749,7 @@ types:
                 type: never
           - type: PlayableRegionInfo
       StarRegionInfo:
+        documentation: The region info format of a star.
         intersection:
           - type:
               EnterLocation:
@@ -743,6 +767,7 @@ types:
                 type: never
           - type: PlayableRegionInfo
       PlanetRegionInfo:
+        documentation: The region info format of a planet.
         intersection:
           - type:
               PlanetData:
@@ -788,6 +813,7 @@ types:
                 type: never
           - type: PlayableRegionInfo
       CompleteRegionInfo:
+        documentation: A type that demonstrates how the different region info types are returned interchangeably.
         union:
           - type: OrbitRegionInfo
           - type: SpaceRegionInfo
@@ -799,47 +825,63 @@ types:
         # Space
         - type:
             BeaconCount:
+              documentation: The amount of beacons in the region at the time of the scan.
               type: number
             HasRings:
+              documentation: Whether the region has planetary rings.
               type: boolean
             Name:
+              documentation: The name of the region.
               type: string
             SubType:
               type: never
             TidallyLocked:
+              documentation: This value contains meaningless data for a space region, but is nonetheless present.
               type: boolean
             Type:
               string-type: Planet
         # Planet
         - type:
             BeaconCount:
+              documentation: The amount of beacons in the region at the time of the scan.
               type: number
             Color:
+              documentation: The primary color of the planet.
               type: Color3
             Gravity:
+              documentation: The gravity of the planet.
               type: number
             HasAtmosphere:
+              documentation: Whether the planet has an atmosphere.
               type: boolean
             HasRings:
+              documentation: Whether the planet has planetary rings.
               type: boolean
             Name:
+              documentation: The name of the planet.
               type: string
             Resources:
+              documentation: The resources that can be found on the planet.
               array-type: string
             SubType:
+              documentation: The type of the planet, such as <code>Desert</code>, <code>Terra</code>, <code>EarthLike</code>, etc.
               type: PlanetType
             TidallyLocked:
+              documentation: Whether the planet is tidally locked, meaning, whether it has a day/night cycle.
               type: boolean
             Type:
               string-type: Planet
         # Black Hole
         - type:
             BeaconCount:
+              documentation: The amount of beacons in the region at the time of the scan.
               type: number
             Name:
+              documentation: The name of the region.
               type: string
             Size:
               documentation:
+                description: The visual size of the black hole.
                 range: [500, 15000]
                 increment: 1
               type: number
@@ -848,15 +890,19 @@ types:
         # Star
         - type:
             BeaconCount:
+              documentation: The amount of beacons in the region at the time of the scan.
               type: number
             Name:
+              documentation: The name of the region.
               type: string
             Size:
               documentation:
+                description: The visual size of the star.
                 range: [2000, 6000]
                 increment: 1
               type: number
             SubType:
+              documentation: The type of the star, such as <code>Red</code>, <code>Orange</code>, <code>Yellow</code>, etc.
               type: StarType
             Type:
               string-type: Star
@@ -1076,6 +1122,7 @@ types:
               - name: options
                 nullable-type: FileSystemOperationOptions
     primitive:
+      documentation: A primitive type, used to represent a primitive value stored within the file system.
       export: false
       union:
         - type: string
@@ -1174,47 +1221,62 @@ types:
       export: false
       type:
         Description:
+          documentation: A description of the method parameter.
           nullable-type: string
         Name:
+          documentation: The name of the method parameter.
           nullable-type: string
         Type:
+          documentation: The type of the method parameter.
           nullable-type: string
     MethodData:
       type:
         Arguments:
+          documentation: The arguments that the method takes.
           array-type: MethodParameter
         Description:
+          documentation: A description of the method.
           nullable-type: string
         Name:
+          documentation: The name of the method.
           type: string
         Results:
           array-type: MethodParameter
     ConfigurableData:
       type:
         DefaultValue:
+          documentation: The default value of the configurable, if it has one.
           nullable-type: any
         Description:
+          documentation: A description of the configurable.
           type: string
         Name:
+          documentation: The name of the configurable.
           type: string
         Options:
+          documentation: The options that the configurable can take.
           nullable-union:
             - array-type: string
             - array-type: number
         Type:
+          documentation: The type of the configurable.
           type: string
   Modems:
     ModemRequest:
       type:
         Body:
+          documentation: The body of the request, is usually a JSON string.
           nullable-type: string
         Compress:
+          documentation: What type of compression to use for the request.
           nullable-type: Enum.HttpCompression
         Headers:
+          documentation: The headers of the request.
           nullable-type:
             [string]:
               type: any
         Method:
+          documentation: The HTTP method to use for the request.
           nullable-string-union:
             - GET
             - POST
@@ -1222,23 +1284,30 @@ types:
             - PATCH
             - DELETE
         Url:
+          documentation: The real world URL to send the request to.
           type: string
     ModemRequestResponse:
       type:
         Body:
+          documentation: The body of the response, is usually a JSON string.
           type: any
         Headers:
+          documentation: The headers of the response.
           type:
             [string]:
               type: any
         StatusCode:
+          documentation: The HTTP status code of the response.
           type: number
         StatusMessage:
+          documentation: The HTTP status message of the response.
           type: string
         Success:
+          documentation: Whether the request was successful or not.
           type: boolean
   Object Detector:
     ObjectDetectorHitNothing:
+      documentation: The data provided by the object detector when it doesn't hit anything.
       type:
         isTerrain:
           documentation: Whether or not the hit object is terrain.
@@ -1247,6 +1316,7 @@ types:
           documentation: Will be greater than or equal to the <code>ObjectDetector</code>'s <code>MaxDistance</code> configuration, note, there is a slight error in this value so it may be ~1e-3 less than it should be.
           type: number
     ObjectDetectorHitTerrain:
+      documentation: The data provided by the object detector when it hits terrain.
       type:
         isTerrain:
           documentation: Whether or not the hit object is terrain.
@@ -1278,6 +1348,7 @@ types:
           documentation: The distance between the start of the ray and the contact point.
           type: number
     ObjectDetectorHitObject:
+      documentation: The data provided by the object detector when it hits an object.
       type:
         isTerrain:
           documentation: Whether or not the hit object is terrain.
@@ -1314,12 +1385,14 @@ types:
           documentation: The distance between the start of the ray and the contact point.
           type: number
     ObjectDetectorHitData:
+      documentation: A type that demonstrates the fact that what type the object detector returns depends on what it hits.
       union:
         - type: ObjectDetectorHitNothing
         - type: ObjectDetectorHitTerrain
         - type: ObjectDetectorHitObject
   Black Box Logs:
     RegionLogType:
+      documentation: The type of a region log, used to describe what happened in the region.
       string-union:
         - HyperDrive
         - Aliens
@@ -1332,12 +1405,16 @@ types:
         - Freezing
         - Melting
     RegionLog:
+      documentation: A log of an event that happened in a region, such as a player spawning into or warping out of the region.
       type:
         Desc:
+          documentation: A description of the event that happened in the region.
           type: string
         Event:
+          documentation: The type of event that happened in the region.
           type: RegionLogType
         TimeAgo:
+          documentation: The time since the event happened, in seconds. Does not update in real time.
           type: number
   User Input Mediums:
     UserInputObject:
@@ -1375,6 +1452,7 @@ types:
           type: number
     AR:
       ARInput:
+        documentation: This class is obtained through <code>ARCursor.UserInput</code> and provides information about the user's input.
         export: false
         type:
           Gamepad:
@@ -1418,6 +1496,7 @@ types:
               source: https://create.roblox.com/docs/reference/engine/classes/UserInputService#VREnabled
             type: boolean
       ARCamera:
+        documentation: The player's camera, used for AR devices.
         type:
           CFrame:
             documentation:
@@ -1481,6 +1560,7 @@ types:
             readonly: true
             type: Vector2
       ARCursor:
+        documentation: A cursor that represents a player's mouse in the 3D world. For use with AR devices.
         type:
           Player:
             documentation: The name of the player the cursor is for.
@@ -1542,11 +1622,13 @@ types:
   String Enums:
     General:
       TemperatureUnit:
+        documentation: A unit of temperature, i.e., fahrenheit, celsius, or kelvin.
         string-union:
           - K
           - F
           - C
       Permission:
+        documentation: Different types of permissions that can be granted to players.
         string-union:
           - Modify
           - Unlock
@@ -1555,25 +1637,30 @@ types:
           - Interact
           - Attach
       CanvasContext:
+        documentation: The context of different canvases, for use in AR (where you can have 2D interfaces and 3D objects at once)
         string-union:
           - 2D
           - 3D
     Configuration:
       PolysiliconMode:
+        documentation: The mode of polysilicon, used in the <code>Polysilicon</code> part.
         string-union:
           - Activate
           - Deactivate
           - FlipFlop
       BladeShape:
+        documentation: The shape of the blade, used in the <code>Blade</code> part.
         string-union:
           - Block
           - Spheroid
           - Cone
       RemoteControlMode:
+        documentation: The mode of the remote control, used in the <code>RemoteControl</code> part.
         string-union:
           - EmitFromTarget
           - SendDirectly
       PlayerLimb:
+        documentation: The limb of the player, used in the <code>Player</code> part.
         string-union:
           - Head
           - Torso
@@ -1583,26 +1670,31 @@ types:
           - Right Leg
           - HumanoidRootPart
       VehicleSeatMode:
+        documentation: The mode of the vehicle seat, used in the <code>VehicleSeat</code> part.
         string-union:
           - Horizontal
           - Yaw/Pitch
           - Full
           - Mouse
       HandleTriggerMode:
+        documentation: The mode of the handle trigger, used in the <code>Handle</code> part.
         string-union:
           - MouseDown
           - MouseUp
           - Both
       HandleSwingMode:
+        documentation: The mode of the handle swing, used in the <code>Handle</code> part.
         string-union:
           - None
           - Swing
           - Point
       RelayMode:
+        documentation: The mode of the relay, used in the <code>Relay</code> part.
         string-union:
           - Send
           - Receive
       InstrumentType:
+        documentation: The type of instrument reading desired, used in the <code>Instrument</code> part.
         string-union:
           - Speed
           - AngularSpeed
