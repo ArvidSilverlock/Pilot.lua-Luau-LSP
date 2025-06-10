@@ -438,7 +438,7 @@ types:
         - type:
             [JSONValue]:
               type: JSON
-        - array-type: JSONValue
+        - array-type: JSON
         - type: JSONValue
 
   Universe Info:
