@@ -30,8 +30,8 @@ function Snippet:Insert(index: number?, value: any?)
 	return self
 end
 
-function Snippet:NewLine()
-	self:Push("\n")
+function Snippet:NewLine(count: number?)
+	self:Push(string.rep("\n", count or 1))
 	return self
 end
 
