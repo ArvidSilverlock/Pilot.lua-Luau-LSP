@@ -1,8 +1,8 @@
 local luauTypes = {}
 
-type TypeStyle = "type" | "function" | "method" | "union" | "intersection"
+export type TypeStyle = "type" | "function" | "method" | "union" | "intersection"
 
-type Context = {
+export type Context = {
 	style: TypeStyle,
 	isMethod: boolean,
 	isNullable: boolean,
@@ -12,7 +12,7 @@ type Context = {
 	isSparseArray: boolean,
 }
 
-type TypeGroup = {
+export type TypeGroup = {
 	key: string,
 	value: any,
 	context: Context,
@@ -20,7 +20,7 @@ type TypeGroup = {
 	genericDefinitions: { any }?,
 }
 
-type State = {
+export type State = {
 	base: TypeGroup,
 	metatable: TypeGroup,
 	self: TypeGroup,
@@ -30,10 +30,11 @@ type State = {
 	source: any,
 }
 
-type RootState = {
+export type RootState = {
 	name: string,
 	isRoot: true,
 	context: "class" | "declaration" | "type",
+	define: boolean?,
 }
 
 local NULLABLE_MODIFIER = "nullable"
@@ -175,7 +176,7 @@ function luauTypes.writeFromState(output, state: State)
 				end
 				output:Push(" = ")
 			elseif state.root.context == "class" then
-				output:Push("declare class ", state.root.name, "\n"):Indent()
+				output:PushLine("declare class ", state.root.name):Indent()
 			end
 		end
 	end
@@ -183,11 +184,11 @@ function luauTypes.writeFromState(output, state: State)
 	if state.metatable then
 		local metatableContext = state.metatable.context
 
-		output:Push("typeof(setmetatable(\n"):Indent():Push("{} :: ")
+		output:PushLine("typeof(setmetatable("):Indent():Push("{} :: ")
 		luauTypes[`write{context.style:gsub("^%l", string.upper)}`](output, state, state.base)
 		output:Push(",\n{} :: ")
 		luauTypes[`write{metatableContext.style:gsub("^%l", string.upper)}`](output, state, state.metatable)
-		output:Push("\n"):Dedent():Push("))")
+		output:Dedent():NewLine():Push("))")
 	else
 		luauTypes[`write{context.style:gsub("^%l", string.upper)}`](output, state, state.base)
 	end
@@ -249,11 +250,11 @@ function luauTypes.writeType(output, state: State, group: TypeGroup)
 				output:Push(">")
 			end
 		elseif typeof(value) == "table" then
-			output:Push("{\n"):Indent()
+			output:PushLine("{"):Indent()
 			for key, subValue in value do
 				writeKey(output, key)
 				luauTypes.write(output, subValue, state)
-				output:Push(",\n")
+				output:PushLine(",")
 			end
 			output:Dedent():Push("}")
 		else
