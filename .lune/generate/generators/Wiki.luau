@@ -2,6 +2,7 @@ local fs = require("@lune/fs")
 local serde = require("@lune/serde")
 
 local luauTypes = require("../modules/LuauType")
+local Snippet = require("../modules/Snippet")
 local MarkdownSnippet = require("../modules/MarkdownSnippet")
 
 local partDocumentation = serde.decode("yaml", fs.readFile("./.lune/generate/documentation.yaml")) :: any
@@ -10,7 +11,7 @@ local rawPartData = serde.decode("json", fs.readFile("./.lune/generate/partdata.
 local WIKI_DIRECTORY = "./wiki/docs/"
 
 local function getType(value)
-	local output = MarkdownSnippet.new()
+	local output = Snippet.new()
 	luauTypes.write(output, value, { isRoot = true, context = "type", define = false } :: any)
 	return tostring(output)
 end
@@ -166,7 +167,7 @@ local function writeParameters(output, objectName, memberName, parameters, group
 			end
 		else
 			if parameterIndex == 1 then
-				output:Push(`\n\nThe {groupNamePlural} for <code>{memberName}</code> are as follows:\n`)
+				output:Push("\n\nThe ", groupNamePlural, " for "):InlineCode(memberName):PushLine(" are as follows:")
 			end
 
 			output:Push("- The ")
@@ -286,12 +287,175 @@ local function addCodeSamples(output, data)
 	end
 end
 
+local function appendDocumentation(output, object, metadata, dontWriteDescription)
+	if typeof(object.documentation) == "string" then
+		if not dontWriteDescription then
+			output:PushLine(object.documentation)
+		end
+		return
+	elseif typeof(object.documentation) ~= "table" then
+		return
+	end
+
+	local documentation = object.documentation
+
+	if typeof(documentation) == "table" then
+		if documentation.description and not dontWriteDescription then
+			output:Push(documentation.description)
+		end
+
+		local incrementSuffix = if documentation.increment
+			then ", and an increment of " .. documentation.increment
+			else ""
+		if documentation.minimum then
+			output:Push("\nIt has a minimum value of ", documentation.minimum, incrementSuffix, ".")
+		elseif documentation.maximum then
+			output:Push("\nIt has a maximum value of ", documentation.maximum, incrementSuffix, ".")
+		elseif documentation.range then
+			output:Push("\nIt ranges between ", documentation.range[1], " and ", documentation.range[2], ".")
+			if documentation.increment then
+				output:Push(" It increments by ", documentation.increment, ".")
+			end
+		elseif documentation.increment then
+			output:Push("\nIt increments by ", documentation.increment, ".")
+		end
+	elseif documentation and not dontWriteDescription then
+		output:Push(documentation)
+	end
+
+	if documentation.length then
+		output:PushLine("It will always have a length of ", documentation.length, ".\n")
+	elseif documentation["max-length"] then
+		output:PushLine("It has a maximum length of ", documentation["max-length"], ".\n")
+	end
+
+	if metadata then
+		metadata.tags = if documentation.categories then table.clone(documentation.categories) else {}
+	end
+
+	addCodeSamples(output, object)
+end
+
+local writeWithoutState, writeIndividualTypeDescription
+
+function writeWithoutState(output, name, source: any, parent: luauTypes.State, depth)
+	local state = assert(luauTypes.getTypeState(source, parent), "no context found")
+	writeIndividualTypeDescription(output, name, state, depth)
+end
+
+function writeIndividualTypeDescription(output, name, state: luauTypes.State, depth)
+	local context = state.base.context
+	local source = state.source
+
+	if context.style == "type" and state.base.value == "never" then
+		return
+	end
+
+	output:PushLine(string.rep("#", depth), " ", name):NewLine()
+
+	local documentation = source.documentation
+	if typeof(documentation) == "table" and documentation.description then
+		output:PushLine(documentation.description)
+	elseif typeof(documentation) == "string" then
+		output:PushLine(documentation)
+	end
+
+	if context.style == "type" then
+		if typeof(state.base.value) == "table" then
+			for memberName, memberValue in sortedIterate(state.base.value) do
+				writeWithoutState(output, memberName, memberValue, state, depth + 1)
+			end
+		elseif context.isString then
+			output:Push("It is always the string "):InlineCode(state.base.value):Push(".")
+		else
+			output:Push("It is of type "):InlineCode(state.base.value):Push(".")
+		end
+	elseif context.style == "function" then
+		output:InlineCode(name):PushLine("()")
+	elseif context.style == "method" then
+		output:InlineCode(name):PushLine("() (method)")
+	elseif context.style == "union" then
+		if context.isString then
+			if context.isOpenString then
+				output:Push(name, " can be any string, some "):Italic("example"):Push(" possibilities include: ")
+			else
+				output:Push(name, " can be any of the following strings: ")
+			end
+			for index, memberValue in state.base.value do
+				output:InlineCode(memberValue)
+				if index < #state.base.value then
+					output:Push(", ")
+				end
+			end
+			output:PushLine(".")
+		else
+			output:PushLine("It is one (not all) of the following types:")
+			for index, memberValue in state.base.value do
+				writeWithoutState(output, `Subtype {string.char(64 + index)}`, memberValue, state, depth + 1)
+			end
+		end
+	elseif context.style == "intersection" then
+		output:PushLine("It is the combination of the following types:")
+		for index, memberValue in state.base.value do
+			writeWithoutState(output, `Subtype {string.char(64 + index)}`, memberValue, state, depth + 1)
+		end
+	else
+		error(`Unknown context style: {context.style}`)
+	end
+
+	appendDocumentation(output, source, nil, true)
+
+	output:NewLine(2)
+end
+
+local function generateTypePage(key: string, value: any, parent, path: string, generatedPages)
+	local typeState = luauTypes.getTypeState(value, {
+		isRoot = true,
+		name = key,
+		context = "type",
+		define = true,
+	})
+
+	if typeState then
+		print(`{path}/{key}`)
+
+		local snippet = MarkdownSnippet.new()
+
+		snippet:PushLine('\nimport Member from "@theme/Member";\n\n')
+
+		writeIndividualTypeDescription(snippet, key, typeState, 1)
+
+		snippet
+			:MemberHeader("Luau Type", "Luau Type", "group")
+			:Push("This is the luau type for ")
+			:InlineCode(key)
+			:PushLine(
+				". It may help clear up mistranslations from the raw data to the wiki page (as it is an automatic process)."
+			)
+			:CodeStart()
+
+		luauTypes.writeFromState(snippet, typeState)
+
+		snippet:NewLine():CodeEnd():PushLine("\n\n")
+
+		generatedPages[key] = tostring(snippet)
+	else
+		generatedPages[key] = {}
+		for childName, child in value do
+			generateTypePage(childName, child, parent, `{path}/{key}`, generatedPages[key])
+		end
+	end
+end
+
 local Wiki = {}
 
 function Wiki.generate(options)
 	local generatedPages = {
 		objects = {},
+		types = {},
 	}
+
+	generateTypePage("types", partDocumentation.types, nil, "types", generatedPages)
 
 	for objectName, object in partDocumentation.classes do
 		if not object.hydrator then
@@ -301,7 +465,7 @@ function Wiki.generate(options)
 		objectName = object.hydrator["class-name"] or objectName
 
 		local output = MarkdownSnippet.new(objectName)
-		local metadata = {}
+		local metadata: any = {}
 
 		local tableOfContents = {}
 
@@ -326,17 +490,7 @@ function Wiki.generate(options)
 			metadata.sidebar_position = 1
 		end
 
-		if object.documentation and typeof(object.documentation) == "table" then
-			local documentation = object.documentation
-			metadata.tags = if documentation.categories then table.clone(documentation.categories) else {}
-
-			if documentation.description then
-				output:Push(documentation.description:gsub("\n+$", "") .. "\n")
-			end
-			addCodeSamples(output, object)
-		elseif typeof(object.documentation) == "string" then
-			output:Push(object.documentation:gsub("\n+$", "") .. "\n")
-		end
+		appendDocumentation(output, object, metadata)
 
 		if not metadata.tags then
 			metadata.tags = {}
@@ -775,20 +929,21 @@ local function recursiveWrite(pages, path)
 		if typeof(value) == "table" then
 			local subpath = `{path}/{name}`
 
-			if fs.isDir(subpath) then
-				fs.removeDir(subpath)
-			end
+			-- if fs.isDir(subpath) then
+			-- 	fs.removeDir(subpath)
+			-- end
 			fs.writeDir(subpath)
 
 			recursiveWrite(value, subpath)
 		else
-			fs.writeFile(`{path}/{name}`, value)
+			fs.writeFile(`{path}/{name}.mdx`, value)
 		end
 	end
 end
 
 function Wiki.save(options, generatedPages)
-	recursiveWrite(generatedPages, WIKI_DIRECTORY)
+	recursiveWrite(generatedPages.objects, `{WIKI_DIRECTORY}/objects`)
+	recursiveWrite(generatedPages.types, `{WIKI_DIRECTORY}/types`)
 
 	local rawDocumentation = fs.readFile("./.lune/generate/documentation.yaml")
 	local rawDocumentationSnippet = MarkdownSnippet.new(rawDocumentation)
