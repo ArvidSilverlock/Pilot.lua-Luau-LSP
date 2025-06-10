@@ -3,6 +3,7 @@ workspace
 
 # generated wiki directories
 wiki/docs/objects/*
+wiki/docs/types/*
 wiki/docs/raw-documentation.md
 
 # miscellaneous
