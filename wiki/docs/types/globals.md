@@ -2,6 +2,12 @@
 sidebar_position: 1
 ---
 
+# Globals
+
+This 'types' section is incomplete, I have not written a generalised system for generating type documentation, and only have the bare bones version used in the 'objects' section.
+
+Please note you can find the raw documentation [here](https://github.com/ArvidSilverlock/Pilot.lua-Luau-LSP/blob/master/.lune/generate/documentation.json), I know it is hard to read, but you should be able to find any information you need in there.
+
 This page is manually transcribed from the data and is not automatically generated.
 
 - **GetPartFromPort**(_Port | number_ port, _string?_ className) → _PilotObject_
