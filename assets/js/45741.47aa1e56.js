@@ -1,1 +1,0 @@
-(self.webpackChunkwaste_of_space_wiki=self.webpackChunkwaste_of_space_wiki||[]).push([[45741],{45741:()=>{}}]);
