@@ -916,13 +916,9 @@ function Wiki.generate(options)
 			table.insert(metadata.tags, "Non-Configurable")
 		end
 
-		local extension
 		if #tableOfContents > 0 then
 			output:Insert(1, `\nexport const toc = [{table.concat(tableOfContents, ",")}]\n\n`)
 			output:Insert(1, '\nimport Member from "@theme/Member";\n\n')
-			extension = ".mdx"
-		else
-			extension = ".md"
 		end
 
 		if next(metadata) then
@@ -941,7 +937,7 @@ function Wiki.generate(options)
 			end
 		end
 
-		generatedPages.objects[objectName .. extension] = text
+		generatedPages.objects[objectName] = text
 
 		-- print(table.concat(output))
 	end
