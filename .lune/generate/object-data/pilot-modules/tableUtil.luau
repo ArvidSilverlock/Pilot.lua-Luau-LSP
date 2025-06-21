@@ -921,4 +921,4 @@ TableUtil.IsEmpty = IsEmpty
 TableUtil.EncodeJSON = EncodeJSON
 TableUtil.DecodeJSON = DecodeJSON
 
-return TableUtil
+return require("tableUtil") :: typeof(TableUtil)

@@ -55,4 +55,4 @@ export type Array<T> = Types.Array<T>
 export type List<T> = Array<T>
 export type Set<T> = Types.Set<T>
 
-return Sift
+return require("sift") :: typeof(Sift)

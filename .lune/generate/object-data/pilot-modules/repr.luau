@@ -30,7 +30,7 @@ local reprSettings = {
 print(repr(myTable, reprSettings))
 ```
 ]=]
-return function() end :: (
+return require("repr") :: (
 	value: any?,
 	configuration: {
 		pretty: boolean?,

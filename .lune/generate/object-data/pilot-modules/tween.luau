@@ -1,4 +1,4 @@
-type Tween = {
+return require("tween") :: {
 	GetValue: (
 		self: Tween,
 		alpha: number,
@@ -6,5 +6,3 @@ type Tween = {
 		easingDirection: Enum.EasingDirection
 	) -> number,
 }
-
-return {} :: Tween

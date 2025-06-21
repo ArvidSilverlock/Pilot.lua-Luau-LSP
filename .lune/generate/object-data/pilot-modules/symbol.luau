@@ -1,1 +1,1 @@
-return function() end :: (string) -> typeof(newproxy(true))
+return require("symbol") :: (string) -> typeof(newproxy(true))

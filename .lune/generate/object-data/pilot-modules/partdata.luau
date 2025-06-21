@@ -80,7 +80,7 @@ export type PartInfo = {
 	HeatGeneratorProduct: number?,
 }
 
-return {} :: {
+return require("partdata") :: {
 	Components: { [string]: ComponentInfo },
 	Parts: { [string]: PartInfo },
 }

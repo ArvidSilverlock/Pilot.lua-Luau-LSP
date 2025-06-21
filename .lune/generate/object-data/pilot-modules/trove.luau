@@ -607,6 +607,6 @@ function Trove.Destroy(self: TroveInternal)
 	self:Clean()
 end
 
-return {
-	new = Trove.new,
+return require("trove") :: {
+	new: typeof(Trove.new),
 }
