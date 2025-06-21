@@ -9,8 +9,13 @@ function Darklua.save(options, generatedData)
 		bundle = {
 			require_mode = {
 				name = "path",
+				use_luau_configuration = true,
 			},
 			excludes = {},
+		},
+		rules = {
+			"remove_types",
+			"remove_comments",
 		},
 	}
 
