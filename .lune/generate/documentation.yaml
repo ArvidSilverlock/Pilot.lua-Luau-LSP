@@ -2003,7 +2003,7 @@ classes:
                   type: MethodData
         GetNameOfOwnerAsync:
           documentation:
-            deprecated: Use <code>require("player"):GetNameFromUserIdAsync</code> instead.
+            deprecated: Use <code>require("players"):GetUsername</code> instead.
           returns:
             - name: ownerUsername
               nullable-type: string
@@ -2426,7 +2426,18 @@ classes:
     hydrator:
       name: wos-object
       methods:
-        CalculateModelRecipe: {}
+        CalculateModelRecipe:
+          documentation: Returns the required resources to construct the specified model.
+          parameters:
+            - name: modelCode
+              type: string
+              documentation: If left unspecified it will utilise the <code>ModelCode</code> configurable.
+          returns:
+            - name: materials
+              type:
+                [string]:
+                  type: number
+              documentation: The materials required to generate the model.
       events:
         Configured: *ConfiguredEvent
         Triggered: *TriggeredEvent
@@ -2810,6 +2821,8 @@ classes:
               type: any
               documentation: Unknown.
         PostRequest:
+          documentation:
+            deprecated: This function still 'exists', but has no effect.
           parameters:
             - name: domain
               type: string
@@ -2827,6 +2840,8 @@ classes:
             - name: encodedUrl
               type: string
         GetRequest:
+          documentation:
+            deprecated: This function still 'exists', but has no effect.
           parameters:
             - name: domain
               type: string
@@ -3085,6 +3100,12 @@ classes:
       events:
         Configured: *ConfiguredEvent
       configurables:
+        Angle:
+          documentation:
+            description: Determines the angle of the servo. When configured with a value outside of the specified range, it will be calculated modulo 360 (i.e., 360 ⟹ 0, 375 ⟹ 15, -10 ⟹ 350).
+            default: 0
+            range: [0, 359]
+          type: number
         ServoSpeed:
           documentation:
             description: Determines the speed at which the servo is driven.
@@ -3277,9 +3298,21 @@ classes:
               type: Cursor
       events:
         Configured: *ConfiguredEvent
-        CursorMoved: {}
-        CursorPressed: {}
-        CursorReleased: {}
+        CursorMoved:
+          documentation: Fires when a cursor is moved.
+          parameters:
+            - name: Cursor
+              type: Cursor
+        CursorPressed:
+          documentation: Fires when a user presses their left mouse button.
+          parameters:
+            - name: Cursor
+              type: Cursor
+        CursorReleased:
+          documentation: Fires when a user releases their left mouse button.
+          parameters:
+            - name: Cursor
+              type: Cursor
       configurables:
         VideoID:
           documentation:
@@ -3422,7 +3455,40 @@ classes:
               type:
                 [any]:
                   type: any
-        WriteAll: {}
+        WriteAll:
+          documentation:
+            description: |-
+              Replaces (to clarify, it <i>does</i> clear the original contents) the content
+              of the disk with the specified dictionary.
+
+              Note that it will have bizzare behaviour when used with <code>:ReadAll</code>.
+            code-sample: |-
+              local repr = require("repr")
+
+              local disk = assert(GetPart("Disk"), "no disk connected")
+
+              local a = disk:ReadAll()
+              disk:Write("foo", "bar")
+
+              print(a.foo) -- bar
+
+              disk:WriteAll( { hello = "world", asd = "fgh" } )
+              local b = disk:ReadAll()
+
+              print(a.foo, b.foo) -- bar nil
+              print(a.hello, b.hello) -- world world
+
+              print(a == b) -- false
+              print(a == disk:ReadAll()) -- false
+              print(b == disk:ReadAll()) -- true
+
+              print(repr(a)) -- { asd = "fgh", foo = "bar", hello = "world" }
+              print(repr(b)) -- { asd = "fgh", hello = "world" }
+          parameters:
+            - name: content
+              type:
+                [any]:
+                  type: any
         Read:
           documentation: Reads the specified key from the disk and returns the value.
           parameters:
@@ -3461,7 +3527,7 @@ classes:
             - name: player
               type: string
         SimulateTextInput:
-          documentation: Simulates text input just like you would type in the keyboard and enter.
+          documentation: Simulates text input just like you would type in the keyboard and enter. This fires the <code>TextInputted</code> event.
           parameters:
             - name: input
               nullable-type: string
@@ -3469,7 +3535,19 @@ classes:
               type: string
       events:
         KeyPressed: *KeyPressedEvent
-        TextInputted: {}
+        TextInputted:
+          documentation: |-
+            Fires when a player finishes typing into the keyboard. Note that a newline will
+            be present wherever the cursor of the player was when they pressed enter (generally
+            the end, but if they moved their cursor whilst typing, it may be in the middle
+            of the text).
+          parameters:
+            - name: text
+              type: string
+              documentation: The text inputted into the keyboard.
+            - name: player
+              type: string
+              documentation: The username of the player who inputted the text.
         UserInput: *UserInputEvent
   Seat:
     documentation:
