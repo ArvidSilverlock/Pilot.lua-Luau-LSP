@@ -83,6 +83,12 @@ const config: Config = {
 				},
 				{
 					type: 'docSidebar',
+					sidebarId: 'moduleSidebar',
+					position: 'left',
+					label: 'Modules',
+				},
+				{
+					type: 'docSidebar',
 					sidebarId: 'helpSidebar',
 					position: 'left',
 					label: 'Help',
