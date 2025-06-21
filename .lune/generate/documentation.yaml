@@ -3703,6 +3703,13 @@ classes:
             [1178125707] = true,
         }
 
+        -- Don't know your `UserId`? You can find it at runtime by using the `players:GetUserId("YourUsername")`
+        -- function. Note that this will add a bit of extra overhead (if you're not in the server, waste of
+        -- space has to make a web request), so it is not reccomended.
+        -- local WHITELIST = {
+        --     [players:GetUserId("ArvidSilverlock")] = true,
+        -- }
+
         -- Try and get the life sensor, throw an informative error if we don't find it using `assert`.
         local lifeSensor = assert(GetPart("LifeSensor"), "no life sensor connected")
 
