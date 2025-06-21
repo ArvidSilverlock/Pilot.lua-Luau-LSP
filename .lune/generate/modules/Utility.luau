@@ -60,8 +60,10 @@ end
 
 function Utility.writeConfigurationFile(path: string, format: serde.EncodeDecodeFormat, values: { [any]: any })
 	if fs.isFile(path) then
-		local currentValue = serde.decode(format, fs.readFile(path))
-		Utility.mergeTables(currentValue, values)
+		local currentValueIsValid, currentValue = pcall(serde.decode, format, fs.readFile(path))
+		if currentValueIsValid and currentValue then
+			Utility.mergeTables(currentValue, values)
+		end
 	end
 
 	fs.writeFile(path, serde.encode(format, values, true))
