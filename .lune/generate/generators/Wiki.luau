@@ -383,11 +383,9 @@ function writeIndividualTypeDescription(output, name, state: luauTypes.State, de
 			output:Push("of the type "):InlineCode(state.base.value):PushLine(".")
 		end
 	elseif context.style == "function" then
-		output:PushLine(
-			"It is a function, and I am too lazy to generate a description for it as of right now ❤️✨."
-		)
+		output:PushLine("It is a function, read the 'Luau Type' to learn its parameters and returns.")
 	elseif context.style == "method" then
-		output:PushLine("It is a method, and I am too lazy to generate a description for it as of right now ❤️✨.")
+		output:PushLine("It is a method, read the 'Luau Type' to learn its parameters and returns.")
 	elseif context.style == "union" then
 		if context.isString then
 			if context.isArray then
