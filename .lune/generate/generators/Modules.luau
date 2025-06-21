@@ -30,6 +30,12 @@ function Modules.save(options)
 		fileRequireAliases[Utility.stripFileExtension(module)] = filePath
 		fs.copy(`{MODULE_SOURCE_DIRECTORY}/{module}`, modulePath)
 	end
+
+	Utility.writeConfigurationFile(`{options.o}/.luaurc`, "json", {
+		aliases = {
+			wos = `./{typesDirectory}/modules`,
+		},
+	})
 end
 
 return Modules
