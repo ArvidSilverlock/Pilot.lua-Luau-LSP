@@ -3,7 +3,7 @@ An array of 4 `Vector2`s, the first being the min & max ux, the second being the
 ]]
 export type CoordinateBounds = { Vector2 }
 
-return {} :: {
+return require("coordinate") :: {
 	new: (ux: number, uy: number, sx: number, sy: number, inPlanet: boolean) -> Coordinate,
 	withBounds: (
 		bounds: CoordinateBounds,

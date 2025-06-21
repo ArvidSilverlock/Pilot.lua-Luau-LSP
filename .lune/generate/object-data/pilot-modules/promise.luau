@@ -1987,4 +1987,4 @@ function Promise.onUnhandledRejection(callback)
 	end
 end
 
-return Promise
+return require("promise") :: typeof(Promise)

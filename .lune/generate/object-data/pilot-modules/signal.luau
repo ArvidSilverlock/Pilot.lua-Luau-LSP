@@ -433,8 +433,8 @@ setmetatable(Signal, {
 	end,
 })
 
-return table.freeze({
-	new = Signal.new,
-	Wrap = Signal.Wrap,
-	Is = Signal.Is,
-})
+return require("signal") :: {
+	new: typeof(Signal.new),
+	Wrap: typeof(Signal.Wrap),
+	Is: typeof(Signal.Is),
+}

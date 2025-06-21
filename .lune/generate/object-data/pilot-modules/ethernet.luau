@@ -1,1 +1,1 @@
-return nil :: any
+return require("ethernet") :: any
