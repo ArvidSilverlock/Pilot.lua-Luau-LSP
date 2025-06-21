@@ -1,0 +1,1 @@
+Provides the [<code>FileSystemRoot</code>](/types/File%20System/File%20Types/FileSystemRoot) of the file system used by <code>require</code>. It has a metatable of type [<code>FileSystem</code>](/types/File%20System/FileSystem).
