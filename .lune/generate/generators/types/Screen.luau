@@ -19,6 +19,7 @@ local function getLuauType(valueType)
 		then "string"
 		elseif name == "OptionalCoordinateFrame" then "CFrame"
 		elseif name == "Color3uint8" then "Color3"
+		elseif name == "SecurityCapabilities" then "any" -- not added to luau lsp yet
 		else name
 end
 
