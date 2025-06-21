@@ -3596,6 +3596,7 @@
 				"write": "boolean?"
 			},
 			"FileSystem": {
+				"__index": "FileSystem",
 				"chdir": "(self: FileSystem, pathname: string) -> string",
 				"copy": "(self: FileSystem, pathnameFrom: string, pathnameTo: string?) -> ()",
 				"exists": "(pathname: string) -> boolean",
