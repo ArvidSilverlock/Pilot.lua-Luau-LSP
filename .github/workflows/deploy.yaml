@@ -49,14 +49,14 @@ jobs:
         run: lune run pilot-generate -- --release
 
       - name: Upload wiki artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: needs.filter.outputs.wiki
         with:
           name: wiki
           path: wiki
 
       - name: Upload workspace artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: needs.filter.outputs.workspace
         with:
           name: workspace
@@ -72,7 +72,7 @@ jobs:
           node-version: 18
 
       - name: Download wiki artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: wiki
           path: wiki
@@ -93,7 +93,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download workspace artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: workspace
           path: workspace
