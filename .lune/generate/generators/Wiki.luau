@@ -291,7 +291,14 @@ local function addCodeSamples(output, data)
 	end
 end
 
-local function appendDocumentation(output, object, metadata, dontWriteDescription)
+local function appendDocumentation(output, object, metadata, dontWriteDescription, objectName, imageLink)
+	if imageLink then
+		output
+			:PushLine('<div class="clearfix">')
+			:Indent()
+			:PushLine('<img src="', imageLink, '" style={{float: "right", marginRight: "1em"}} />')
+	end
+
 	if typeof(object.documentation) == "string" then
 		if not dontWriteDescription then
 			output:PushLine(object.documentation)
@@ -331,6 +338,93 @@ local function appendDocumentation(output, object, metadata, dontWriteDescriptio
 		output:PushLine("It will always have a length of ", documentation.length, ".\n")
 	elseif documentation["max-length"] then
 		output:PushLine("It has a maximum length of ", documentation["max-length"], ".\n")
+	end
+
+	local rawData = rawPartData.Parts[objectName]
+	if rawData then
+		output:Push("\n")
+
+		output:Push(
+			`It is a{if rawData.Craftable and rawData.Spawnable
+				then " craftable and spawnable"
+				elseif rawData.Craftable then " craftable"
+				elseif rawData.Spawnable then " spawnable"
+				else ""} {if rawData.Flammable then "flammable" else "non-flammable"} {if rawData.ClassState
+				then rawData.ClassState:lower()
+				else "object"}.\n\n`
+		)
+
+		if rawData.Malleability == 0 then
+			output:Push(`It cannot be resized.\n\n`)
+		elseif rawData.Malleability then
+			local sizes = findPossibleSizes(rawData.Malleability)
+			if #sizes > 0 then
+				output:Push(
+					`Here is a list of possible sizes that reach the maximum malleability ({rawData.Malleability}) that have integer components: `
+				)
+				output:Push(table.concat(sizes, ", "))
+				output:Push("\n\n")
+			else
+				output:Push(
+					"It has a malleability of ",
+					rawData.Malleability,
+					". You cannot reach this size with only integer components.\n\n"
+				)
+			end
+		end
+
+		local defaultSize = formatSize(unpack(rawData.BaseSize))
+
+		if rawData.BaseDurability == "inf" then
+			output:Push("It has infinite durability and a default size of ", defaultSize, ".\n\n")
+		elseif rawData.BaseDurability then
+			local baseVolume = rawData.BaseSize[1] * rawData.BaseSize[2] * rawData.BaseSize[3]
+			output:Push("At its default size (", defaultSize, ") it has a durability of ", rawData.BaseDurability)
+
+			if rawData.Malleability and rawData.Malleability > 0 then
+				output:Push(
+					", at its maximum size it has a durability of ",
+					math.floor((rawData.Malleability / baseVolume) ^ (1 / 3) * rawData.BaseDurability + 1)
+				)
+			end
+
+			output:Push(".\n\n")
+		elseif rawData.BaseSize then
+			output:PushLine("It has a default size of ", defaultSize, ".\n\n")
+		end
+
+		if rawData.Color then
+			local hex = string.format("%02x%02x%02x", unpack(rawData.Color))
+			output:PushLine(
+				"By default, its colour is <span style={{color: '#{",
+				hex:upper(),
+				"'}}>#",
+				hex,
+				"</span>.\n"
+			)
+		end
+
+		if rawData.Recipe then
+			local recipe = { "It requires " }
+			for key, value in sortedIterate(rawData.Recipe) do
+				table.insert(recipe, `{value} <code>{key}</code>`)
+				if #recipe > 1 then
+					table.insert(recipe, ", ")
+				end
+			end
+
+			if #recipe > 3 then
+				recipe[#recipe - 2] = if #recipe == 5 then " and " else ", and "
+				recipe[#recipe] = " "
+			end
+			table.insert(recipe, "to be crafted.")
+
+			output:Push(table.concat(recipe) .. "\n\n")
+		end
+	end
+
+	if imageLink then
+		output:Dedent():PushLine("\n</div>")
 	end
 
 	if metadata then
@@ -594,97 +688,13 @@ function Wiki.generate(options)
 			metadata.sidebar_position = 1
 		end
 
-		if fs.isFile(`./wiki/static/part-images/{objectName}.png`) then
-			output:PushLine("![", objectName, "](/part-images/", objectName, ".png#right)\n")
-		end
+		local imageExists = fs.isFile(`./wiki/static/part-images/{objectName}.png`)
+		local imageLink = if imageExists then `/Pilot.lua-Luau-LSP/part-images/{objectName}.png` else nil
 
-		appendDocumentation(output, object, metadata)
+		appendDocumentation(output, object, metadata, false, objectName, imageLink)
 
 		if not metadata.tags then
 			metadata.tags = {}
-		end
-
-		local rawData = rawPartData.Parts[objectName]
-		if rawData then
-			output:Push("\n")
-
-			output:Push(
-				`It is a{if rawData.Craftable and rawData.Spawnable
-					then " craftable and spawnable"
-					elseif rawData.Craftable then " craftable"
-					elseif rawData.Spawnable then " spawnable"
-					else ""} {if rawData.Flammable then "flammable" else "non-flammable"} {if rawData.ClassState
-					then rawData.ClassState:lower()
-					else "object"}.\n\n`
-			)
-
-			if rawData.Malleability == 0 then
-				output:Push(`It cannot be resized.\n\n`)
-			elseif rawData.Malleability then
-				local sizes = findPossibleSizes(rawData.Malleability)
-				if #sizes > 0 then
-					output:Push(
-						`Here is a list of possible sizes that reach the maximum malleability ({rawData.Malleability}) that have integer components: `
-					)
-					output:Push(table.concat(sizes, ", "))
-					output:Push("\n\n")
-				else
-					output:Push(
-						"It has a malleability of ",
-						rawData.Malleability,
-						". You cannot reach this size with only integer components.\n\n"
-					)
-				end
-			end
-
-			local defaultSize = formatSize(unpack(rawData.BaseSize))
-
-			if rawData.BaseDurability == "inf" then
-				output:Push("It has infinite durability and a default size of ", defaultSize, ".\n\n")
-			elseif rawData.BaseDurability then
-				local baseVolume = rawData.BaseSize[1] * rawData.BaseSize[2] * rawData.BaseSize[3]
-				output:Push("At its default size (", defaultSize, ") it has a durability of ", rawData.BaseDurability)
-
-				if rawData.Malleability and rawData.Malleability > 0 then
-					output:Push(
-						", at its maximum size it has a durability of ",
-						math.floor((rawData.Malleability / baseVolume) ^ (1 / 3) * rawData.BaseDurability + 1)
-					)
-				end
-
-				output:Push(".\n\n")
-			elseif rawData.BaseSize then
-				output:PushLine("It has a default size of ", defaultSize, ".\n\n")
-			end
-
-			if rawData.Color then
-				local hex = string.format("%02x%02x%02x", unpack(rawData.Color))
-				output:PushLine(
-					"By default, its colour is <span style={{color: '#{",
-					hex:upper(),
-					"'}}>#",
-					hex,
-					"</span>.\n"
-				)
-			end
-
-			if rawData.Recipe then
-				local recipe = { "It requires " }
-				for key, value in sortedIterate(rawData.Recipe) do
-					table.insert(recipe, `{value} <code>{key}</code>`)
-					if #recipe > 1 then
-						table.insert(recipe, ", ")
-					end
-				end
-
-				if #recipe > 3 then
-					recipe[#recipe - 2] = if #recipe == 5 then " and " else ", and "
-					recipe[#recipe] = " "
-				end
-				table.insert(recipe, "to be crafted.")
-
-				output:Push(table.concat(recipe) .. "\n\n")
-			end
 		end
 
 		if typeof(object.hydrator) == "table" then
