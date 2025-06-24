@@ -21,7 +21,7 @@ export default function Heading({
   group,
   ...props
 }: Props & {
-  group: "method" | "property" | "configurable" | "event" | "group";
+  group: "method" | "function" | "property" | "configurable" | "event" | "group" | number;
 }): JSX.Element {
   const brokenLinks = useBrokenLinks();
   const {
@@ -30,7 +30,14 @@ export default function Heading({
 
   brokenLinks.collectAnchor(id);
 
-  const HeaderSize = group === "group" ? "h2" : "h3";
+  let HeaderSize: keyof JSX.IntrinsicElements;
+  if (typeof group === "number" && group >= 1 && group <= 6) {
+    HeaderSize = `h${group}` as keyof JSX.IntrinsicElements;
+  } else if (group === "group") {
+    HeaderSize = "h2";
+  } else {
+    HeaderSize = "h3";
+  }
 
   const anchorTitle = translate(
     {
@@ -79,17 +86,19 @@ export default function Heading({
       </Link>
       <BrowserOnly>
         {() => {
-          const pathSegments = location.pathname.split("/").filter(Boolean);
-          const pageName = pathSegments[pathSegments.length - 1];
+            const pathSegments = location.pathname.split("/").filter(Boolean);
+            const pageName = pathSegments[pathSegments.length - 1];
 
-          const displayString =
+            const displayString =
             group == "group"
               ? `\`${pageName}\`'s ${id.toLowerCase()}`
+              : group == "function"
+              ? `\`${pageName}.${id}()\``
               : group == "method"
               ? `\`${pageName}:${id}()\``
               : `\`${pageName}.${id}\``;
-          const linkString = `${window.location.origin}${pathName}#${id}`;
-          const markdownLink = `[${displayString}](<${linkString}>)`;
+            const linkString = `${window.location.origin}${encodeURI(pathName)}#${encodeURIComponent(id)}`;
+            const markdownLink = `[${displayString}](<${linkString}>)`;
 
           return (
             <a
