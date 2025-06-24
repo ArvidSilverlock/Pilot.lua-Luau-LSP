@@ -40,7 +40,21 @@ jobs:
               - '.lune/generate/generators/Wiki.luau'
             workspace:
               - '.lune/pilot-generate.luau'
-              - '.lune/generate/**'
+              - '.lune/generate/documentation.json'
+              - '.lune/generate/partdata.json'
+              - '.lune/generate/modules/**'
+              - '.lune/generate/object-data/**'
+              - '.lune/generate/data-parsing/**'
+              - '.lune/generate/generators/Darklua.luau'
+              - '.lune/generate/generators/Definition.luau'
+              - '.lune/generate/generators/Documentation.luau'
+              - '.lune/generate/generators/Modules.luau'
+              - '.lune/generate/generators/Rokit.luau'
+              - '.lune/generate/generators/Selene.luau'
+              - '.lune/generate/generators/types'
+              - '.lune/generate/generators/Vanilla.luau'
+              - '.lune/generate/generators/VSCode.luau'
+          # Is this wrong of me? Yes, but I don't care.
 
   pilot-generate:
     runs-on: ubuntu-latest
