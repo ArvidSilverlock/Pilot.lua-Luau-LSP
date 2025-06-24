@@ -38,8 +38,11 @@
 }
 
 img {
-    border-radius: 10px;
+  border-radius: 10px;
+  margin-left: 10px;
+  margin-bottom: 10px;
 }
+
 img[src*="#right"] {
-    float: right;
+  float: right;
 }
