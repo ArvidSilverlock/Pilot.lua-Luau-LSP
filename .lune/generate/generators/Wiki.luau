@@ -430,13 +430,13 @@ function writeIndividualTypeDescription(output, key, state: luauTypes.State, dep
 		if parameters and #parameters > 0 then
 			writeParameters(output, source.name, name, parameters, "parameter", "parameters")
 		else
-			output:PushLine("It has no parameters.")
+			output:PushLine("\n\nIt has no parameters.")
 		end
 
 		if returns and #returns > 0 then
 			writeParameters(output, source.name, name, returns, "return", "returns")
 		else
-			output:PushLine("It has no return values.")
+			output:PushLine("\n\nIt has no return values.")
 		end
 	elseif context.style == "union" then
 		if context.isString then
