@@ -41,6 +41,10 @@ end
 
 -- Hardcoded indefinite articles for all uses. This is to avoid non-phonetic spellings messing with the articles.
 local indefiniteArticles = {
+	random = "a",
+	callback = "a",
+	event = "an",
+	file = "a",
 	arcursor = "an",
 	blade = "a",
 	boolean = "a",
@@ -338,12 +342,12 @@ end
 
 local writeWithoutState, writeIndividualTypeDescription
 
-function writeWithoutState(output, name, source: any, parent: luauTypes.State, depth)
+function writeWithoutState(output, name, source: any, parent: luauTypes.State, depth, tableOfContents)
 	local state = assert(luauTypes.getTypeState(source, parent), "no context found")
-	writeIndividualTypeDescription(output, name, state, depth)
+	writeIndividualTypeDescription(output, name, state, depth, tableOfContents)
 end
 
-function writeIndividualTypeDescription(output, name, state: luauTypes.State, depth)
+function writeIndividualTypeDescription(output, key, state: luauTypes.State, depth, tableOfContents)
 	local context = state.base.context
 	local source = state.source
 
@@ -351,7 +355,44 @@ function writeIndividualTypeDescription(output, name, state: luauTypes.State, de
 		return
 	end
 
-	output:PushLine(string.rep("#", depth), " ", name):NewLine()
+	local name = if typeof(key) == "table" then `[{key[1]}]` else key
+
+	if depth > 1 then
+		local headerText = if typeof(name) == "table" then `[{name[1]}]` else name
+
+		if context.style == "function" then
+			local parameterNames, returnNames = {}, {}
+
+			if context.isMethod then
+				table.insert(parameterNames, "self")
+				table.insert(returnNames, "self")
+			end
+
+			for index, parameter in state.base.value.parameters or {} do
+				table.insert(parameterNames, parameter.name or `<i>{string.char(96 + index)}</i>`)
+			end
+			for index, value in state.base.value.returns or {} do
+				table.insert(returnNames, value.name or `<i>{string.char(96 + index)}</i>`)
+			end
+
+			headerText ..= "(" .. table.concat(parameterNames, ", ") .. ")" .. (if #returnNames > 1
+				then " → (" .. table.concat(returnNames, ", ") .. ")"
+				elseif #returnNames > 0 then " → " .. returnNames[1]
+				else "")
+		end
+
+		output
+			:MemberHeader(
+				name,
+				headerText,
+				if context.style == "function" then (if context.isMethod then "method" else "function") else "property"
+			)
+			:NewLine()
+		table.insert(
+			tableOfContents,
+			`\{value: "{name .. if context.style == "function" then "()" else ""}", id: "{name}", "level": {depth}\}`
+		)
+	end
 
 	local documentation = source.documentation
 	if typeof(documentation) == "table" and documentation.description then
@@ -367,7 +408,7 @@ function writeIndividualTypeDescription(output, name, state: luauTypes.State, de
 			end
 
 			for memberName, memberValue in sortedIterate(state.base.value) do
-				writeWithoutState(output, memberName, memberValue, state, depth + 1)
+				writeWithoutState(output, memberName, memberValue, state, depth + 1, tableOfContents)
 			end
 		elseif context.isString then
 			output:Push("It is always ")
@@ -383,9 +424,20 @@ function writeIndividualTypeDescription(output, name, state: luauTypes.State, de
 			output:Push("of the type "):InlineCode(state.base.value):PushLine(".")
 		end
 	elseif context.style == "function" then
-		output:PushLine("It is a function, read the 'Luau Type' to learn its parameters and returns.")
-	elseif context.style == "method" then
-		output:PushLine("It is a method, read the 'Luau Type' to learn its parameters and returns.")
+		local parameters = state.base.value.parameters
+		local returns = state.base.value.returns
+
+		if parameters and #parameters > 0 then
+			writeParameters(output, source.name, name, parameters, "parameter", "parameters")
+		else
+			output:PushLine("It has no parameters.")
+		end
+
+		if returns and #returns > 0 then
+			writeParameters(output, source.name, name, returns, "return", "returns")
+		else
+			output:PushLine("It has no return values.")
+		end
 	elseif context.style == "union" then
 		if context.isString then
 			if context.isArray then
@@ -412,7 +464,14 @@ function writeIndividualTypeDescription(output, name, state: luauTypes.State, de
 			end
 			output:PushLine("one (not all) of the following types:")
 			for index, memberValue in state.base.value do
-				writeWithoutState(output, `Subtype {string.char(64 + index)}`, memberValue, state, depth + 1)
+				writeWithoutState(
+					output,
+					`Subtype {string.char(64 + index)}`,
+					memberValue,
+					state,
+					depth + 1,
+					tableOfContents
+				)
 			end
 		end
 	elseif context.style == "intersection" then
@@ -422,7 +481,14 @@ function writeIndividualTypeDescription(output, name, state: luauTypes.State, de
 		end
 		output:PushLine("the combination of the following types:")
 		for index, memberValue in state.base.value do
-			writeWithoutState(output, `Subtype {string.char(64 + index)}`, memberValue, state, depth + 1)
+			writeWithoutState(
+				output,
+				`Subtype {string.char(64 + index)}`,
+				memberValue,
+				state,
+				depth + 1,
+				tableOfContents
+			)
 		end
 	else
 		error(`Unknown context style: {context.style}`)
@@ -446,14 +512,21 @@ local function generateTypePage(key: string, value: any, parent, path: string, g
 	})
 
 	if typeState then
+		local tableOfContents = {}
+
 		local snippet = MarkdownSnippet.new()
 
 		snippet:PushLine('\nimport Member from "@theme/Member";\n\n')
 
-		writeIndividualTypeDescription(snippet, key, typeState, 1)
+		snippet:MemberHeader("Members", "Members", "group")
+		table.insert(tableOfContents, '{value: "Members", id: "Members", "level": 1}')
+
+		writeIndividualTypeDescription(snippet, key, typeState, 1, tableOfContents)
+
+		snippet:MemberHeader("Luau Type", "Luau Type", "group")
+		table.insert(tableOfContents, '{value: "Luau Type", id: "Luau Type", "level": 1}')
 
 		snippet
-			:MemberHeader("Luau Type", "Luau Type", "group")
 			:Push("This is the luau type for ")
 			:InlineCode(key)
 			:PushLine(
@@ -464,6 +537,10 @@ local function generateTypePage(key: string, value: any, parent, path: string, g
 		luauTypes.writeFromState(snippet, typeState)
 
 		snippet:NewLine():CodeEnd():PushLine("\n\n")
+
+		if #tableOfContents > 0 then
+			snippet:Insert(1, `\nexport const toc = [{table.concat(tableOfContents, ",")}]\n\n`)
+		end
 
 		generatedPages[key] = tostring(snippet)
 	else
@@ -708,17 +785,11 @@ function Wiki.generate(options)
 					else
 						local parameterNames = {}
 						for index, parameter in methodData.parameters or {} do
-							if not parameter.name then
-								print(`{objectName}.{methodName}.parameters.{index}`)
-							end
 							table.insert(parameterNames, parameter.name or `<i>{string.char(96 + index)}</i>`)
 						end
 
 						local returnNames = {}
 						for index, value in methodData.returns or {} do
-							if not value.name then
-								print(`{objectName}.{methodName}.returns.{index}`)
-							end
 							table.insert(returnNames, value.name or `<i>{string.char(96 + index)}</i>`)
 						end
 
@@ -936,8 +1007,6 @@ function Wiki.generate(options)
 		end
 
 		generatedPages.objects[objectName] = text
-
-		-- print(table.concat(output))
 	end
 
 	return generatedPages
