@@ -25,10 +25,22 @@ if options.release then
 	options.docs = true
 	options.vscode = true
 	options.modules = true
-	options.wiki = true
 	options.selene = true
 	options.darklua = true
 	options.rokit = true
+	options.wiki = false
+elseif options.wikionly then
+	stdio.write("Using wiki-only options.\n")
+
+	options.wiki = true
+
+	options.types = false
+	options.docs = false
+	options.vscode = false
+	options.modules = false
+	options.selene = false
+	options.darklua = false
+	options.rokit = false
 elseif argumentsSpecified then
 	stdio.write("Arguments besides '-o' and `--types-dir` specified, not providing Q/A.\n")
 else
@@ -104,8 +116,18 @@ stdio.write(
 
 stdio.write("\n")
 
-Utility.makeDirectory(options.o)
-Utility.makeDirectory(`{options.o}/{options["types-dir"]}`)
+if
+	options.types
+	or options.docs
+	or options.modules
+	or options.vscode
+	or options.selene
+	or options.darklua
+	or options.rokit
+then
+	Utility.makeDirectory(options.o)
+	Utility.makeDirectory(`{options.o}/{options["types-dir"]}`)
+end
 
 generate("types", "Definition", true)
 generate("docs", "Documentation", true)
