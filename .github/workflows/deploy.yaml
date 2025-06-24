@@ -9,6 +9,9 @@ concurrency:
   group: deploy
   cancel-in-progress: true
 
+permissions:
+  contents: write
+
 jobs:
   filter:
     runs-on: ubuntu-latest
@@ -102,9 +105,6 @@ jobs:
     if: needs.filter.outputs.workspace
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: write
-
     steps:
       - name: Download workspace artifact
         uses: actions/download-artifact@v4
@@ -115,9 +115,14 @@ jobs:
       - name: Zip workspace directory
         run: zip -r workspace.zip workspace
 
-      - name: Generate date-based tag
+      - name: Get date-based version tag
         id: get_tag
-        run: echo "tag=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+        run: |
+          DATE=$(date +'%Y-%m-%d')
+          EXISTING_TAGS=$(git ls-remote --tags origin "refs/tags/$DATE*" | wc -l)
+          COUNT=$((EXISTING_TAGS + 1))
+          TAG="$DATE-$COUNT"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         id: create_release
@@ -138,3 +143,5 @@ jobs:
           asset_path: ./workspace.zip
           asset_name: workspace.zip
           asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
