@@ -45,8 +45,13 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install lune
         run: rokit install --no-trust-check
-      - name: Run pilot-generate
+
+      - name: Run pilot-generate for workspace
+        if: needs.filter.outputs.workspace
         run: lune run pilot-generate -- --release
+      - name: Run pilot-generate for wiki
+        if: needs.filter.outputs.wiki
+        run: lune run pilot-generate -- --wikionly
 
       - name: Upload wiki artifact
         uses: actions/upload-artifact@v4
