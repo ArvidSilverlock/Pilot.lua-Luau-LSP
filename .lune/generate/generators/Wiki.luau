@@ -594,6 +594,10 @@ function Wiki.generate(options)
 			metadata.sidebar_position = 1
 		end
 
+		if fs.isFile(`./wiki/static/wospart/{objectName}.png`) then
+			table.insert(output, `![{objectName}](../../static/wospart/{objectName}.png#right)`)
+		end
+
 		appendDocumentation(output, object, metadata)
 
 		if not metadata.tags then
