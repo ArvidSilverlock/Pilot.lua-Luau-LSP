@@ -2,6 +2,10 @@ name: Build, Deploy Wiki & Release Workspace
 
 on:
   push:
+    paths:
+      - wiki/**
+      - .lune/generate/**
+      - .lune/pilot-generate.luau
     branches:
       - master
 
@@ -34,11 +38,9 @@ jobs:
               - '.lune/generate/partdata.json'
               - '.lune/generate/documentation.yaml'
               - '.lune/generate/generators/Wiki.luau'
-              - '.github/workflows/deploy.yaml'
             workspace:
               - '.lune/pilot-generate.luau'
               - '.lune/generate/**'
-              - '.github/workflows/deploy.yaml'
 
   pilot-generate:
     runs-on: ubuntu-latest
