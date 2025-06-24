@@ -62,7 +62,7 @@ end
 
 local function generate(optionName: string, generatorName: string, default: boolean)
 	local positive, negative = options[optionName], options["no" .. optionName]
-	local shouldGenerate = if positive then true elseif negative then false else default
+	local shouldGenerate = if positive ~= nil then positive elseif negative then false else default
 
 	if not shouldGenerate then
 		return
