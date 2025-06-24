@@ -66,6 +66,10 @@ jobs:
     needs: pilot-generate
     if: needs.filter.outputs.wiki
     runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+
     steps:
       - uses: actions/setup-node@v3
         with:
@@ -75,22 +79,27 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: wiki
-          path: wiki
+          path: wiki-deployment
 
       - run: npm ci
-        working-directory: wiki
+        working-directory: wiki-deployment
       - run: npm run build
-        working-directory: wiki
+        working-directory: wiki-deployment
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./wiki/build
+          publish_dir: ./wiki-deployment/build
 
   release_workspace:
     needs: pilot-generate
     if: needs.filter.outputs.workspace
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
     steps:
       - name: Download workspace artifact
         uses: actions/download-artifact@v4
