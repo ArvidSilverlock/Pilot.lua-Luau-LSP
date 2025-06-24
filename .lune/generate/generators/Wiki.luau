@@ -595,7 +595,7 @@ function Wiki.generate(options)
 		end
 
 		if fs.isFile(`./wiki/static/wospart/{objectName}.png`) then
-			table.insert(output, `![{objectName}](../../static/wospart/{objectName}.png#right)`)
+			output:PushLine("![", objectName, "](/wospart/", objectName, ".png#right)\n")
 		end
 
 		appendDocumentation(output, object, metadata)
