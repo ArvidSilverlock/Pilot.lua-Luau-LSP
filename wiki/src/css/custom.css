@@ -37,18 +37,26 @@
   border-left: 3px solid #ff000080;
 }
 
-img {
+.clearfix {
+  overflow: auto;
+}
+
+.clearfix img {
   max-width: 256px;
   max-height: 256px;
   height: auto;
   width: auto;
-  
-  border-radius: 10px;
 
   margin-left: 10px;
   margin-bottom: 10px;
+  border-radius: 10px;
+
+  float: inline-end;
+  overflow: auto;
 }
 
-img[src*="#right"] {
-  float: right;
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
 }
