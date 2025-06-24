@@ -81,6 +81,9 @@ jobs:
       pages: write
       id-token: write
 
+    environment:
+      name: github-pages
+
     steps:
       - uses: actions/setup-node@v3
         with:
