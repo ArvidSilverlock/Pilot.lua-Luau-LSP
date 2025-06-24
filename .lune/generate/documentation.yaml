@@ -341,8 +341,6 @@ variables:
     type: boolean
 
 types:
-  PilotObject:
-    type: any
   ResourceString:
     type: string
 
@@ -909,6 +907,8 @@ types:
   File System:
     FileSystem:
       type:
+        __index:
+          type: FileSystem
         chdir:
           method:
             parameters:
