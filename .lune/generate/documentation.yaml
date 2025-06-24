@@ -2849,6 +2849,8 @@ classes:
             - name: response
               type: string
         RealPostRequest:
+          documentation:
+            deprecated: Use <code>Modem:PostAsync</code> instead.
           parameters:
             - name: domain
               type: string
