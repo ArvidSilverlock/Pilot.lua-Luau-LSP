@@ -36,3 +36,10 @@
   padding: 0 var(--ifm-pre-padding);
   border-left: 3px solid #ff000080;
 }
+
+img {
+    border-radius: 10px;
+}
+img[src*="#right"] {
+    float: right;
+}
