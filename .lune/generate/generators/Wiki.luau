@@ -594,8 +594,8 @@ function Wiki.generate(options)
 			metadata.sidebar_position = 1
 		end
 
-		if fs.isFile(`./wiki/static/wospart/{objectName}.png`) then
-			output:PushLine("![", objectName, "](/wospart/", objectName, ".png#right)\n")
+		if fs.isFile(`./wiki/static/part-images/{objectName}.png`) then
+			output:PushLine("![", objectName, "](/part-images/", objectName, ".png#right)\n")
 		end
 
 		appendDocumentation(output, object, metadata)
