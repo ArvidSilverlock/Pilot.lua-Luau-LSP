@@ -2588,8 +2588,6 @@ classes:
         Putting "Sun" as part of the list will make the seeker automatically target the main stellar body in the system.
 
         Gyros also have a property called MaxTorque. This allows you to control the max force on the gyro to stabilize it.
-      events:
-        Triggered: *TriggeredEvent
       categories: [Electrical, Spawnable, Craftable]
     hydrator:
       name: wos-object
