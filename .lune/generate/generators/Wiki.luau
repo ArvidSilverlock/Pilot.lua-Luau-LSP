@@ -1,4 +1,3 @@
-local net = require("@lune/net")
 local fs = require("@lune/fs")
 local serde = require("@lune/serde")
 
@@ -38,6 +37,11 @@ local function sortedIterate<T>(dictionary: { [string]: T }, deprioritizeDepreca
 		local key = primary[index] or secondary[index - #primary]
 		return key, dictionary[key]
 	end
+end
+
+-- Not actually real URL encoding, but this seems to work for docusaurus links, at least for the limited subset of symbols in the link names.
+local function urlEncode(url: string)
+	return url:gsub(" ", "%%20")
 end
 
 -- Hardcoded indefinite articles for all uses. This is to avoid non-phonetic spellings messing with the articles.
@@ -625,9 +629,9 @@ local function generateTypePage(key: string, value: any, parent, path: string, g
 		define = true,
 	})
 
-	local encodedKey = net.urlEncode(key)
+	local encodedKey = urlEncode(key)
 	if typeState then
-		codeblockLinks[key] = if path:match("[^/]+$") == encodedKey then path else `{path}/{net.urlEncode(key)}`
+		codeblockLinks[key] = if path:match("[^/]+$") == encodedKey then path else `{path}/{urlEncode(key)}`
 
 		local tableOfContents = {}
 
@@ -684,7 +688,7 @@ function Wiki.generate(options)
 			continue
 		end
 
-		codeblockLinks[objectName] = `/objects/{net.urlEncode(objectName)}`
+		codeblockLinks[objectName] = `/objects/{urlEncode(objectName)}`
 
 		objectName = object.hydrator["class-name"] or objectName
 
