@@ -1,3 +1,4 @@
+local net = require("@lune/net")
 local fs = require("@lune/fs")
 local serde = require("@lune/serde")
 
@@ -231,7 +232,7 @@ local function writeParameters(output, objectName, memberName, parameters, group
 			local indexer, value = next(base.value)
 
 			output
-				:Push(" is a dictionary with keys that are")
+				:Push(" is a dictionary with keys that are ")
 				:InlineCode(indexer[1])
 				:Push("s and values that are ")
 				:InlineCode(getMarkdownType(value))
@@ -294,13 +295,16 @@ local function addIndividualCodeSample(output, codeSample)
 end
 
 local function addCodeSamples(output, data)
-	if typeof(data.documentation) == "table" then
-		local codeSamples = data.documentation["code-samples"] or {}
+	if typeof(data.documentation) ~= "table" then
+		return
+	end
 
-		if data.documentation["code-sample"] then
-			addIndividualCodeSample(output, data.documentation["code-sample"])
-		end
+	if data.documentation["code-sample"] then
+		addIndividualCodeSample(output, data.documentation["code-sample"])
+	end
 
+	local codeSamples = data.documentation["code-samples"]
+	if codeSamples then
 		for _, codeSample in codeSamples do
 			addIndividualCodeSample(output, codeSample)
 		end
@@ -613,7 +617,7 @@ function writeIndividualTypeDescription(output, key, state: luauTypes.State, dep
 	output:NewLine(2)
 end
 
-local function generateTypePage(key: string, value: any, parent, path: string, generatedPages)
+local function generateTypePage(key: string, value: any, parent, path: string, generatedPages, codeblockLinks)
 	local typeState = luauTypes.getTypeState(value, {
 		isRoot = true,
 		name = key,
@@ -622,6 +626,8 @@ local function generateTypePage(key: string, value: any, parent, path: string, g
 	})
 
 	if typeState then
+		codeblockLinks[key] = `{path}/{net.urlEncode(key)}`
+
 		local tableOfContents = {}
 
 		local snippet = MarkdownSnippet.new()
@@ -656,7 +662,14 @@ local function generateTypePage(key: string, value: any, parent, path: string, g
 	else
 		generatedPages[key] = {}
 		for childName, child in value do
-			generateTypePage(childName, child, parent, `{path}/{key}`, generatedPages[key])
+			generateTypePage(
+				childName,
+				child,
+				parent,
+				`{path}/{net.urlEncode(key)}`,
+				generatedPages[key],
+				codeblockLinks
+			)
 		end
 	end
 end
@@ -664,17 +677,20 @@ end
 local Wiki = {}
 
 function Wiki.generate(options)
+	local codeblockLinks = {}
 	local generatedPages = {
 		objects = {},
 		types = {},
 	}
 
-	generateTypePage("types", partDocumentation.types, nil, "types", generatedPages)
+	generateTypePage("types", partDocumentation.types, nil, "", generatedPages, codeblockLinks)
 
 	for objectName, object in partDocumentation.classes do
 		if not object.hydrator then
 			continue
 		end
+
+		codeblockLinks[objectName] = `/objects/{net.urlEncode(objectName)}`
 
 		objectName = object.hydrator["class-name"] or objectName
 
@@ -1024,25 +1040,13 @@ function Wiki.generate(options)
 			output:Insert(1, `---\n{serde.encode("yaml", metadata)}---\n`)
 		end
 
-		local text = tostring(output)
-
-		for match in text:gmatch("<code>(.-)</code>") do
-			if partDocumentation.classes[match] then
-				text = text:gsub(
-					"<code>" .. match .. "</code>",
-					`<code><a href="/Pilot.lua-Luau-LSP/objects/{match}">{match}</a></code>`,
-					1
-				)
-			end
-		end
-
-		generatedPages.objects[objectName] = text
+		generatedPages.objects[objectName] = tostring(output)
 	end
 
-	return generatedPages
+	return generatedPages, codeblockLinks
 end
 
-local function recursiveWrite(pages, path)
+local function recursiveWrite(pages, path, codeblockLinks)
 	if not fs.isDir(path) then
 		fs.writeDir(path)
 	end
@@ -1056,16 +1060,22 @@ local function recursiveWrite(pages, path)
 			-- end
 			fs.writeDir(subpath)
 
-			recursiveWrite(value, subpath)
+			recursiveWrite(value, subpath, codeblockLinks)
 		else
-			fs.writeFile(`{path}/{name}.mdx`, value)
+			fs.writeFile(
+				`{path}/{name}.mdx`,
+				value:gsub("<code>(.-)</code>", function(match)
+					local codeBlock = `<code>{match}</code>`
+					return if codeblockLinks[match] then `[{codeBlock}]({codeblockLinks[match]})` else codeBlock
+				end)
+			)
 		end
 	end
 end
 
-function Wiki.save(options, generatedPages)
-	recursiveWrite(generatedPages.objects, `{WIKI_DIRECTORY}/objects`)
-	recursiveWrite(generatedPages.types, `{WIKI_DIRECTORY}/types`)
+function Wiki.save(options, generatedPages, codeblockLinks)
+	recursiveWrite(generatedPages.objects, `{WIKI_DIRECTORY}/objects`, codeblockLinks)
+	recursiveWrite(generatedPages.types, `{WIKI_DIRECTORY}/types`, codeblockLinks)
 
 	local rawDocumentation = fs.readFile("documentation/documentation.yaml")
 	local rawDocumentationSnippet = MarkdownSnippet.new(rawDocumentation)
