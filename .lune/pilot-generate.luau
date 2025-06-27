@@ -73,8 +73,7 @@ local function generate(optionName: string, generatorName: string, default: bool
 	local generator = require(`./generate/generators/{generatorName}`)
 
 	if generator.generate and generator.save then
-		local generatedData = generator.generate(options)
-		generator.save(options, generatedData)
+		generator.save(options, generator.generate(options))
 	elseif generator.generate then
 		generator.generate(options)
 	elseif generator.save then
