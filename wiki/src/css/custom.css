@@ -42,8 +42,8 @@
 }
 
 .clearfix img {
-  max-width: 256px;
-  max-height: 256px;
+  max-width: min(256px, 25%);
+  max-height: min(256px, 25%);
   height: auto;
   width: auto;
 
