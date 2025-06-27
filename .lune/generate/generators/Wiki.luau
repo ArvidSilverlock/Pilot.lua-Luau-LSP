@@ -625,8 +625,9 @@ local function generateTypePage(key: string, value: any, parent, path: string, g
 		define = true,
 	})
 
+	local encodedKey = net.urlEncode(key)
 	if typeState then
-		codeblockLinks[key] = `{path}/{net.urlEncode(key)}`
+		codeblockLinks[key] = if path:match("[^/]+$") == encodedKey then path else `{path}/{net.urlEncode(key)}`
 
 		local tableOfContents = {}
 
@@ -662,14 +663,7 @@ local function generateTypePage(key: string, value: any, parent, path: string, g
 	else
 		generatedPages[key] = {}
 		for childName, child in value do
-			generateTypePage(
-				childName,
-				child,
-				parent,
-				`{path}/{net.urlEncode(key)}`,
-				generatedPages[key],
-				codeblockLinks
-			)
+			generateTypePage(childName, child, parent, `{path}/{encodedKey}`, generatedPages[key], codeblockLinks)
 		end
 	end
 end
