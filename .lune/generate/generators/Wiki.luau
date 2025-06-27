@@ -5,8 +5,8 @@ local luauTypes = require("../modules/LuauType")
 local Snippet = require("../modules/Snippet")
 local MarkdownSnippet = require("../modules/MarkdownSnippet")
 
-local partDocumentation = serde.decode("yaml", fs.readFile("./.lune/generate/documentation.yaml")) :: any
-local rawPartData = serde.decode("json", fs.readFile("./.lune/generate/partdata.json")) :: any
+local partDocumentation = serde.decode("yaml", fs.readFile("documentation/documentation.yaml")) :: any
+local rawPartData = serde.decode("json", fs.readFile("documentation/partdata.json")) :: any
 
 local WIKI_DIRECTORY = "./wiki/docs/"
 
@@ -276,17 +276,33 @@ local function writeParameters(output, objectName, memberName, parameters, group
 	end
 end
 
+local function addIndividualCodeSample(output, codeSample)
+	if not codeSample then
+		return
+	end
+
+	output:Push("\n```lua\n")
+
+	local filePath = codeSample:match("^(.-%.luau)$")
+	if filePath then
+		output:Push(fs.readFile(`documentation/programs/{filePath}`))
+	else
+		output:Push(codeSample)
+	end
+
+	output:Push("\n```")
+end
+
 local function addCodeSamples(output, data)
 	if typeof(data.documentation) == "table" then
 		local codeSamples = data.documentation["code-samples"] or {}
+
 		if data.documentation["code-sample"] then
-			table.insert(codeSamples, 1, data.documentation["code-sample"])
+			addIndividualCodeSample(output, data.documentation["code-sample"])
 		end
 
 		for _, codeSample in codeSamples do
-			output:Push("\n```lua\n")
-			output:Push(codeSample)
-			output:Push("\n```")
+			addIndividualCodeSample(output, codeSample)
 		end
 	end
 end
@@ -1051,7 +1067,7 @@ function Wiki.save(options, generatedPages)
 	recursiveWrite(generatedPages.objects, `{WIKI_DIRECTORY}/objects`)
 	recursiveWrite(generatedPages.types, `{WIKI_DIRECTORY}/types`)
 
-	local rawDocumentation = fs.readFile("./.lune/generate/documentation.yaml")
+	local rawDocumentation = fs.readFile("documentation/documentation.yaml")
 	local rawDocumentationSnippet = MarkdownSnippet.new(rawDocumentation)
 
 	rawDocumentationSnippet
