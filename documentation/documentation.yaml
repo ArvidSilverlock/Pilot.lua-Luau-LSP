@@ -2338,7 +2338,18 @@ classes:
       categories: [Spawnable, Craftable]
     hydrator:
       name: wos-object
-      extends: Dispenser
+      methods:
+        Dispense:
+          documentation: Dispenses a single item instantly.
+      events:
+        Configured: *ConfiguredEvent
+        Loop: *LoopEvent
+      configurables:
+        Filter:
+          documentation:
+            description: Which kinds of resources to drop, separated by commas.
+            max-length: 256
+          type: string
   Gyro:
     documentation:
       description: |-
