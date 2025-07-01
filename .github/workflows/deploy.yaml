@@ -36,14 +36,14 @@ jobs:
           filters: |
             wiki:
               - 'wiki/**'
-              - '.lune/documentation/partdata.json'
-              - '.lune/documentation/documentation.yaml'
-              - '.lune/documentation/programs/**'
+              - 'documentation/partdata.json'
+              - 'documentation/documentation.yaml'
+              - 'documentation/programs/**'
               - '.lune/generate/generators/Wiki.luau'
             workspace:
               - '.lune/pilot-generate.luau'
-              - '.lune/documentation/documentation.json'
-              - '.lune/documentation/partdata.json'
+              - 'documentation/documentation.json'
+              - 'documentation/partdata.json'
               - '.lune/generate/modules/**'
               - '.lune/generate/object-data/**'
               - '.lune/generate/data-parsing/**'
