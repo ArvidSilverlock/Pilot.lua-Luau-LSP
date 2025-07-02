@@ -20,11 +20,11 @@ function Snippet:Insert(index: number?, value: any?)
 	local text = {}
 
 	local previousLine = if index then self._lines[index - 1] else self._lines[#self._lines]
-	if previousLine == nil or previousLine:match("\n%s*$") then
+	if previousLine == nil or previousLine:match("\n$") then
 		table.insert(text, indent)
 	end
 
-	table.insert(text, (str:gsub("\n", "\n" .. indent):gsub("\n%s+\n", "\n\n")))
+	table.insert(text, (str:gsub("\n\t*", "\n" .. indent):gsub("\n%s+\n", "\n\n")))
 	table.insert(self._lines, index or #self._lines + 1, table.concat(text))
 
 	return self
@@ -64,6 +64,9 @@ end
 
 function Snippet:Dedent(amount: number?)
 	self._indent -= amount or 1
+	self._lines[#self._lines] = self._lines[#self._lines]:gsub("\t+", function(str)
+		return string.rep("\t", math.max(#str - (amount or 1), 0))
+	end)
 	return self
 end
 
