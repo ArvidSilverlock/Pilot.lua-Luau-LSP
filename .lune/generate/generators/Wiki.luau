@@ -483,7 +483,6 @@ function writeIndividualTypeDescription(output, key, state: luauTypes.State, dep
 
 			if context.isMethod then
 				table.insert(parameterNames, "self")
-				table.insert(returnNames, "self")
 			end
 
 			for index, parameter in state.base.value.parameters or {} do
@@ -508,7 +507,7 @@ function writeIndividualTypeDescription(output, key, state: luauTypes.State, dep
 			:NewLine()
 		table.insert(
 			tableOfContents,
-			`\{value: "{name .. if context.style == "function" then "()" else ""}", id: "{name}", "level": {depth}\}`
+			`\{value: "{name .. if context.style == "function" then "()" else ""}", id: "{name}", "level": {depth + 1}\}`
 		)
 	end
 
@@ -569,7 +568,7 @@ function writeIndividualTypeDescription(output, key, state: luauTypes.State, dep
 				output:Push("can be any of the following strings: ")
 			end
 			for index, memberValue in state.base.value do
-				output:InlineCode(memberValue)
+				output:InlineCode(string.format("%q", memberValue))
 				if index < #state.base.value then
 					output:Push(", ")
 				end
@@ -639,13 +638,17 @@ local function generateTypePage(key: string, value: any, parent, path: string, g
 
 		snippet:PushLine('\nimport Member from "@theme/Member";\n\n')
 
-		snippet:MemberHeader("Members", "Members", "group")
-		table.insert(tableOfContents, '{value: "Members", id: "Members", "level": 1}')
+		local header = if typeState.base.context.style == "type" and typeof(typeState.source) == "table"
+			then "Members"
+			else "Type"
+
+		snippet:MemberHeader(header, header, "group")
+		table.insert(tableOfContents, `\{value: "{header}", id: "{header}", "level": 2}`)
 
 		writeIndividualTypeDescription(snippet, key, typeState, 1, tableOfContents)
 
 		snippet:MemberHeader("Luau Type", "Luau Type", "group")
-		table.insert(tableOfContents, '{value: "Luau Type", id: "Luau Type", "level": 1}')
+		table.insert(tableOfContents, '{value: "Luau Type", id: "Luau Type", "level": 2}')
 
 		snippet
 			:Push("This is the luau type for ")
@@ -657,7 +660,7 @@ local function generateTypePage(key: string, value: any, parent, path: string, g
 
 		luauTypes.writeFromState(snippet, typeState)
 
-		snippet:NewLine():CodeEnd():PushLine("\n\n")
+		snippet:CodeEnd():PushLine("\n\n")
 
 		if #tableOfContents > 0 then
 			snippet:Insert(1, `\nexport const toc = [{table.concat(tableOfContents, ",")}]\n\n`)
