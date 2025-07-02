@@ -1,6 +1,6 @@
 local luauTypes = {}
 
-export type TypeStyle = "type" | "function" | "method" | "union" | "intersection"
+export type TypeStyle = "type" | "function" | "union" | "intersection"
 
 export type Context = {
 	style: TypeStyle,
@@ -92,7 +92,7 @@ local function moveMerge(t, key, value)
 	end
 end
 
-function luauTypes.getTypeState(source, parent: State | RootState): State?
+function luauTypes.getTypeState(source, parent: (State | RootState)?): State?
 	local output: State = {} :: any
 
 	for key, value in source do
@@ -130,8 +130,10 @@ function luauTypes.getTypeState(source, parent: State | RootState): State?
 	end
 
 	if next(output) then
-		output.parent = parent
-		output.root = if parent.isRoot then parent else parent.root
+		if parent then
+			output.parent = parent
+			output.root = if parent.isRoot then parent else parent.root
+		end
 		output.source = source
 		return output
 	else
@@ -156,27 +158,31 @@ function luauTypes.writeFromState(output, state: State)
 				end
 				output:Push(">")
 			end
-		else
-			if state.root.context == "type" then
-				output:Push(if source.export ~= false then "export " else nil, "type ", state.root.name)
-				local generics = state.base.genericDefinitions
-				if generics then
-					output:Push("<")
-					for index, genericValue in generics do
-						output:Push(genericValue.name)
-						if next(genericValue, "name") or next(genericValue) then
-							output:Push(" = ")
-							luauTypes.write(output, genericValue, state)
-						end
-						if index < #generics then
-							output:Push(", ")
-						end
+		elseif state.root.context == "type" then
+			output:Push(if source.export ~= false then "export " else nil, "type ", state.root.name)
+			local generics = state.base.genericDefinitions
+			if generics then
+				output:Push("<")
+				for index, genericValue in generics do
+					output:Push(genericValue.name)
+					if next(genericValue, "name") or next(genericValue) then
+						output:Push(" = ")
+						luauTypes.write(output, genericValue, state)
 					end
-					output:Push(">")
+					if index < #generics then
+						output:Push(", ")
+					end
 				end
-				output:Push(" = ")
-			elseif state.root.context == "class" then
-				output:PushLine("declare class ", state.root.name):Indent()
+				output:Push(">")
+			end
+			output:Push(" = ")
+		elseif state.root.context == "class" then
+			output:PushLine("declare class ", state.root.name):Indent()
+		elseif state.root.context == "declaration" then
+			if context.style == "function" then
+				output:Push("declare function ", state.root.name)
+			else
+				output:Push("declare ", state.root.name, ": ")
 			end
 		end
 	end
@@ -194,10 +200,10 @@ function luauTypes.writeFromState(output, state: State)
 	end
 
 	if state.parent.isRoot then
-		if state.root.context == "type" then
-			-- output:Push("")
-		elseif state.root.context == "class" then
-			output:Dedent():Push("end")
+		if state.root.context == "class" then
+			output:Dedent():PushLine("end")
+		else
+			output:NewLine()
 		end
 	end
 end
@@ -335,96 +341,60 @@ local function getParameters(state: State, group: TypeGroup)
 	return parameters
 end
 
-local function writeFunctionDeclaration(output, state: State, group: TypeGroup)
+function luauTypes.writeFunction(output, state: State, group: TypeGroup)
 	local value, context = group.value, group.context
+	assert(not context.isString, "you cannot have a string literal function")
 
-	output:Push("(")
+	local isDirectlyUnderRoot = if state.root.context == "declaration"
+		then state.parent and state.parent.isRoot
+		else state.parent and (state :: any).parent.parent and (state :: any).parent.parent.isRoot
+	local isClassMethod = isDirectlyUnderRoot and state.root.context ~= "type"
 
-	local node = state
-	while node ~= nil and not node.isRoot and not node.self do
-		node = node.parent
-	end
-
-	local parameters = getParameters(state, group)
-
-	if parameters and #parameters > 0 then
-		output:Push("self, ")
-
-		for index, parameter in parameters do
-			if parameter.name then
-				output:Push(parameter.name, ": ")
-			end
-			luauTypes.write(output, parameter, state)
-			if index < #parameters then
-				output:Push(", ")
-			end
-		end
-	else
-		output:Push("self")
-	end
-
-	if value.returns and #value.returns > 0 then
-		output:Push("): ")
-
-		local needsBrackets = #value.returns > 1 or context.isNullable
-
-		if needsBrackets then
-			output:Push("(")
-		end
-
-		for index, returnValue in value.returns do
-			if returnValue.name == "..." then
-				output:Push("...")
-			end
-			luauTypes.write(output, returnValue, state)
-			if index < #value.returns then
-				output:Push(", ")
-			end
-		end
-
-		if needsBrackets then
-			output:Push(")")
-		end
-	else
-		output:Push(")")
-	end
-
-	if context.isNullable then
-		output:Push("?")
-	end
-end
-
-local function writeFunctionLuauType(output, state: State, group: TypeGroup)
-	local value, context = group.value, group.context
+	local needsBrackets = not state.parent.isRoot
+		and (state.parent.base.context.style == "union" or state.parent.base.context.style == "intersection")
 
 	local parameters = getParameters(state, group)
 	local returns = value.returns
 
+	if needsBrackets then
+		output:Push("(")
+	end
+
 	output:Push("(")
 
 	if parameters and #parameters > 0 then
 		for index, parameter in parameters do
-			if parameter.name == "..." then
+			local shouldWriteType = if isClassMethod then parameter.name ~= "self" else true
+
+			if isClassMethod then
+				output:Push(parameter.name)
+			elseif parameter.name == "..." then
 				output:Push("...")
 			elseif parameter.name then
-				output:Push(parameter.name, ": ")
+				output:Push(parameter.name)
 			end
 
-			luauTypes.write(output, parameter, state)
+			if shouldWriteType then
+				if parameter.name and (isClassMethod or parameter.name ~= "...") then
+					output:Push(": ")
+				end
+				luauTypes.write(output, parameter, state)
+			end
+
 			if index < #parameters then
 				output:Push(", ")
 			end
 		end
 	end
 
-	output:Push(") -> ")
+	if isClassMethod then
+		output:Push("): ")
+	else
+		output:Push(") -> ")
+	end
 
 	if returns and #returns > 0 then
-		local needsBrackets = #returns > 1 or context.isNullable
-
-		if needsBrackets then
-			output:Push("(")
-		end
+		output:Push("(")
 
 		for index, returnValue in returns do
 			if returnValue.name == "..." then
@@ -436,26 +406,17 @@ local function writeFunctionLuauType(output, state: State, group: TypeGroup)
 			end
 		end
 
-		if needsBrackets then
-			output:Push(")")
-		end
+		output:Push(")")
 	else
 		output:Push("()")
 	end
 
+	if needsBrackets then
+		output:Push(")")
+	end
+
 	if context.isNullable then
 		output:Push("?")
-	end
-end
-
-function luauTypes.writeFunction(output, state: State, group: TypeGroup)
-	local context = group.context
-	assert(not context.isString, "you cannot have a string literal function")
-
-	if state.parent.isRoot and state.root.context == "class" or state.root.context == "declaration" then
-		writeFunctionDeclaration(output, state, group)
-	else
-		writeFunctionLuauType(output, state, group)
 	end
 end
 
@@ -558,7 +519,7 @@ function luauTypes.writeClass(output, state: State, group: TypeGroup)
 	for key, member in value do
 		local memberState = assert(luauTypes.getTypeState(member, state), "no context found")
 
-		if memberState.base.context.style == "method" then
+		if memberState.base.context.style == "function" and memberState.base.context.isMethod then
 			assert(
 				typeof(key) == "string" and key:match("^[_%a][_%w]*$"),
 				"class methods must have valid luau identifiers as keys"
@@ -569,7 +530,37 @@ function luauTypes.writeClass(output, state: State, group: TypeGroup)
 		end
 
 		luauTypes.writeFromState(output, memberState)
+		output:NewLine()
 	end
+end
+
+function luauTypes.setNullable(type, nullable: boolean)
+	local typeState = luauTypes.getTypeState(type)
+	if typeState.base.context.isNullable == nullable then
+		return table.clone(type)
+	end
+
+	local currentKey = typeState.base.key
+	local newKey = table.clone(currentKey)
+
+	if nullable then
+		table.insert(newKey, 1, NULLABLE_MODIFIER)
+	else
+		local index = table.find(newKey, NULLABLE_MODIFIER)
+		if index then
+			table.remove(newKey, index)
+		end
+	end
+
+	local typeCopy = table.clone(type)
+
+	local currentKeyString = table.concat(currentKey, "-")
+	local newKeyString = table.concat(newKey, "-")
+
+	typeCopy[newKeyString] = typeCopy[currentKeyString]
+	typeCopy[currentKeyString] = nil
+
+	return typeCopy
 end
 
 return luauTypes
