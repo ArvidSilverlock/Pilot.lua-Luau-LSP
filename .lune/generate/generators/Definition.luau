@@ -112,7 +112,7 @@ function Definition.generate(options)
 	writeTypeGroup(snippet, "types", partDocumentation.types, "type")
 
 	local independentClasses = {}
-	local inheritenceDependencies = {}
+	local inheritanceDependencies = {}
 	local classSnippets = {}
 
 	for className, class in partDocumentation.classes do
@@ -200,7 +200,7 @@ function Definition.generate(options)
 			reformattedClass.class.ClassName = { ["string-type"] = className }
 		end
 
-		local inheritenceSource = if hydrator.extends
+		local inheritanceSource = if hydrator.extends
 			then (
 				if typeof(hydrator.extends) == "table"
 					then hydrator.extends[1] --[[sorry]]
@@ -209,17 +209,17 @@ function Definition.generate(options)
 			elseif not hydrator.abstract then "PilotObject"
 			else nil
 
-		reformattedClass.extends = inheritenceSource
+		reformattedClass.extends = inheritanceSource
 
 		local classSnippet = Snippet.new()
 		writeTypeGroup(classSnippet, className, reformattedClass, "class")
 		classSnippets[className] = classSnippet
 
-		if inheritenceSource then
-			if inheritenceDependencies[inheritenceSource] then
-				table.insert(inheritenceDependencies[inheritenceSource], className)
+		if inheritanceSource then
+			if inheritanceDependencies[inheritanceSource] then
+				table.insert(inheritanceDependencies[inheritanceSource], className)
 			else
-				inheritenceDependencies[inheritenceSource] = { className }
+				inheritanceDependencies[inheritanceSource] = { className }
 			end
 		else
 			table.insert(independentClasses, className)
@@ -234,7 +234,7 @@ function Definition.generate(options)
 
 		snippet:Push(tostring(classSnippet))
 
-		local dependantClasses = inheritenceDependencies[currentClass]
+		local dependantClasses = inheritanceDependencies[currentClass]
 		if dependantClasses then
 			table.move(dependantClasses, 1, #dependantClasses, #classStack + 1, classStack)
 		end
