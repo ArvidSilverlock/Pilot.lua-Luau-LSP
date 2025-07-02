@@ -2071,7 +2071,7 @@ classes:
       categories: [Tools, Electrical, Craftable, Spawnable]
     hydrator:
       name: wos-object
-      extends: [TouchScreen, Microcontroller, Antenna, Router, Tool]
+      extends: [ARController, Microcontroller, Antenna, Router, Tool]
 
   # Has both methods and events, is configurable, and is both craftable and spawnable
   Assembler:
@@ -3055,14 +3055,6 @@ classes:
           parameters:
             - name: Cursor
               type: Cursor
-      configurables:
-        VideoID:
-          documentation:
-            description: The ID of the camera feed being to be viewed, or 0 for none.
-            default: 0
-            range: [0, 10000000000]
-            increment: 1
-          type: number
   VehicleSeat:
     documentation:
       description: |-
@@ -4163,6 +4155,12 @@ classes:
             minimum: 0
             increment: 1
           type: number
+      methods:
+        Sort:
+          documentation: Tells the sorter to move the given amount of resources, or the sort quantity config if unspecified.
+          parameters:
+            - name: amount
+              nullable-type: number
   SteamEngine:
     documentation:
       description: It acts similar to a motor, but is powered by Steam instead of electricity.
