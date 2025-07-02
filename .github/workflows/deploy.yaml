@@ -86,12 +86,15 @@ jobs:
           name: wiki
           path: wiki
 
-      - name: Upload workspace artifact
+      - name: Zip workspace directory
+        if: needs.filter.outputs.workspace == 'true'
+        run: zip -r workspace.zip workspace
+      - name: Upload workspace artifact (as zip)
         uses: actions/upload-artifact@v4
         if: needs.filter.outputs.workspace == 'true'
         with:
           name: workspace
-          path: workspace
+          path: workspace.zip
 
   deploy_wiki:
     needs: pilot-generate
@@ -148,11 +151,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: workspace
-          path: workspace
-
-      - name: Zip workspace directory
-        run: zip -r ../workspace.zip . -x '*.DS_Store'
-        working-directory: workspace
+          path: .
 
       - name: Fetch all existing tags
         run: git fetch --tags
