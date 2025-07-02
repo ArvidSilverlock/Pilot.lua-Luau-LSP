@@ -177,7 +177,11 @@ function luauTypes.writeFromState(output, state: State)
 			end
 			output:Push(" = ")
 		elseif state.root.context == "class" then
-			output:PushLine("declare class ", state.root.name):Indent()
+			output:Push("declare class ", state.root.name)
+			if source.extends then
+				output:Push(" extends ", source.extends)
+			end
+			output:NewLine():Indent()
 		elseif state.root.context == "declaration" then
 			if context.style == "function" then
 				output:Push("declare function ", state.root.name)
