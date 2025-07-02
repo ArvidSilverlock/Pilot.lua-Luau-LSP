@@ -2480,6 +2480,40 @@ classes:
         If you want to know about various globals you can use from Roblox's engine, you can take a look at Roblox's Developer Documentation and search for Roblox Globals and Lua Globals.
         For more info, check the game's wiki, or look at one of the game's social platforms if it's linked at the bottom of the game page.
       categories: [Logic, Spawnable, Craftable]
+      code-samples:
+        - |-
+          -- Microcontroller A
+          local function receive(sender, command, ...)
+              if command == "Tell me a joke." then
+                  sender:Send("Why did the chicken cross the road?")
+              elseif command == "I don't know, why?" then
+                  sender:Send("To get to the other side.")
+              end
+          end
+
+          while true do
+              receive(Microcontroller:Receive())
+          end
+        - |-
+          -- Microcontroller B
+          local otherMicrocontroller = GetPartFromPort(1, "Microcontroller")
+
+          local function receive(sender, command, ...)
+              if command == "Why did the chicken cross the road?" then
+                  sender:Send("I don't know, why?")
+              elseif command == "To get to the other side." then
+                  sender:Send("HAHAHA that's SO FUNNY!!!!")
+                  sender:Shutdown() -- kill enemy
+              end
+          end
+
+          task.spawn(function()
+              while true do
+                  receive(Microcontroller:Receive())
+              end
+          end)
+
+          otherMicrocontroller:Send("Tell me a joke.")
     hydrator:
       name: wos-object
       methods:
@@ -4107,6 +4141,12 @@ classes:
         Rate:
           documentation:
             description: How much of the resource to push per second. May be inf (or math.huge in a Microcontroller).
+            minimum: 0
+            increment: 1
+          type: number
+        TriggerQuantity:
+          documentation:
+            description: How much of the resource to when triggered. May be inf (or math.huge in a Microcontroller).
             minimum: 0
             increment: 1
           type: number
