@@ -119,6 +119,11 @@ variables:
 types:
   ResourceString:
     type: string
+  PortLike:
+    documentation: A value that will be accepted as a port by the <code>GetPart(s)(FromPort)</code> functions.
+    union:
+      - type: Port
+      - type: number
 
   Events:
     EventConnection:
@@ -1397,6 +1402,14 @@ types:
             type: ARCamera
   String Enums:
     General:
+      ComponentName:
+        documentation: A name of a <code>Component</code> object.
+        string-union:
+          - Blade
+          - KeyButton
+          - ClickButton
+          - Hull
+          - Door
       TemperatureUnit:
         documentation: A unit of temperature, i.e., fahrenheit, celsius, or kelvin.
         string-union:
@@ -1652,9 +1665,9 @@ globals:
                 - name: period
                   type: number
                 - name: callback
-                  function:
+                  function: {}
               returns:
-                - function:
+                - function: {}
           getTimeout:
             documentation: Gets the current CPU timeout, or the CPU timeout that the given thread will obey.
             function:
@@ -4146,7 +4159,7 @@ classes:
           type: number
         TriggerQuantity:
           documentation:
-            description: How much of the resource to when triggered. May be inf (or math.huge in a Microcontroller).
+            description: How much of the resource to push when triggered. May be inf (or math.huge in a Microcontroller).
             minimum: 0
             increment: 1
           type: number
