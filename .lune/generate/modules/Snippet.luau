@@ -24,7 +24,7 @@ function Snippet:Insert(index: number?, value: any?)
 		table.insert(text, indent)
 	end
 
-	table.insert(text, (str:gsub("\n\t*", "\n" .. indent):gsub("\n%s+\n", "\n\n")))
+	table.insert(text, (str:gsub("\n", "\n" .. indent):gsub("\n%s+\n", "\n\n")))
 	table.insert(self._lines, index or #self._lines + 1, table.concat(text))
 
 	return self
