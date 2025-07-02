@@ -7,6 +7,7 @@ on:
       - documentation/**
       - .lune/generate/**
       - .lune/pilot-generate.luau
+      - .github/workflows/deploy.yaml
     branches:
       - master
 
@@ -40,6 +41,7 @@ jobs:
               - 'documentation/documentation.yaml'
               - 'documentation/programs/**'
               - '.lune/generate/generators/Wiki.luau'
+              - '.github/workflows/deploy.yaml'
             workspace:
               - '.lune/pilot-generate.luau'
               - 'documentation/documentation.json'
@@ -56,6 +58,7 @@ jobs:
               - '.lune/generate/generators/Vanilla.luau'
               - '.lune/generate/generators/VSCode.luau'
               - '.lune/generate/generators/types/**'
+              - '.github/workflows/deploy.yaml'
           # Is this wrong of me? Yes, but I don't care.
 
   pilot-generate:
@@ -148,7 +151,8 @@ jobs:
           path: workspace
 
       - name: Zip workspace directory
-        run: zip -r workspace.zip workspace
+        run: zip -r ../workspace.zip . -x '*.DS_Store'
+        working-directory: workspace
 
       - name: Fetch all existing tags
         run: git fetch --tags
