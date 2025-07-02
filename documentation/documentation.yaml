@@ -195,7 +195,7 @@ types:
               - name: callback
                 type: Callback
             returns:
-              - name: callback
+              - name: connection
                 type: EventConnection
                 generics:
                   - type: Name
