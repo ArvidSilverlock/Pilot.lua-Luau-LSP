@@ -44,6 +44,7 @@ jobs:
               - '.github/workflows/deploy.yaml'
             workspace:
               - '.lune/pilot-generate.luau'
+              - 'documentation/documentation.yaml'
               - 'documentation/documentation.json'
               - 'documentation/partdata.json'
               - '.lune/generate/modules/**'
