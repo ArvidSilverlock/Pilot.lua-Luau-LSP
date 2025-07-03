@@ -1079,7 +1079,7 @@ local function recursiveWrite(pages, path, codeblockLinks)
 			end)
 
 			local writePath = `{path}/{name}.mdx`
-			if fs.readFile(writePath) ~= content then
+			if not fs.isFile(writePath) or fs.readFile(writePath) ~= content then
 				fs.writeFile(writePath, content)
 			end
 		end
