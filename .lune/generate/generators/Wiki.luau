@@ -13,7 +13,7 @@ local WIKI_DIRECTORY = "./wiki/docs/"
 local function getType(value)
 	local output = Snippet.new()
 	luauTypes.write(output, value, { isRoot = true, context = "type", define = false } :: any)
-	return tostring(output)
+	return tostring(output):match("^%s*(.-)%s*$")
 end
 
 local function sortedIterate<T>(dictionary: { [string]: T }, deprioritizeDeprecated: boolean?): () -> (string, T)
@@ -46,6 +46,9 @@ end
 
 -- Hardcoded indefinite articles for all uses. This is to avoid non-phonetic spellings messing with the articles.
 local indefiniteArticles = {
+	range = "a",
+	network = "a",
+	port = "a",
 	random = "a",
 	callback = "a",
 	event = "an",
@@ -507,16 +510,39 @@ function writeIndividualTypeDescription(output, key, state: luauTypes.State, dep
 			:NewLine()
 		table.insert(
 			tableOfContents,
-			`\{value: "{name .. if context.style == "function" then "()" else ""}", id: "{name}", "level": {depth + 1}\}`
+			`\{value: "{name .. if context.style == "function" then "()" else ""}", id: "{name}", "level": {depth}\}`
 		)
 	end
 
 	local documentation = source.documentation
-	if typeof(documentation) == "table" and documentation.description then
-		output:PushLine(documentation.description)
+	if typeof(documentation) == "table" then
+		if documentation.deprecated then
+			output:AdmonitionStart("warning")
+			output:Push("This method is deprecated.")
+			if typeof(documentation.deprecated) == "string" then
+				output:Push(" ", documentation.deprecated)
+			end
+			output:AdmonitionEnd()
+		end
+
+		if documentation.warning then
+			output:AdmonitionStart("danger")
+			if typeof(documentation.warning) == "string" then
+				output:Push(" ", documentation.warning)
+			else
+				output:Push("This method may be dangerous.")
+			end
+			output:AdmonitionEnd()
+		end
+
+		if documentation.description then
+			output:PushLine(documentation.description)
+		end
 	elseif typeof(documentation) == "string" then
 		output:PushLine(documentation)
 	end
+
+	appendDocumentation(output, source, nil, true)
 
 	if context.style == "type" then
 		if typeof(state.base.value) == "table" then
@@ -615,8 +641,6 @@ function writeIndividualTypeDescription(output, key, state: luauTypes.State, dep
 		output:PushLine("It may also be <code>nil</code>.")
 	end
 
-	appendDocumentation(output, source, nil, true)
-
 	output:NewLine(2)
 end
 
@@ -637,13 +661,6 @@ local function generateTypePage(key: string, value: any, parent, path: string, g
 		local snippet = MarkdownSnippet.new()
 
 		snippet:PushLine('\nimport Member from "@theme/Member";\n\n')
-
-		local header = if typeState.base.context.style == "type" and typeof(typeState.source) == "table"
-			then "Members"
-			else "Type"
-
-		snippet:MemberHeader(header, header, "group")
-		table.insert(tableOfContents, `\{value: "{header}", id: "{header}", "level": 2}`)
 
 		writeIndividualTypeDescription(snippet, key, typeState, 1, tableOfContents)
 
@@ -1054,22 +1071,17 @@ local function recursiveWrite(pages, path, codeblockLinks)
 
 	for name, value in pages do
 		if typeof(value) == "table" then
-			local subpath = `{path}/{name}`
-
-			-- if fs.isDir(subpath) then
-			-- 	fs.removeDir(subpath)
-			-- end
-			fs.writeDir(subpath)
-
-			recursiveWrite(value, subpath, codeblockLinks)
+			recursiveWrite(value, `{path}/{name}`, codeblockLinks)
 		else
-			fs.writeFile(
-				`{path}/{name}.mdx`,
-				value:gsub("<code>(.-)</code>", function(match)
-					local codeBlock = `<code>{match}</code>`
-					return if codeblockLinks[match] then `[{codeBlock}]({codeblockLinks[match]})` else codeBlock
-				end)
-			)
+			local content = value:gsub("<code>(.-)</code>", function(match)
+				local codeBlock = `<code>{match}</code>`
+				return if codeblockLinks[match] then `[{codeBlock}]({codeblockLinks[match]})` else codeBlock
+			end)
+
+			local writePath = `{path}/{name}.mdx`
+			if fs.readFile(writePath) ~= content then
+				fs.writeFile(writePath, content)
+			end
 		end
 	end
 end
