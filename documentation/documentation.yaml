@@ -1596,7 +1596,7 @@ types:
               nullable-type: PortLike
           returns:
             - name: subnet
-              type: network
+              type: Network
       __index:
         type: Network
       new:
