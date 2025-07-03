@@ -118,12 +118,16 @@ variables:
 
 types:
   ResourceString:
+    documentation: A string representing an object's [<code>ClassName</code>](</objects/PilotObject#ClassName>)
     type: string
   PortLike:
     documentation: A value that will be accepted as a port by the <code>GetPart(s)(FromPort)</code> functions.
     union:
       - type: Port
       - type: number
+  Range:
+    documentation: Specifies a range of values, it is a string of the form <code>min:max</code>.
+    type: string
 
   Events:
     EventConnection:
@@ -1498,6 +1502,118 @@ types:
           - AirTemperatureF
           - AirTemperatureC
 
+  Network:
+    documentation:
+      description: A network object.
+      code-sample: |-
+        -- Handles an individual reactor subnet
+        local function handleReactor(network: Network)
+            -- Get all of the relevant parts relative to the reactor subnet
+            local reactor = network:GetPart("Reactor")
+            local polysilicon = network:GetPart("Polysilicon")
+            local dispenser = network:GetPart("Dispenser")
+
+            -- stuff
+        end
+
+        -- Handles all reactors on a subnet full of reactor modules
+        local function handleReactors(network: Network)
+            for _, port in network:GetPorts() do
+                -- Handle the reactor on the subnet
+                handleReactor(network:GetSubnet(port))
+            end
+        end
+
+        -- Handles the reactor modules on Port 1
+        handleReactors(Network:GetSubnet(1))
+    type:
+      Clone:
+      GetHistory:
+        documentation: Returns a list of all objects that have been traversed by the network. Note this makes a copy of the internal state and is therefore modifying it does not affect the network itself whatsoever.
+        method:
+          returns:
+            - name: history
+              type:
+                [PilotObject]:
+                  type: true
+      GetPart:
+        method:
+          parameters:
+            - name: className
+              nullable-type: string
+          returns:
+            - name: object
+              nullable-type: PilotObject
+      GetPartFromPort:
+        method:
+          parameters:
+            - name: port
+              nullable-type: PortLike
+            - name: className
+              nullable-type: string
+          returns:
+            - name: object
+              nullable-type: PilotObject
+      GetParts:
+        method:
+          parameters:
+            - name: className
+              nullable-type: string
+          returns:
+            - name: objects
+              array-type: PilotObject
+      GetPartsFromPort:
+        method:
+          parameters:
+            - name: port
+              nullable-type: PortLike
+            - name: className
+              nullable-type: string
+          returns:
+            - name: objects
+              array-type: PilotObject
+      GetPort:
+        method:
+          parameters:
+            - name: port
+              nullable-type: PortLike
+          returns:
+            - name: objects
+              array-type: Port
+      GetPorts:
+        method:
+          parameters:
+            - name: port
+              nullable-type: PortLike
+          returns:
+            - name: objects
+              array-type: Port
+      GetSubnet:
+        documentation: Creates a new network with its root set to the specified <code>Port</code>.
+        method:
+          parameters:
+            - name: port
+              nullable-type: PortLike
+          returns:
+            - name: subnet
+              type: network
+      __index:
+        type: Network
+      new:
+        documentation:
+          warning: This function is volatile and may be subject to change as it is primarily for internal use.
+        function:
+          parameters:
+            - name: rootParts
+              documentation: An array of objects to be the roots of the network
+              array-type: PilotObject
+            - name: parentNetwork
+              documentation: You can use this to make a new network that will never explore along the path that was taken by the network you pass.
+              nullable-type: Network
+          returns:
+            - name: network
+              type: Network
+
 globals:
   Functions:
     Miscellaneous:
@@ -1636,7 +1752,7 @@ globals:
   Values:
     Miscellaneous:
       Network:
-        type: any
+        type: Network
       pilot:
         documentation: Provides functions for accessing/manipulating information about threads such as permissions, ownership, and interrupts.
         type:
@@ -2984,7 +3100,7 @@ classes:
       configurables:
         TemperatureRange:
           documentation: The range of temperatures (°F) within which the gate will be open.
-          type: NumberRange
+          type: Range
         Inverted:
           documentation: Whether or not the state will be inverted.
           type: boolean
@@ -3010,7 +3126,7 @@ classes:
       configurables:
         TemperatureRange:
           documentation: The range of temperatures (°F) which this sensor will trigger at.
-          type: NumberRange
+          type: Range
   TouchScreen:
     documentation:
       description: |-
@@ -4127,7 +4243,7 @@ classes:
           type: boolean
         PowerRange:
           documentation: The power range the state will be active for.
-          type: NumberRange
+          type: Range
   Sorter:
     documentation:
       description: Moves a type of resource through it, depending on the input and output faces as indicated by the arrow. Behaves just like the old Diode part when set to insert 100 Power.
@@ -4189,7 +4305,7 @@ classes:
       configurables:
         QuantityRange:
           documentation: The range of item quantities within which this sensor will trigger.
-          type: NumberRange
+          type: Range
   Switch:
     documentation:
       description: Acts as a wire when active/green, but when black or inactive it acts as a normal object. Must use a polysilicon to switch for trigger events.
