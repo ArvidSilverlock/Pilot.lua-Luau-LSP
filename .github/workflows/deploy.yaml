@@ -89,7 +89,7 @@ jobs:
 
       - name: Zip workspace directory
         if: needs.filter.outputs.workspace == 'true'
-        run: zip -r workspace.zip workspace
+        run: zip -r ../workspace.zip .
       - name: Upload workspace artifact (as zip)
         uses: actions/upload-artifact@v4
         if: needs.filter.outputs.workspace == 'true'
