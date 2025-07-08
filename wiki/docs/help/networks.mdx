@@ -23,7 +23,7 @@ import CodeBlock from "@theme/CodeBlock";
 		<CodeBlock language="lua">
 			{`local lifeSensor
 for _, port in GetPartsFromPort(GetPort(1), "Port") do
-		if port.PortId ~= 1 then continue end
+		if port.PortID ~= 1 then continue end
 		lifeSensor = GetPartFromPort(port, "LifeSensor")
 		if lifeSensor then break end
 end`}
