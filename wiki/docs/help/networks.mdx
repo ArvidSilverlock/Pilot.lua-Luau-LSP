@@ -1,0 +1,83 @@
+import CodeBlock from "@theme/CodeBlock";
+
+# Networks
+
+## Base Access
+
+<div style={{ display: "flex", alignItems: "top", gap: "1rem" }}>
+	<img
+		src="/Pilot.lua-Luau-LSP/image/network/first.png"
+		style={{
+			width: "min(500px, 40%)",
+			height: undefined,
+			aspectRatio: 51 / 43,
+		}}
+	/>
+	<div>
+		<h3>Base Access</h3>
+		<p>
+			You can access any object in a network, but it may require a bit more
+			logic to get a port when there are multiple of them. Getting the life
+			sensor without subnets could look like:
+		</p>
+		<CodeBlock language="lua">
+			{`local lifeSensor
+for _, port in GetPartsFromPort(GetPort(1), "Port") do
+		if port.PortId ~= 1 then continue end
+		lifeSensor = GetPartFromPort(port, "LifeSensor")
+		if lifeSensor then break end
+end`}
+		</CodeBlock>
+	</div>
+</div>
+
+## Creating a Subnet
+
+<div style={{ display: "flex", alignItems: "top", gap: "1rem" }}>
+	<img
+		src="/Pilot.lua-Luau-LSP/image/network/second.png"
+		style={{
+			width: "min(500px, 40%)",
+			height: undefined,
+			aspectRatio: 51 / 43,
+		}}
+	/>
+	<div>
+		<p>
+			You can create a subnet simply by calling
+			<code>Network:GetSubnet(Port)</code>. You can think of the port in the argument
+			as a microcontroller itself, and you can call
+			<code>:GetPort()</code> or <code>:GetPartFromPort()</code> on it. Now you
+			can get a life sensor like:
+		</p>
+		<CodeBlock language="lua">
+			{`local network = Network:GetSubnet(GetPort(1))
+local lifesensor = network:GetPartFromPort(1, "LifeSensor")`}
+		</CodeBlock>
+	</div>
+</div>
+
+## Subnets in Subnets
+
+<div style={{ display: "flex", alignItems: "top", gap: "1rem" }}>
+	<img
+		src="/Pilot.lua-Luau-LSP/image/network/third.png"
+		style={{
+			width: "min(500px, 40%)",
+			height: undefined,
+			aspectRatio: 51 / 43,
+		}}
+	/>
+	<div>
+		<p>
+			You can get subnets from subnets, too. Just call <code>:GetSubnet()</code>
+			on an existing subnet instead of <code>Network</code>. Here's how you could
+			get the disk:
+		</p>
+		<CodeBlock language="lua">
+			{`local network = Network:GetSubnet(GetPort(1))
+local network2 = network:GetSubnet(network:GetPort(2))
+local disk = network2:GetPartFromPort(3, "Disk")`}
+		</CodeBlock>
+	</div>
+</div>
