@@ -5,14 +5,14 @@ import type * as Preset from "@docusaurus/preset-classic";
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 if (process.env.NODE_ENV !== 'production') {
- 	require('dotenv').config();
+	require('dotenv').config();
 }
 
 const config: Config = {
 	title: "Waste of Space Wiki",
 	tagline:
 		"All information on this wiki is sourced from practical testing and developer messages. I have never had access to information no one else can get.",
-	favicon: "img/favicon.ico",
+	favicon: "image/favicon.ico",
 
 	// Set the production url of your site here
 	url: "https://arvidsilverlock.github.io",
@@ -58,7 +58,7 @@ const config: Config = {
 	],
 
 	themeConfig: {
-		image: "img/social-card.png",
+		image: "image/social-card.png",
 		metadata: [
 			{
 				name: "keywords",
@@ -70,7 +70,7 @@ const config: Config = {
 			title: "Waste of Space Wiki",
 			logo: {
 				alt: "WoS Wiki Logo",
-				src: "img/logo.png",
+				src: "image/logo.png",
 			},
 			items: [
 				{
