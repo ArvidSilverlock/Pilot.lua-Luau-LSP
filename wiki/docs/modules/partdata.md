@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 The partdata module provides information about objects in game, such as what configurables the object has, what 'programmable events' it has, default size, durability and many other facts.
 
 Here is the structure, wrttien using [Luau's type system](https://luau.org/typecheck):
