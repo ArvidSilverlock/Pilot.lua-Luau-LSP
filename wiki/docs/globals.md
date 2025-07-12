@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Globals
 
-Please note you can find the raw documentation [here](https://github.com/ArvidSilverlock/Pilot.lua-Luau-LSP/blob/master/.lune/generate/documentation.json), I know it is hard to read, but you should be able to find any information you need in there.
+Please note you can find the raw documentation [here](/raw-documentation), I know it is hard to read, but you should be able to find any information you need in there.
 
 This page is manually transcribed from the data and is not automatically generated.
 
