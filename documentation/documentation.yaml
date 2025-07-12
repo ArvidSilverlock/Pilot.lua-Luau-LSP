@@ -1123,6 +1123,16 @@ types:
         Distance:
           documentation: Will be greater than or equal to the <code>ObjectDetector</code>'s <code>MaxDistance</code> configuration, note, there is a slight error in this value so it may be ~1e-3 less than it should be.
           type: number
+        Name:
+          type: never
+        Position:
+          type: never
+        Color:
+          type: never
+        CFrame:
+          type: never
+        Size:
+          type: never
     ObjectDetectorHitTerrain:
       documentation: The data provided by the object detector when it hits terrain.
       type:
