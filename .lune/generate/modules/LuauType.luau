@@ -30,10 +30,12 @@ export type State = {
 	source: any,
 }
 
+export type TypeContext = "class" | "declaration" | "type"
+
 export type RootState = {
 	name: string,
 	isRoot: true,
-	context: "class" | "declaration" | "type",
+	context: TypeContext,
 	define: boolean?,
 }
 
