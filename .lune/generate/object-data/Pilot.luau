@@ -1,38 +1,28 @@
-local Types = require("../modules/Types")
-
--- Forced module caching. _G usage...
-if _G._pilotData then
-	return (_G._pilotData :: any) :: Types.PilotData
-end
-
 local fs = require("@lune/fs")
+local serde = require("@lune/serde")
 
-local PILOT_DATA = require("../object-data/raw-pilot-data/RawData")
+local luauTypes = require("../modules/LuauType")
 
-local data = {
-	Raw = PILOT_DATA,
-}
+local documentation = serde.decode("yaml", fs.readFile("documentation/documentation.yaml")) :: any
 
-local function runParser(name)
-	local path = if fs.isDir(`.lune/generate/data-parsing/{name}`)
-		then `../data-parsing/{name}/init.luau`
-		else `../data-parsing/{name}.luau`
+documentation.configurations = {}
 
-	local parser = require(path)
-	parser.parse(PILOT_DATA, data)
+for className, class in documentation.classes do
+	local hydrator = class.hydrator
+	if typeof(hydrator) == "table" then
+		if hydrator.configurables then
+			local configurationTypeName = className .. "Configuration"
+			documentation.configurations[configurationTypeName] = {
+				documentation = `The configuration of the <code>{className}</code> object.`,
+				type = { [{ "string" }] = { type = "any" } }, -- yeah, i know
+			}
+
+			for configurable, configurableData in hydrator.configurables do
+				documentation.configurations[configurationTypeName].type[configurable] =
+					luauTypes.setNullable(configurableData, true)
+			end
+		end
+	end
 end
 
-for _, parser in
-	{
-		"GlobalFunctions",
-		"GlobalValues",
-		"Types",
-		"Objects",
-	}
-do
-	runParser(parser)
-end
-
-_G._pilotData = data
-
-return (data :: any) :: Types.PilotData
+return documentation
