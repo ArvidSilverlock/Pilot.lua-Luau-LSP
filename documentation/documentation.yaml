@@ -102,6 +102,7 @@ variables:
     documentation: Gives you the total amount of objects in the container.
     returns:
       - name: amount
+        documentation: The amount of objects in the container.
         type: number
   - &GetAmountMethod
     documentation:
@@ -109,6 +110,7 @@ variables:
       deprecated: Use <code>:GetResourceAmount()</code> instead.
     returns:
       - name: amount
+        documentation: The amount of objects in the container.
         type: number
   - &SwitchValueConfigurable
     documentation:
@@ -261,27 +263,39 @@ types:
           __index:
             type: CoordinatesMetatable
           Clone:
+            documentation: Makes a copy of the coordinates.
             method:
               returns:
                 - type: Coordinates
+                  documentation: A copy of the coordinates.
           CoordStringWithoutPlanet:
+            documentation: Returns a string representation of the coordinates without the planet.
             method:
               returns:
                 - type: string
+                  documentation: A string representation of the coordinates without the planet.
           GetRandom:
+            documentation: Returns a <code>Random</code> object seeded with the coordinates.
             method:
               returns:
                 - type: Random
           GetSeed:
+            documentation: Returns the seed for the coordinates, which is used to generate region.
             method:
               returns:
                 - type: number
           ToArray:
+            documentation:
+              description: Converts the coordinates to an array representation.
+              code-sample: |-
+                local coordinates = Coordinates.new(0, 0, 0, 0, false) -- hypothetical coordinate constructor
+                local array = coordinates:ToArray() -- {0, 0, 0, 0, false}
             method:
               returns:
                 - union-array:
                     - type: number
                     - type: boolean
+                  documentation: An array representation of the coordinates.
           type:
             string-type: Coordinates
       Coordinates:
@@ -603,92 +617,101 @@ types:
           - type: BlackHoleRegionInfo
           - type: StarRegionInfo
           - type: PlanetRegionInfo
-    RegionInfo:
-      union:
-        # Space
-        - type:
-            BeaconCount:
-              documentation: The amount of beacons in the region at the time of the scan.
-              type: number
-            HasRings:
-              documentation: Whether the region has planetary rings.
-              type: boolean
-            Name:
-              documentation: The name of the region.
-              type: string
-            SubType:
-              type: never
-            TidallyLocked:
-              documentation: This value contains meaningless data for a space region, but is nonetheless present.
-              type: boolean
-            Type:
-              string-type: Planet
-        # Planet
-        - type:
-            BeaconCount:
-              documentation: The amount of beacons in the region at the time of the scan.
-              type: number
-            Color:
-              documentation: The primary color of the planet.
-              type: Color3
-            Gravity:
-              documentation: The gravity of the planet.
-              type: number
-            HasAtmosphere:
-              documentation: Whether the planet has an atmosphere.
-              type: boolean
-            HasRings:
-              documentation: Whether the planet has planetary rings.
-              type: boolean
-            Name:
-              documentation: The name of the planet.
-              type: string
-            Resources:
-              documentation: The resources that can be found on the planet.
-              array-type: string
-            SubType:
-              documentation: The type of the planet, such as <code>Desert</code>, <code>Terra</code>, <code>EarthLike</code>, etc.
-              type: PlanetType
-            TidallyLocked:
-              documentation: Whether the planet is tidally locked, meaning, whether it has a day/night cycle.
-              type: boolean
-            Type:
-              string-type: Planet
-        # Black Hole
-        - type:
-            BeaconCount:
-              documentation: The amount of beacons in the region at the time of the scan.
-              type: number
-            Name:
-              documentation: The name of the region.
-              type: string
-            Size:
-              documentation:
-                description: The visual size of the black hole.
-                range: [500, 15000]
-                increment: 1
-              type: number
-            Type:
-              string-type: BlackHole
-        # Star
-        - type:
-            BeaconCount:
-              documentation: The amount of beacons in the region at the time of the scan.
-              type: number
-            Name:
-              documentation: The name of the region.
-              type: string
-            Size:
-              documentation:
-                description: The visual size of the star.
-                range: [2000, 6000]
-                increment: 1
-              type: number
-            SubType:
-              documentation: The type of the star, such as <code>Red</code>, <code>Orange</code>, <code>Yellow</code>, etc.
-              type: StarType
-            Type:
-              string-type: Star
+    Simple Region Info:
+      RegionInfo:
+        union:
+          - type: SimpleSpaceRegionInfo
+          - type: SimplePlanetRegionInfo
+          - type: SimpleBlackHoleRegionInfo
+          - type: SimpleStarRegionInfo
+      SimpleSpaceRegionInfo:
+        type:
+          BeaconCount:
+            documentation: The amount of beacons in the region at the time of the scan.
+            type: number
+          HasRings:
+            documentation: Whether the region has planetary rings.
+            type: boolean
+          Name:
+            documentation: The name of the region.
+            type: string
+          SubType:
+            type: never
+          TidallyLocked:
+            documentation: This value contains meaningless data for a space region, but is nonetheless present.
+            type: boolean
+          Type:
+            documentation: The type of the region.
+            string-type: Planet
+      SimplePlanetRegionInfo:
+        type:
+          BeaconCount:
+            documentation: The amount of beacons in the region at the time of the scan.
+            type: number
+          Color:
+            documentation: The primary color of the planet.
+            type: Color3
+          Gravity:
+            documentation: The gravity of the planet.
+            type: number
+          HasAtmosphere:
+            documentation: Whether the planet has an atmosphere.
+            type: boolean
+          HasRings:
+            documentation: Whether the planet has planetary rings.
+            type: boolean
+          Name:
+            documentation: The name of the planet.
+            type: string
+          Resources:
+            documentation: The resources that can be found on the planet.
+            array-type: string
+          SubType:
+            documentation: The type of the planet, such as <code>Desert</code>, <code>Terra</code>, <code>EarthLike</code>, etc.
+            type: PlanetType
+          TidallyLocked:
+            documentation: Whether the planet is tidally locked, meaning, whether it has a day/night cycle.
+            type: boolean
+          Type:
+            documentation: The type of the region.
+            string-type: Planet
+      SimpleBlackHoleRegionInfo:
+        type:
+          BeaconCount:
+            documentation: The amount of beacons in the region at the time of the scan.
+            type: number
+          Name:
+            documentation: The name of the region.
+            type: string
+          Size:
+            documentation:
+              description: The visual size of the black hole.
+              range: [500, 15000]
+              increment: 1
+            type: number
+          Type:
+            documentation: The type of the region.
+            string-type: BlackHole
+      SimpleStarRegionInfo:
+        type:
+          BeaconCount:
+            documentation: The amount of beacons in the region at the time of the scan.
+            type: number
+          Name:
+            documentation: The name of the region.
+            type: string
+          Size:
+            documentation:
+              description: The visual size of the star.
+              range: [2000, 6000]
+              increment: 1
+            type: number
+          SubType:
+            documentation: The type of the star, such as <code>Red</code>, <code>Orange</code>, <code>Yellow</code>, etc.
+            type: StarType
+          Type:
+            documentation: The type of the region.
+            string-type: Star
   File System:
     FileSystem:
       type:
@@ -1761,16 +1784,20 @@ globals:
             function:
               parameters:
                 - name: timeout
+                  documentation: The CPU timeout in seconds.
                   nullable-type: number
                 - name: thread
+                  documentation: The thread to apply the timeout to.
                   nullable-type: thread
           hasRing:
             documentation: Checks if the target (or running) thread has the specified ring privilege or lower.
             function:
               parameters:
                 - name: ring
+                  documentation: The ring to check for.
                   type: number
                 - name: thread
+                  documentation: The thread to check for the ring on. If not specified, the running thread will be used.
                   nullable-type: thread
               returns:
                 - type: boolean
@@ -1864,32 +1891,42 @@ classes:
           documentation: Fires when the object is destroyed.
       methods:
         CanInstallComponent:
+          documentation: Checks if the specified component can be installed on the object.
           parameters:
             - name: componentName
+              documentation: The name of the component to check whether it is installable or not.
               nullable-type: ComponentName
           returns:
             - name: canInstall
+              documentation: Whether or not the component can be installed on the object.
               type: boolean
         CanUninstallComponent:
+          documentation: Checks if the specified component can be uninstalled from the object.
           parameters:
             - name: componentName
+              documentation: The name of the component to check whether it is uninstallable or not.
               nullable-type: ComponentName
           returns:
             - name: canUninstall
+              documentation: Whether or not the component can be uninstalled from the object.
               type: boolean
         Click:
           documentation: Emulates a user clicking on the object, seems dysfunctional in some cases, (i.e., <code>ClickButton</code> components do not get triggered).
         GetComponent:
+          documentation: Gets the component of the specified type for the object.
           parameters:
             - name: componentName
+              documentation: The name of the component to get.
               type: ComponentName
           returns:
             - name: component
+              documentation: The component of the requested type for the object, or <code>nil</code> if it does not have the component.
               nullable-type: Component
         GetConfigurables:
           documentation: Gets information about the configurables of the object.
           returns:
             - name: configurables
+              documentation: An dictionary of configurable names to data about that configurable.
               type:
                 [string]:
                   type: ConfigurableData
@@ -1897,30 +1934,35 @@ classes:
           documentation: Gets information about the events of the object.
           returns:
             - name: events
-              array-type: string
               documentation: An array of event names.
+              array-type: string
         GetMethods:
           documentation: Gets information about the methods of the object.
           returns:
             - name: methods
+              documentation: An dictionary of method names to data about that method.
               type:
                 [string]:
                   type: MethodData
         GetNameOfOwnerAsync:
           documentation:
+            description: Returns the username of the owner of the part, if the part is locked, otherwise returns the username of the creator of the part.
             deprecated: Use <code>require("players"):GetUsername</code> instead.
           returns:
             - name: ownerUsername
+              documentation: The username of the 'owner' of the part.
               nullable-type: string
         GetOwnerId:
           documentation: Returns who locked the part if the part is locked, otherwise returns who created the part.
           returns:
             - name: ownerId
+              documentation: The <code>UserId</code> of the 'owner' of the part.
               nullable-type: number
         GetShape:
-          documentation: Gets the shape of the part, if the part is a block, it will return <code>nil</code>.
+          documentation: Gets the shape of the part.
           returns:
             - name: shape
+              documentation: The shape of the part, or <code>nil</code> if the part is a block.
               nullable-type: string
         GetDurability:
           documentation:
@@ -1928,6 +1970,7 @@ classes:
             deprecated: Use <code>PilotObject.Durability</code> instead.
           returns:
             - name: durability
+              documentation: The <i>maximum</i> durability of the object.
               type: number
         GetColor:
           documentation:
@@ -1935,6 +1978,7 @@ classes:
             deprecated: Use <code>PilotObject.Color</code> instead.
           returns:
             - name: color
+              documentation: The color of the object.
               type: Color3
         GetSize:
           documentation:
@@ -1942,6 +1986,7 @@ classes:
             deprecated: Use <code>PilotObject.Size</code> instead.
           returns:
             - name: size
+              documentation: The size of the object.
               type: Vector3
         GetTemperature:
           documentation:
@@ -1949,32 +1994,41 @@ classes:
             deprecated: Use <code>PilotObject.Temperature</code> instead.
           returns:
             - name: temperature
+              documentation: The temperature of the object.
               type: number
         HasComponent:
+          documentation: Returns a boolean as to whether or not the object has the specified component.
           returns:
             - name: hasComponent
+              documentation: Whether or not the object has the specified component.
               type: boolean
         HasPermission:
           documentation: Returns a boolean as to whether or not the microcontroller has permission to do the specified action.
           parameters:
             - name: permission
+              documentation: The permission to check for.
               type: Permission
           returns:
             - name: hasPermission
+              documentation: Whether or not the microcontroller has the specified permission.
               type: boolean
         IsDestroyed:
           documentation: Returns a boolean as to whether or not the object is destroyed.
           returns:
             - name: isDestroyed
+              documentation: Whether or not the object is destroyed.
               type: boolean
         IsGrounded:
           documentation: Tells you if the part is grounded, meaning it does it have physics. If it is attached to terrain or an anchor for example, it will be grounded.
           returns:
             - name: isGrounded
+              documentation: Whether or not the object is grounded.
               type: boolean
         ListComponents:
+          documentation: Lists all the components installed on the object.
           returns:
             - name: components
+              documentation: An array of the names of the components installed on the object.
               array-type: string
         Trigger:
           documentation: Triggers the object.
@@ -1983,6 +2037,7 @@ classes:
           documentation: A string representing the type of the object.
           type: string
         GUID:
+          documentation: A unique identifier for the object, useful for comparing different references to the same object.
           type: string
         CFrame:
           documentation:
@@ -2316,15 +2371,19 @@ classes:
           documentation: Returns whether or not the coupler is currently attached to another coupler.
           returns:
             - name: isCoupled
+              documentation: Whether or not the coupler is currently attached to another coupler.
               type: boolean
         GetAttachedCoupler:
           documentation: Returns a reference to the current connected coupler, will return <code>nil</code> if no other coupler is connected.
           returns:
             - name: otherCoupler
+              documentation: The coupler that this coupler is currently attached to, or <code>nil</code> if it is not attached to any other coupler.
               nullable-type: Coupler
       events:
-        Couple: {}
-        Decouple: {}
+        Couple:
+          documentation: Fires when the coupler is attached to another coupler.
+        Decouple:
+          documentation: Fires when the coupler is detached from another coupler.
       configurables:
         CouplerID:
           documentation:
@@ -2374,19 +2433,21 @@ classes:
             - name: health
               type: number
               documentation:
+                description: The current health of the shield as a percentage between <code>0</code> and <code>1</code>.
                 range: [0, 1]
         CalculateCost:
+          documentation: Calculates the power cost of the shield based on its radius.
           parameters:
             - name: radius
-              nullable-type: number
               documentation: |-
                 The radius of the theoretical energy shield you want to calculate the power cost for.
                 If <code>nil</code>, will default to the <code>EnergyShield.Radius</code> configuration.
                 The parameter is not bound by the constraints of <code>EnergyShield.Radius</code> and will accept any input.
+              nullable-type: number
           returns:
             - name: cost
-              type: number
               documentation: The <code>Power</code> cost per game tick to keep the <code>EnergyShield</code> running.
+              type: number
         SetColor: *SetColorMethod
       events:
         Configured: *ConfiguredEvent
@@ -2701,20 +2762,28 @@ classes:
           parameters:
             - name: url
               type: string
+              documentation: The destination address for the data.
             - name: data
               type: string
+              documentation: The data being sent.
             - name: contentType
               nullable-type: Enum.HttpContentType
+              documentation: Modifies the value in the <code>Content-Type</code> header sent with the request.
             - name: compress
               nullable-type: boolean
+              documentation: Determines whether the data is compressed (<b>gzipped</b>) when sent.
             - name: headers
               nullable-type:
                 [string]:
+                  documentation: A HTTP request header.
                   type: any
+              documentation: Used to specify some HTTP request headers.
           returns:
             - name: response
               type: string
+              documentation: The HTTP response sent back indicating the request result.
         SendLocalMessage:
+          documentation: Sends a message to all modems in the same region of the same <code>NetworkID</code>.
           parameters:
             - name: ...
               type: any
@@ -2858,6 +2927,7 @@ classes:
           returns:
             - name: temperature
               type: number
+              documentation: The current temperature of the reactor in degrees fahrenheit.
       events:
         Loop: *LoopEvent
       configurables:
@@ -2998,9 +3068,11 @@ classes:
           parameters:
             - name: soundId
               type: string
+              documentation: The ID of the sound to load.
           returns:
             - name: loadedSound
               type: Sound
+              documentation: The loaded sound object.
         ClearSounds:
           documentation: Stops and clears all sounds the speaker is currently playing.
         Chat:
@@ -3008,11 +3080,13 @@ classes:
           parameters:
             - name: message
               type: string
+              documentation: The message to display in the chat bubble.
         PlaySound:
           documentation: Plays a sound with the given <code>soundId</code>. If no <code>soundId</code> is provided it will default to the <code>Audio</code> configuration of the speaker.
           parameters:
             - name: soundId
               nullable-type: string
+              documentation: The ID of the sound to play. If <code>nil</code>, will default to the <code>Audio</code> configuration.
       events:
         Configured: *ConfiguredEvent
         Triggered: *TriggeredEvent
@@ -3052,12 +3126,15 @@ classes:
       name: wos-object
       methods:
         WhenRegionLoads:
+          documentation: Registers a callback that will be called when information is first loaded about a region.
           parameters:
             - name: callback
               function:
                 parameters:
                   - name: regionInfo
                     type: CompleteRegionInfo
+                    documentation: The information about the region that has loaded.
+              documentation: A callback that will be called when the region loads. The callback will receive a <code>CompleteRegionInfo</code> object containing information about the region.
         GetCoordinate:
           documentation: Gets information about the configured region.
           returns:
@@ -3087,14 +3164,20 @@ classes:
       name: wos-object
       methods:
         GetTemp:
+          documentation:
+            description: Returns the current temperature of the gate.
+            deprecated: Use <code>TemperatureSensor:GetTemperature()</code> instead.
           returns:
             - name: temperature
               type: number
+              documentation: The current temperature of the gate in degrees Fahrenheit.
         GetState: {}
         GetTemperature:
+          documentation: Returns the current temperature of the gate.
           returns:
             - name: temperature
               type: number
+              documentation: The current temperature of the gate in degrees Fahrenheit.
       events:
         Configured: *ConfiguredEvent
       configurables:
@@ -3295,8 +3378,10 @@ classes:
           parameters:
             - name: key
               type: any
+              documentation: The key to write to the disk at.
             - name: value
               type: any
+              documentation: The value to write to the disk.
         Compress: {}
         ReadAll:
           documentation: Reads the entire content of the disk and outputs it as a dictionary.
@@ -3305,6 +3390,7 @@ classes:
               type:
                 [any]:
                   type: any
+              documentation: The content of the disk as a dictionary.
         WriteAll:
           documentation:
             description: |-
@@ -3356,7 +3442,10 @@ classes:
               type:
                 [any]:
                   type: any
-        ClearDisk: {}
+        ClearDisk:
+          documentation:
+            description: Clears the disk.
+            deprecated: Superseded by <code>Disk:Clear()</code>.
       events:
         Loop: *LoopEvent
   Keyboard:
@@ -3401,6 +3490,7 @@ classes:
         UserInput: *UserInputEvent
   Seat:
     documentation:
+      description: A seat.
       categories: [Spawnable, Craftable]
     hydrator:
       name: wos-object
@@ -3409,11 +3499,13 @@ classes:
           documentation: Retrieves the <code>UserId</code> of the seat's occupant, it will be <code>nil</code> if there is no occupant.
           returns:
             - name: currentOccupant
+              documentation: The <code>UserId</code> of the seat's occupant, or <code>nil</code> if there is no occupant.
               nullable-type: number
         EjectOccupant:
           documentation: Ejects the seat occupant.
       events:
-        OccupantChanged: {}
+        OccupantChanged:
+          documentation: Fires when the occupant of the seat changes.
   SteamTurbine:
     documentation:
       description: Produces power from steam at a base rate of 100 power each. Improves up to 250 per steam if consecutively ran at max speed. All bonuses are capped to the real consumption rate, so more steam equals better efficiency, but faster consumption rates. It may consume +0.5/s^2 steam, up to a maximum rate of 10 steam per second (for a total of 2500 power per second). Has a 10% chance to recover water for every steam consumed, improving up to 20%. Maximum efficiency can be reached in no less than 18 seconds if fed an optimal amount of steam.
@@ -3447,11 +3539,13 @@ classes:
       name: wos-object
       methods:
         GetLastHitPart:
+          documentation: Returns the most recently hit part by the <code>ObjectDetector</code>.
           returns:
             - name: object
               type: PilotObject
               documentation: A reference to the most recently hit part.
         GetLastHitData:
+          documentation: Returns a table with data about the last object hit by the <code>ObjectDetector</code>.
           returns:
             - name: data
               type: ObjectDetectorHitData
@@ -3609,6 +3703,7 @@ classes:
       name: wos-object
       configurables:
         ViewCoordinates:
+          documentation: The coordinates to view.
           type: Coordinates
 
   # Has methods and is both craftable and spawnable
@@ -3636,6 +3731,7 @@ classes:
           returns:
             - name: players
               array-type: number
+              documentation: An array of player <code>UserId</code>s.
         GetPlayers:
           documentation: Returns a table where the keys are <i>player</i> <code>UserId</code>s and the values are <i>player</i> CFrames. Only has a 2,000 stud range.
           returns:
@@ -3680,18 +3776,23 @@ classes:
       name: wos-object
       methods:
         GetSystems:
+          documentation: Returns an array of star systems in a 21x21 grid centred around the current region. Note that this filters out systems that orbit around planets.
           returns:
             - name: systems
               array-type: string
+              documentation: The local star systems.
         GetBodies:
+          documentation: Returns an array of celestial bodies in the current star system.
           returns:
-            # Complex type - requires rewriting
             - name: bodies
               type:
                 [string]:
+                  documentation: A celestial body.
                   type:
                     PlanetType:
+                      documentation: The type of the celestial body.
                       type: PlanetType
+              documentation: The celestial bodies in the current system.
 
   # Has events, is configurable, and is both craftable and spawnable
   Anchor:
@@ -4277,6 +4378,7 @@ classes:
           parameters:
             - name: amount
               nullable-type: number
+              documentation: The amount of resources to move.
   SteamEngine:
     documentation:
       description: It acts similar to a motor, but is powered by Steam instead of electricity.
@@ -4775,11 +4877,14 @@ classes:
       name: wos-object
       events:
         Chatted:
+          documentation: Fires when a player sends a message in the chat.
           parameters:
             - name: player
               type: number
+              documentation: The <code>UserId</code> of the player who chatted.
             - name: message
               type: string
+              documentation: The message that the player sent. Has a trailing newline character.
   Obelisk:
     documentation:
       description: |-
@@ -4922,11 +5027,13 @@ classes:
       name: wos-object
       events:
         Touched:
+          documentation: Fires when the part is touched by another object (or player!).
           parameters:
             - name: object
               nullable-union:
                 - type: number
                 - type: PilotObject
+              documentation: The object that touched the part, if it's a player, it will be their <code>UserId</code>.
   Treads:
     documentation:
       description: |-
