@@ -346,16 +346,16 @@ local function appendDocumentation(output, object, metadata, dontWriteDescriptio
 			then ", and an increment of " .. documentation.increment
 			else ""
 		if documentation.minimum then
-			output:Push("\nIt has a minimum value of ", documentation.minimum, incrementSuffix, ".")
+			output:PushLine("It has a minimum value of ", documentation.minimum, incrementSuffix, ".")
 		elseif documentation.maximum then
-			output:Push("\nIt has a maximum value of ", documentation.maximum, incrementSuffix, ".")
-		elseif documentation.range then
-			output:Push("\nIt ranges between ", documentation.range[1], " and ", documentation.range[2], ".")
-			if documentation.increment then
-				output:Push(" It increments by ", documentation.increment, ".")
+			output:PushLine("It has a maximum value of ", documentation.maximum, incrementSuffix, ".")
+		else
+			if documentation.range then
+				output:PushLine("It ranges between ", documentation.range[1], " and ", documentation.range[2], ".")
 			end
-		elseif documentation.increment then
-			output:Push("\nIt increments by ", documentation.increment, ".")
+			if documentation.increment then
+				output:PushLine("It increments by ", documentation.increment, ".")
+			end
 		end
 	elseif documentation and not dontWriteDescription then
 		output:Push(documentation)
