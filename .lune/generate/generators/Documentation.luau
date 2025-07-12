@@ -1,132 +1,132 @@
---!strict
-
-local serde = require("@lune/serde")
 local fs = require("@lune/fs")
+local serde = require("@lune/serde")
 
-local PilotData = require("../object-data/Pilot")
-local Types = require("../modules/Types")
+local luauTypes = require("../modules/LuauType")
+local hydrators = require("../modules/Hydrators")
+local documentation = require("../object-data/Pilot")
 
 local NO_PARAMETER_RESERVED = "__RESERVE__NO_PARAMETERS___RESERVE_"
-local NO_PARAMETER_REMOVE = `"params":%s*%[%s*\n%s*{string.format("%q", NO_PARAMETER_RESERVED)}%s*\n%s*%]`
+local NO_PARAMETER_REMOVE = `"params":%s*{string.format("%q", NO_PARAMETER_RESERVED)}`
 
-local function constructDocumentation(data: Types.Describable | any, _output: { [string]: any }?)
-	local output: { [string]: any } = _output or {}
-
-	local description = {}
-
-	if data.Deprecated then
-		table.insert(
-			description,
-			if typeof(data.Deprecated) == "string" then `@deprecated -- {data.Deprecated}` else "@deprecated"
-		)
+local function extractDescription(key, state, value)
+	if not value.documentation then
+		return nil
+	elseif typeof(value.documentation) == "string" then
+		return value.documentation
+	elseif typeof(value.documentation) == "table" then
+		return value.documentation.description
+	else
+		error(`Invalid documentation type: {typeof(value.documentation)}`)
 	end
-
-	if (data :: any).ReadOnly then
-		table.insert(description, "@readonly")
-	end
-
-	if data.Description and not data.Description:match("^%s*$") then
-		if #description > 0 then
-			table.insert(description, "")
-		end
-
-		table.insert(description, data.Description)
-	end
-
-	output.documentation = if #description > 0 then table.concat(description, "\n") else nil
-	output.code_sample = data.CodeSample
-	output.learn_more_link = data.LearnMoreLink
-
-	return output
 end
 
-local function insertFunctionParameter(key: string, parameter: Types.ParameterData, keys: any, output)
-	if parameter.Name == "self" then
-		local parameterKey = if parameter.Name == "self" then key:match("^(.*)%..-$") else nil
-		if parameterKey then
-			table.insert(keys, {
-				name = parameter.Name,
+local documentFunctionParameters, documentType
+
+function documentFunctionParameters(group: "parameters" | "returns", output, key, state)
+	local list = {}
+
+	if not state.base.value[group] then
+		return list
+	end
+
+	local prefix
+	local indexOffset = 1
+
+	if group == "parameters" then
+		prefix = `{key}/params`
+
+		if state.base.context.isMethod then
+			table.insert(list, {
+				name = "self",
+				documentation = key,
+			})
+			indexOffset = 0
+		end
+	else
+		prefix = `{key}/returns`
+	end
+
+	for parameterIndex, parameter in state.base.value[group] do
+		local substate = assert(luauTypes.getTypeState(parameter, state), key)
+
+		local parameterKey = `{prefix}/{parameterIndex - indexOffset}`
+
+		documentType(output, parameterKey, substate)
+
+		if group == "parameters" then
+			table.insert(list, {
+				name = parameter.name or `parameter{parameterIndex}`,
 				documentation = parameterKey,
 			})
-			return
+		else
+			table.insert(list, parameterKey)
 		end
 	end
 
-	local parameterKey = `{key}/params/{#keys}`
-	local parameterDocumentation = constructDocumentation(parameter)
-
-	if next(parameterDocumentation) or parameter.Name == "self" then
-		output[parameterKey] = parameterDocumentation
-		table.insert(keys, {
-			name = parameter.Name,
-			documentation = parameterKey,
-		})
-	else
-		table.insert(keys, {
-			name = parameter.Name,
-		})
-	end
+	return list
 end
 
-local function insertFunctionReturn(key: string, returnValue: Types.ParameterData, keys: any, output)
-	local returnKey = `{key}/returns/{#keys}`
-	local returnDocumentation = constructDocumentation(returnValue)
+function documentType(output, key: string, state: luauTypes.State)
+	local context = state.base.context
+	local value = state.base.value
 
-	output[returnKey] = returnDocumentation
-	table.insert(keys, returnKey)
-end
+	if (context.style == "type" or context.style == "class") and typeof(value) == "table" then
+		local keys = {}
 
-local function documentFunction(key: string, data: Types.FunctionData, output)
-	if output[key] then
-		return output[key]
-	end
-
-	local functionDocumentation = constructDocumentation(data)
-
-	if #data.Parameters > 0 then
-		functionDocumentation.params = {}
-		for _, parameter in data.Parameters do
-			insertFunctionParameter(key, parameter, functionDocumentation.params, output)
-		end
-	elseif #data.Returns > 0 then
-		functionDocumentation.params = { NO_PARAMETER_RESERVED }
-	end
-
-	if #data.Returns > 0 then
-		functionDocumentation.returns = {}
-		for _, returnValue in data.Returns do
-			insertFunctionReturn(key, returnValue, functionDocumentation.returns, output)
-		end
-	end
-
-	if next(functionDocumentation) then
-		output[key] = functionDocumentation
-	end
-
-	return functionDocumentation
-end
-
-local function documentObject(object: Types.ObjectData, output)
-	local objectKey = `@roblox/globaltype/{object.Name}`
-
-	local keys = {}
-
-	for _, member in object.Members :: any do
-		local memberKey = `@roblox/globaltype/{member.Source}.{member.Name}`
-
-		if member.Source == object.Name then
-			local memberDocumentation = if member.Group == "Methods"
-				then documentFunction(memberKey, member.Reference, output)
-				else constructDocumentation(member.Reference)
-
-			output[memberKey] = memberDocumentation
-			if next(output[memberKey]) then
-				keys[member.Name] = memberKey
+		for memberName, memberValue in value do
+			if typeof(memberName) ~= "string" then
+				continue
 			end
+
+			local substate = assert(luauTypes.getTypeState(memberValue, state), key)
+
+			local subkey = `{key}.{memberName}`
+			documentType(output, subkey, substate)
+
+			keys[memberName] = subkey
 		end
+
+		output[key] = {
+			documentation = extractDescription(key, state, state.source),
+			keys = if next(keys) then keys else nil,
+		}
+	elseif context.style == "function" then
+		local parameters = documentFunctionParameters("parameters", output, key, state)
+		local returns = documentFunctionParameters("returns", output, key, state)
+
+		output[key] = {
+			documentation = extractDescription(key, state, state.source),
+			params = if next(parameters) then parameters else NO_PARAMETER_RESERVED,
+			returns = if next(returns) then returns else nil,
+		}
+	else
+		output[key] = {
+			documentation = extractDescription(key, state, state.source),
+		}
 	end
 
-	output[objectKey] = constructDocumentation(object, { keys = keys })
+	return { key }
+end
+
+local function writeTypeGroup(output, prefix: string, key: string, value: any, context: luauTypes.TypeContext)
+	if value.hydrator and value.hydrator.name == "get-part" then
+		value = hydrators.getPart(value)
+	end
+
+	local typeState = luauTypes.getTypeState(value, {
+		isRoot = true,
+		name = key,
+		context = context,
+		define = true,
+	})
+
+	if typeState then
+		documentType(output, `{prefix}/{key}`, typeState)
+	else
+		for childName, child in value do
+			writeTypeGroup(output, prefix, childName, child, context)
+		end
+	end
 end
 
 local Documentation = {}
@@ -134,32 +134,15 @@ local Documentation = {}
 function Documentation.generate()
 	local output = {}
 
-	for name, data in PilotData.Functions do
-		local key = `@roblox/global/{name}`
-		documentFunction(key, data, output)
+	writeTypeGroup(output, "@roblox/global", "globals", documentation.globals, "declaration")
+	writeTypeGroup(output, "@roblox/globaltype", "types", documentation.types, "type")
+
+	for className, class in documentation.classes do
+		local reformattedClass = hydrators.object(className, class)
+		writeTypeGroup(output, "@roblox/globaltype", className, reformattedClass, "class")
 	end
 
-	for name, dictionary in PilotData.FunctionDictionaries do
-		local baseKey = `@roblox/global/{name}`
-		local keys = {}
-
-		for functionName, data in dictionary.Functions do
-			local key = `{baseKey}.{functionName}`
-			table.insert(keys, key)
-			documentFunction(key, data, output)
-		end
-
-		output[baseKey] = constructDocumentation(dictionary, { keys = keys })
-	end
-
-	for name, data in PilotData.Values do
-		local key = `@roblox/global/{name}`
-		output[key] = constructDocumentation(data)
-	end
-
-	for _, objectName in PilotData.ObjectDefinitionOrder do
-		documentObject(PilotData.Objects[objectName], output)
-	end
+	writeTypeGroup(output, "@roblox/globaltype", "configurations", documentation.configurations, "type")
 
 	return output
 end
