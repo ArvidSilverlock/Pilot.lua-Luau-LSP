@@ -1212,8 +1212,8 @@ types:
     RegionLogType:
       documentation: The type of a region log, used to describe what happened in the region.
       string-union:
-        - HyperDrive
-        - Aliens
+        - HyperDrive is warping to
+        - Aliens were spawned from an obelisk located at
         - Spawned
         - Death
         - ExitRegion
