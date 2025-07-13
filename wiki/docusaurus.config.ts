@@ -98,9 +98,14 @@ const config: Config = {
 					label: "Help",
 				},
 				{
-					position: "left",
+					position: "right",
 					label: "Raw Documentation",
 					to: "raw-documentation",
+				},
+				{
+					position: "right",
+					label: "Contributing",
+					to: "contributing",
 				},
 				{
 					href: "https://github.com/ArvidSilverlock/Pilot.lua-Luau-LSP",

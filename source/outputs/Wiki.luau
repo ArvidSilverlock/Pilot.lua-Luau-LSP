@@ -1101,6 +1101,8 @@ function Wiki.save(options, generatedPages, codeblockLinks)
 		:PushLine("```")
 
 	fs.writeFile("./wiki/docs/raw-documentation.md", tostring(rawDocumentationSnippet))
+
+	fs.copy("CONTRIBUTING.md", "./wiki/docs/contributing.md", true)
 end
 
 return Wiki
