@@ -5,9 +5,9 @@ on:
     paths:
       - wiki/**
       - documentation/**
-      - lune/generators/**
-      - lune/modules/**
-      - lune/pilot-generate.luau
+      - source/outputs/**
+      - source/modules/**
+      - source/pilot-generate.luau
       - .github/workflows/deploy.yaml
     branches:
       - master
@@ -41,22 +41,22 @@ jobs:
               - 'documentation/partdata.json'
               - 'documentation/documentation.yaml'
               - 'documentation/programs/**'
-              - 'lune/generators/Wiki.luau'
+              - 'source/outputs/Wiki.luau'
               - '.github/workflows/deploy.yaml'
             workspace:
-              - 'lune/pilot-generate.luau'
+              - 'source/main.luau'
               - 'documentation/partdata.json'
               - 'documentation/documentation.yaml'
               - 'documentation/modules/**'
-              - 'lune/modules/**'
-              - 'lune/generators/Darklua.luau'
-              - 'lune/generators/Definition.luau'
-              - 'lune/generators/Documentation.luau'
-              - 'lune/generators/Modules.luau'
-              - 'lune/generators/Rokit.luau'
-              - 'lune/generators/Selene.luau'
-              - 'lune/generators/Vanilla.luau'
-              - 'lune/generators/VSCode.luau'
+              - 'source/modules/**'
+              - 'source/outputs/Darklua.luau'
+              - 'source/outputs/Definition.luau'
+              - 'source/outputs/Documentation.luau'
+              - 'source/outputs/Modules.luau'
+              - 'source/outputs/Rokit.luau'
+              - 'source/outputs/Selene.luau'
+              - 'source/outputs/Vanilla.luau'
+              - 'source/outputs/VSCode.luau'
               - '.github/workflows/deploy.yaml'
           # Is this wrong of me? Yes, but I don't care.
 
