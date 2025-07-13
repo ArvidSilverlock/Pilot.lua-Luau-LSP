@@ -127,5 +127,4 @@ return function(args: { string })
 	generate("rokit", "Rokit", false)
 
 	generate("wiki", "Wiki", false)
-	generate("vanilla", "Vanilla", false)
 end
