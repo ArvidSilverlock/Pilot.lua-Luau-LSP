@@ -1102,7 +1102,26 @@ function Wiki.save(options, generatedPages, codeblockLinks)
 
 	fs.writeFile("./wiki/docs/raw-documentation.md", tostring(rawDocumentationSnippet))
 
-	fs.copy("CONTRIBUTING.md", "./wiki/docs/contributing.md", true)
+	local contributingContent = fs.readFile("CONTRIBUTING.md")
+	local contributingSections = {}
+
+	for _, section in contributingContent:sub(3):split("\n# ") do
+		local title, content = section:match("^(.-)\n(.*)")
+		if title and content then
+			local sanitizedTitle = title:match("^%s*(.-)%s*$"):gsub("%s+", "-"):gsub("[^%w%-]", ""):lower()
+			contributingSections[sanitizedTitle] = "# " .. section
+		end
+	end
+
+	local contributingDir = "./wiki/docs/contributing"
+	if not fs.isDir(contributingDir) then
+		fs.writeDir(contributingDir)
+	end
+
+	for title, content in contributingSections do
+		local filePath = `{contributingDir}/{title}.md`
+		fs.writeFile(filePath, content)
+	end
 end
 
 return Wiki
