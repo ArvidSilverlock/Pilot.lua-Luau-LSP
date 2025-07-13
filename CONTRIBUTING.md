@@ -76,8 +76,8 @@ foobar:
 
 You may be familiar with these from Luau typechecking, or even set theory.
 
-A '[union](https://luau.org/typecheck#union-types)' of a type basically means it is of type 'a' **or** 'b'.
-Whereas an '[intersection](https://luau.org/typecheck#intersection-types)' is _both_ 'a' **and** 'b'.
+A [union](https://luau.org/typecheck#union-types) of a type basically means it is of type `a` **or** `b`.
+Whereas an [intersection](https://luau.org/typecheck#intersection-types) is _both_ `a` **and** `b`.
 
 Here, you would use the key `union` or `intersection` (all the other prefixes still apply)
 
