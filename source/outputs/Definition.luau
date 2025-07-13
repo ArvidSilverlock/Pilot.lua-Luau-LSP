@@ -4,7 +4,7 @@ local luauTypes = require("../modules/LuauType")
 local Snippet = require("../modules/Snippet")
 local hydrators = require("../modules/Hydrators")
 
-local documentation = require("../object-data/Pilot")
+local documentation = require("../modules/PilotDocumentation")
 
 local Definition = {}
 

@@ -16,7 +16,7 @@ function VSCode.save(options)
 	local fileRequireAliases = {}
 	local recommendedExtensions = {}
 
-	for _, module in fs.readDir("./.lune/generate/object-data/pilot-modules") do
+	for _, module in fs.readDir("./documentation/modules") do
 		fileRequireAliases[Utility.stripFileExtension(module)] = `./{typesDirectory}/modules/{module}`
 	end
 

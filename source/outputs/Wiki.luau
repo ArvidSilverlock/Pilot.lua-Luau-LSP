@@ -5,7 +5,7 @@ local luauTypes = require("../modules/LuauType")
 local Snippet = require("../modules/Snippet")
 local MarkdownSnippet = require("../modules/MarkdownSnippet")
 
-local partDocumentation = require("../object-data/Pilot")
+local partDocumentation = require("../modules/PilotDocumentation")
 local rawPartData = serde.decode("json", fs.readFile("documentation/partdata.json")) :: any
 
 local WIKI_DIRECTORY = "./wiki/docs/"

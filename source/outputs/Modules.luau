@@ -2,7 +2,7 @@ local fs = require("@lune/fs")
 
 local Utility = require("../modules/Utility")
 
-local MODULE_SOURCE_DIRECTORY = "./.lune/generate/object-data/pilot-modules"
+local MODULE_SOURCE_DIRECTORY = "./documentation/modules"
 
 local Modules = {}
 
