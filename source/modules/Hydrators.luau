@@ -1,4 +1,4 @@
-local documentation = require("../object-data/Pilot")
+local documentation = require("../modules/PilotDocumentation")
 
 local Hydrators = {}
 

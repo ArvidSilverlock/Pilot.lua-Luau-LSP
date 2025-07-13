@@ -3,7 +3,7 @@ local serde = require("@lune/serde")
 
 local luauTypes = require("../modules/LuauType")
 local hydrators = require("../modules/Hydrators")
-local documentation = require("../object-data/Pilot")
+local documentation = require("../modules/PilotDocumentation")
 
 local NO_PARAMETER_RESERVED = "__RESERVE__NO_PARAMETERS___RESERVE_"
 local NO_PARAMETER_REMOVE = `"params":%s*{string.format("%q", NO_PARAMETER_RESERVED)}`

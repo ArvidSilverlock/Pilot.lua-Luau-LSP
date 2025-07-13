@@ -1,7 +1,7 @@
 local serde = require("@lune/serde")
 local fs = require("@lune/fs")
 
-local PilotData = require("../object-data/Pilot")
+local PilotData = require("../modules/PilotDocumentation")
 local Utility = require("../modules/Utility")
 
 local VALID_SELENE_TYPES = {
