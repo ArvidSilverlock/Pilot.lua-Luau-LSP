@@ -105,7 +105,7 @@ const config: Config = {
 				{
 					position: "right",
 					label: "Contributing",
-					to: "contributing",
+					to: "/contributing/contributing-to-documentation",
 				},
 				{
 					href: "https://github.com/ArvidSilverlock/Pilot.lua-Luau-LSP",

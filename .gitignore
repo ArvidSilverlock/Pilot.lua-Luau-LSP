@@ -5,7 +5,7 @@ workspace
 wiki/docs/objects/*
 wiki/docs/types/*
 wiki/docs/raw-documentation.md
-wiki/docs/contributing.md
+wiki/docs/contributing/*
 
 # miscellaneous
 .DS_Store
