@@ -2219,7 +2219,7 @@ classes:
           documentation:
             description: The transparency of the AR display.
             range: [0, 1]
-            inrement: 0.1
+            increment: 0.1
       events:
         CursorPressed:
           documentation: Fired when a player left clicks.
