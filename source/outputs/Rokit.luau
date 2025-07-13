@@ -1,3 +1,4 @@
+local serde = require("@lune/serde")
 local net = require("@lune/net")
 
 local Utility = require("../modules/Utility")
@@ -17,11 +18,14 @@ function Rokit.save(options)
 			continue
 		end
 
-		local releaseTag = net.jsonDecode(net.request({
-			url = `https://api.github.com/repos/{repo}/releases/latest`,
-			method = "GET",
-			headers = { ["Content-Type"] = "application/json" },
-		}).body).tag_name
+		local releaseTag = serde.decode(
+			"json",
+			net.request({
+				url = `https://api.github.com/repos/{repo}/releases/latest`,
+				method = "GET",
+				headers = { ["Content-Type"] = "application/json" },
+			}).body
+		).tag_name
 
 		rokitConfig.tools[toolName] = `{repo}@{releaseTag:gsub("^v", "")}`
 	end
