@@ -2,7 +2,7 @@
 
 There is a unified system for both the generation of the wiki and the generation of the typechecking.
 
-You will find this in the `documentation/documentation.YAML` file.
+You will find this in the `documentation/documentation.yaml` file.
 
 As this file needs to be able to represent all possible Luau types in a vaguely readable tabular form, it is rather complex.
 
