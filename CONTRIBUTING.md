@@ -357,9 +357,11 @@ PortLike:
     - type: number
 ```
 
+This is good for simple types, which just need a description.
+
 ### Range & Increment
 
-This is good for simple types, which just need a description, but if you wish to specify that a value is _deprecated_, or maybe a range/increment, you would do something like (with a `description` key as a within the `documentation` key):
+If you wish to specify something like a range or increment, you would do something like (with a `description` key as a within the `documentation` key to specify the description):
 
 ```yaml
 Transparency:
@@ -370,7 +372,7 @@ Transparency:
     increment: 0.1
 ```
 
-Note that, for ranges that only have a bound in one direction, you can just specify `min` and `max` instead of `range` (do not specify `min` and `max` both at once).
+Note that, for ranges that only have a bound in one direction, you can just specify `minimum` and `maximum` instead of `range` (do not specify `minimum` and `maximum` both at once).
 
 ### Deprecation
 
