@@ -13,7 +13,7 @@ Note that this is, by default, set up for usage with Visual Studio Code. If you'
 
 If you want to contribute, or want more control over the generation, you'll need to install this repo locally with some other tools to run the Luau code.
 
-Install [lune](https://lune-org.github.io/docs), a luau runtime, note, only install this when the steps require you to, and install it _within_ the specified directory (unless of course, you know what you're doing).
+Install [lune](https://lune-org.github.io/docs), a Luau runtime, note, only install this when the steps require you to, and install it _within_ the specified directory (unless of course, you know what you're doing).
 
 ### Steps
 
@@ -38,9 +38,9 @@ Due to lune you have to add `--` after `pilot-generate` for any command options 
 
 Install [rokit](https://github.com/rojo-rbx/rokit), a toolchain manager, you may have already installed this when installing lune.
 
-Install [darklua](https://darklua.com), which has a luau file bundler.
+Install [darklua](https://darklua.com), which has a Luau file bundler.
 
-Install [selene](https://kampfkarren.github.io/selene), a luau linter.
+Install [selene](https://kampfkarren.github.io/selene), a Luau linter.
 
 ## Command Options
 
@@ -49,7 +49,7 @@ Install [selene](https://kampfkarren.github.io/selene), a luau linter.
 | `--notypes`                    | Don't generate Pilot.lua type definitions.                                                                                                                                                                 |
 | `--nodocs`                     | Don't generate Pilot.lua documentation.                                                                                                                                                                    |
 | `--nomodules`                  | Don't generate Pilot.lua module definitions.                                                                                                                                                               |
-| `--novscode`                   | Don't add a `.vscode` folder. This folder is used by visual studio code for settings, the generated files include luau lsp settings, some code snippets, and a recommended list of extensions to download. |
+| `--novscode`                   | Don't add a `.vscode` folder. This folder is used by visual studio code for settings, the generated files include Luau LSP settings, some code snippets, and a recommended list of extensions to download. |
 | `--darklua`                    | Generate a `.darklua.json`.                                                                                                                                                                                |
 | `--selene`                     | Generate a `selene.toml` and `pilot.yml`.                                                                                                                                                                  |
 | `--rokit`                      | Setup `rokit.toml`.                                                                                                                                                                                        |
