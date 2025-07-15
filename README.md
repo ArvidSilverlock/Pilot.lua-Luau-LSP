@@ -54,7 +54,7 @@ Due to lune you have to add `--` after `pilot-generate` for any command options 
 
 ## Credits
 
-The source code for several roblox related projects are included within the `pilot-modules` directory, these include:
+The source code for several roblox related projects are included within the `documentation/modules` directory, these include:
 
 - [cxmeel/sift](https://cxmeel.github.io/sift/), under an MIT license.
 - [evaera/roblox-lua-promise](https://eryn.io/roblox-lua-promise/), under an MIT license.
