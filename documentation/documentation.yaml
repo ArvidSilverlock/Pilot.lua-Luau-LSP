@@ -1751,9 +1751,7 @@ globals:
         function:
           parameters:
             - name: port
-              union:
-                - type: Port
-                - type: number
+              type: PortLike
     JSON:
       JSONDecode:
         documentation:
