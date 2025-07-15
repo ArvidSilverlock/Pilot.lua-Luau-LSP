@@ -44,16 +44,18 @@ Install [selene](https://kampfkarren.github.io/selene), a luau linter.
 
 ## Command Options
 
-- `--notypes` - don't generate Pilot.lua type definitions.
-- `--nodocs` - don't generate Pilot.lua documentation.
-- `--nomodules` - don't generate Pilot.lua module definitions.
-- `--novscode` - don't add a `.vscode/settings.json` and `.vscode/extensions.json`.
-- `--darklua` - generate a `.darklua.json`.
-- `--selene -` generate a `selene.toml` and `pilot.yml`.
-- `--rokit` - setup `rokit.toml`.
-- `--wiki` - generates all the wiki markdown files in the wiki docs directory.
-- `-o <path>` - location to generate everything in, defaults to `./workspace`.
-- `--types-dir=<type-directory>` - subdirectory of the output location to place the types, docs and modules in, defaults to `types`.
+| Option                         | Description                                                                                                                                                                                                |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--notypes`                    | Don't generate Pilot.lua type definitions.                                                                                                                                                                 |
+| `--nodocs`                     | Don't generate Pilot.lua documentation.                                                                                                                                                                    |
+| `--nomodules`                  | Don't generate Pilot.lua module definitions.                                                                                                                                                               |
+| `--novscode`                   | Don't add a `.vscode` folder. This folder is used by visual studio code for settings, the generated files include luau lsp settings, some code snippets, and a recommended list of extensions to download. |
+| `--darklua`                    | Generate a `.darklua.json`.                                                                                                                                                                                |
+| `--selene`                     | Generate a `selene.toml` and `pilot.yml`.                                                                                                                                                                  |
+| `--rokit`                      | Setup `rokit.toml`.                                                                                                                                                                                        |
+| `--wiki`                       | Generates all the wiki markdown files in the wiki docs directory.                                                                                                                                          |
+| `-o <path>`                    | Location to generate everything in, defaults to `./workspace`.                                                                                                                                             |
+| `--types-dir=<type-directory>` | Subdirectory of the output location to place the types, docs, and modules in, defaults to `types`.                                                                                                         |
 
 ## Credits
 

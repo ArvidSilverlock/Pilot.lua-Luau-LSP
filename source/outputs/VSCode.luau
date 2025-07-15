@@ -1,4 +1,5 @@
 local fs = require("@lune/fs")
+local serde = require("@lune/serde")
 
 local Utility = require("../modules/Utility")
 
@@ -13,12 +14,7 @@ function VSCode.save(options)
 	local typesDirectory = options["types-dir"]
 	local path = Utility.pathJoiner(options.o)
 
-	local fileRequireAliases = {}
 	local recommendedExtensions = {}
-
-	for _, module in fs.readDir("./documentation/modules") do
-		fileRequireAliases[Utility.stripFileExtension(module)] = `./{typesDirectory}/modules/{module}`
-	end
 
 	table.insert(recommendedExtensions, EXTENSIONS.luaulsp)
 	if options.selene then
@@ -33,12 +29,15 @@ function VSCode.save(options)
 		["luau-lsp.platform.type"] = "roblox",
 		["luau-lsp.types.definitionFiles"] = { `./{typesDirectory}/global.d.luau` },
 		["luau-lsp.types.documentationFiles"] = { `./{typesDirectory}/documentation.d.json` },
-		["luau-lsp.require.fileAliases"] = fileRequireAliases,
 	})
 
 	Utility.writeConfigurationFile(path(".vscode/extensions.json"), "json", {
 		recommendations = recommendedExtensions,
 	})
+
+	local snippetsContent = fs.readFile("./documentation/snippets.json")
+	local snippets = serde.decode("json", snippetsContent)
+	Utility.writeConfigurationFile(path(".vscode/*.code-snippets"), "json", snippets)
 end
 
 return VSCode
