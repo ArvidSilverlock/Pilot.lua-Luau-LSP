@@ -2,23 +2,18 @@
 
 Navigate to the [releases](https://github.com/ArvidSilverlock/Pilot.lua-Luau-LSP/releases) and download the latest `workspace.zip`, unzip it, and open it in Visual Studio Code.
 
-You'll need to install the [Luau LSP](https://marketplace.visualstudio.com/items?itemName=JohnnyMorganz.luau-lsp) visual studio code extension. If you are running a version <1.33.1 you will need to find and replace `Enum.` with `Enum` in the `global.d.luau` file, make sure you are not in regex mode, as that would cause issues.
+You'll need to install the [Luau LSP](https://marketplace.visualstudio.com/items?itemName=JohnnyMorganz.luau-lsp) visual studio code extension.
 
 Note that this is, by default, set up for usage with Visual Studio Code. If you're a neovim user or use some other editor, I trust you're smart enough to set it up properly on your own.
 
 ## Building From Source
 
+> [!IMPORTANT]  
+> Do _not_ attempt this route if you are not technically oriented, many have tried, and failed, despite how simple it looks. Read the 'Installation' section if you think you fall into this category.
+
 If you want to contribute, or want more control over the generation, you'll need to install this repo locally with some other tools to run the Luau code.
 
 Install [lune](https://lune-org.github.io/docs), a luau runtime, note, only install this when the steps require you to, and install it _within_ the specified directory (unless of course, you know what you're doing).
-
-### Optional
-
-Install [rokit](https://github.com/rojo-rbx/rokit), a toolchain manager, you may have already installed this when installing lune.
-
-Install [selene](https://kampfkarren.github.io/selene), a luau linter.
-
-Install [darklua](https://darklua.com), which has a luau file bundler.
 
 ### Steps
 
@@ -38,6 +33,14 @@ lune run pilot-generate
 You should then open the generated `workspace` folder as the root folder in visual studio code.
 
 Due to lune you have to add `--` after `pilot-generate` for any command options to work (i.e., `lune run pilot-generate -- -o ./workspace`).
+
+### Optional
+
+Install [rokit](https://github.com/rojo-rbx/rokit), a toolchain manager, you may have already installed this when installing lune.
+
+Install [darklua](https://darklua.com), which has a luau file bundler.
+
+Install [selene](https://kampfkarren.github.io/selene), a luau linter.
 
 ## Command Options
 
