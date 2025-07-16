@@ -42,20 +42,23 @@ Install [darklua](https://darklua.com), which has a Luau file bundler.
 
 Install [selene](https://kampfkarren.github.io/selene), a Luau linter.
 
-## Command Options
+## Command Line Options
 
-| Option                         | Description                                                                                                                                                                                                |
-| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--notypes`                    | Don't generate Pilot.lua type definitions.                                                                                                                                                                 |
-| `--nodocs`                     | Don't generate Pilot.lua documentation.                                                                                                                                                                    |
-| `--nomodules`                  | Don't generate Pilot.lua module definitions.                                                                                                                                                               |
-| `--novscode`                   | Don't add a `.vscode` folder. This folder is used by visual studio code for settings, the generated files include Luau LSP settings, some code snippets, and a recommended list of extensions to download. |
-| `--darklua`                    | Generate a `.darklua.json`.                                                                                                                                                                                |
-| `--selene`                     | Generate a `selene.toml` and `pilot.yml`.                                                                                                                                                                  |
-| `--rokit`                      | Setup `rokit.toml`.                                                                                                                                                                                        |
-| `--wiki`                       | Generates all the wiki markdown files in the wiki docs directory.                                                                                                                                          |
-| `-o <path>`                    | Location to generate everything in, defaults to `./workspace`.                                                                                                                                             |
-| `--types-dir=<type-directory>` | Subdirectory of the output location to place the types, docs, and modules in, defaults to `types`.                                                                                                         |
+| Option                                          | Description                                                                                                                                                          |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--notypes`                                     | Skip generation of Pilot.lua type definitions.                                                                                                                       |
+| `--nodocs`                                      | Skip generation of Pilot.lua documentation.                                                                                                                          |
+| `--nomodules`                                   | Skip generation of Pilot.lua module definitions.                                                                                                                     |
+| `--novscode`                                    | Do not create a `.vscode` folder. This folder typically includes VS Code settings, Luau LSP configurations, code snippets, and a list of recommended extensions.     |
+| `--snippet-casing=camel\|snake\|pascal\|manual` | Sets the casing style for variables in the `getp[oa]rt` VS Code snippets. <br>- `manual`: Disables automatic casing based on class names. <br>- Defaults to `camel`. |
+| `--snippet-part-message="no <part>"`            | Sets the default error message inserted by the `getpart` snippet.                                                                                                    |
+| `--snippet-port-message="no <part> on <port>"`  | Sets the default error message inserted by the `getport` snippet.                                                                                                    |
+| `--darklua`                                     | Generate a `.darklua.json` file for DarkLua configuration.                                                                                                           |
+| `--selene`                                      | Generate a `selene.toml` and `pilot.yml` file for Selene linting and Pilot integration.                                                                              |
+| `--rokit`                                       | Generate a `rokit.toml` configuration file.                                                                                                                          |
+| `--wiki`                                        | Generate markdown files for all documentation in the designated wiki docs directory.                                                                                 |
+| `-o <path>`                                     | Output directory for all generated files. <br>- Defaults to `./workspace`.                                                                                           |
+| `--types-dir=<type-directory>`                  | Subdirectory (within the output directory) where types, documentation, and modules are placed. <br>- Defaults to `types`.                                            |
 
 ## Credits
 

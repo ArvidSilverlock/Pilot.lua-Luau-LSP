@@ -8,6 +8,10 @@ return function(args: { string })
 	local options = Utility.mergeTables(Utility.parseArguments(args, "o"), {
 		o = "./workspace",
 		["types-dir"] = "types",
+
+		["snippet-casing"] = "camel",
+		["snippet-part-message"] = "expected <part> to be connected",
+		["snippet-port-message"] = "expected <part> to be connected on port <port>",
 	})
 
 	local argumentsSpecified = false

@@ -58,11 +58,25 @@ function Utility.pathJoiner(root)
 	end
 end
 
-function Utility.writeConfigurationFile(path: string, format: serde.EncodeDecodeFormat, values: { [any]: any })
+function Utility.writeConfigurationFile(
+	path: string,
+	format: serde.EncodeDecodeFormat,
+	values: { [any]: any },
+	shallow: boolean?
+)
 	if fs.isFile(path) then
 		local currentValueIsValid, currentValue = pcall(serde.decode, format, fs.readFile(path))
 		if currentValueIsValid and currentValue then
-			Utility.mergeTables(currentValue, values)
+			if shallow then
+				for existingKey, existingValue in currentValue do
+					if values[existingKey] ~= nil then
+						continue
+					end
+					values[existingKey] = existingValue
+				end
+			else
+				Utility.mergeTables(currentValue, values)
+			end
 		end
 	end
 
