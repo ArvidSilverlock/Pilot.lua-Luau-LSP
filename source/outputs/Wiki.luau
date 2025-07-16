@@ -381,6 +381,14 @@ local function appendDocumentation(output, object, metadata, dontWriteDescriptio
 				else "object"}.\n\n`
 		)
 
+		if rawData.ResourceType and rawData.ResourceAmount then
+			if rawData.ResourceType == "Power" then
+				output:PushLine(`It consumes {rawData.ResourceAmount} power per tick.`)
+			elseif rawData.ResourceType ~= "Trigger" then
+				output:PushLine(`It generates {rawData.ResourceAmount} <code>{rawData.ResourceType}</code> per tick.`)
+			end
+		end
+
 		if rawData.Malleability == 0 then
 			output:Push(`It cannot be resized.\n\n`)
 		elseif rawData.Malleability then
