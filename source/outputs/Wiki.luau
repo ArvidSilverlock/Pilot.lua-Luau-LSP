@@ -383,9 +383,9 @@ local function appendDocumentation(output, object, metadata, dontWriteDescriptio
 
 		if rawData.ResourceType and rawData.ResourceAmount then
 			if rawData.ResourceType == "Power" then
-				output:PushLine(`It consumes {rawData.ResourceAmount} power per tick.`)
+				output:Push(`It consumes {rawData.ResourceAmount} power per tick.\n\n`)
 			elseif rawData.ResourceType ~= "Trigger" then
-				output:PushLine(`It generates {rawData.ResourceAmount} <code>{rawData.ResourceType}</code> per tick.`)
+				output:Push(`It generates {rawData.ResourceAmount} <code>{rawData.ResourceType}</code> per tick.\n\n`)
 			end
 		end
 
