@@ -354,7 +354,7 @@ function luauTypes.writeFunction(output, state: State, group: TypeGroup)
 	local isDirectlyUnderRoot = if state.root.context == "declaration"
 		then state.parent and state.parent.isRoot
 		else state.parent and (state :: any).parent.parent and (state :: any).parent.parent.isRoot
-	local isClassMethod = isDirectlyUnderRoot and state.root.context ~= "type"
+	local isClassMethod = isDirectlyUnderRoot and (state.root.context == "declaration" or state.root.context == "class")
 
 	local needsBrackets = not state.parent.isRoot
 		and (state.parent.base.context.style == "union" or state.parent.base.context.style == "intersection")
