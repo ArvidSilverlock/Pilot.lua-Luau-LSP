@@ -24,8 +24,10 @@ local function writeTypeGroup(snippet, key: string, value: any, context: string,
 		if callback then
 			callback(snippet, key, value, context)
 		elseif context == "global" then
-			snippet:Push("PilotLua.", key, " = ( nil :: any ) :: ")
+			snippet:Push(key, " = ( ", key, " :: any ) :: ")
 			luauTypes.writeFromState(snippet, typeState)
+			snippet:StripTrailingWhitespace()
+			snippet:PushLine(",")
 		else
 			luauTypes.writeFromState(snippet, typeState)
 		end
@@ -45,7 +47,8 @@ function Vanilla.generate(options)
 	end)
 	table.sort(globalList)
 
-	snippet:Push("-- ", table.concat(globalList, " "))
+	snippet:PushLine("--!nolint UnknownGlobal")
+	snippet:PushLine("-- PilotLua Globals: ", table.concat(globalList, ", "))
 
 	writeTypeGroup(snippet, "types", documentation.types, "type")
 
@@ -88,9 +91,20 @@ function Vanilla.generate(options)
 
 	writeTypeGroup(snippet, "configurations", documentation.configurations, "type")
 
-	snippet:PushLine("local PilotLua = {}")
+	snippet:PushLine("return setmetatable("):Indent():PushLine("{"):Indent()
 	writeTypeGroup(snippet, "globals", documentation.globals, "global")
-	snippet:PushLine("return PilotLua")
+	snippet:Dedent():PushLine("},"):PushLine("{"):Indent():PushLine("__call = function(self)"):Indent():Push("return ")
+
+	for index, global in globalList do
+		snippet:Push("self.", global)
+		if index == #globalList then
+			snippet:NewLine()
+		else
+			snippet:Push(", ")
+		end
+	end
+
+	snippet:Dedent():PushLine("end"):Dedent():PushLine("}"):Dedent():PushLine(")")
 
 	return tostring(snippet)
 end
