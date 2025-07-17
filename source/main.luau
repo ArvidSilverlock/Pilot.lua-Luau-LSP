@@ -4,10 +4,24 @@ local Utility = require("./modules/Utility")
 
 local CHECK_MARK = stdio.color("green") .. "✔" .. stdio.color("reset")
 
+local GENERATORS = {
+	"types",
+	"docs",
+	"vscode",
+	"modules",
+	"selene",
+	"darklua",
+	"rokit",
+	"wiki",
+	"vanilla",
+}
+
 return function(args: { string })
 	local options = Utility.mergeTables(Utility.parseArguments(args, "o"), {
 		o = "./workspace",
 		["types-dir"] = "types",
+
+		["vanilla-output"] = "vanilla.luau",
 
 		["snippet-casing"] = "camel",
 		["snippet-part-message"] = "expected <part> to be connected",
@@ -22,6 +36,14 @@ return function(args: { string })
 		end
 	end
 
+	local foundOnly = nil
+	for _, option in GENERATORS do
+		if options[option .. "only"] then
+			foundOnly = option
+			break
+		end
+	end
+
 	if options.release then
 		stdio.write("Using release options.\n")
 
@@ -32,21 +54,15 @@ return function(args: { string })
 		options.selene = true
 		options.darklua = true
 		options.rokit = true
+		options.vanilla = true
 		options.wiki = false
-	elseif options.wikionly then
-		stdio.write("Using wiki-only options.\n")
-
-		options.wiki = true
-
-		options.types = false
-		options.docs = false
-		options.vscode = false
-		options.modules = false
-		options.selene = false
-		options.darklua = false
-		options.rokit = false
+	elseif foundOnly then
+		stdio.write("Using " .. foundOnly .. "-only options.\n")
+		for _, option in GENERATORS do
+			options[option] = option == foundOnly
+		end
 	elseif argumentsSpecified then
-		stdio.write("Arguments besides '-o' and `--types-dir` specified, not providing Q/A.\n")
+		stdio.write("Arguments besides '" .. "-o" .. "' and `--types-dir` specified, not providing Q/A.\n")
 	else
 		stdio.write(stdio.color("red"))
 		stdio.write("Note: ")
@@ -58,6 +74,7 @@ return function(args: { string })
 		options.vscode = true
 		options.modules = true
 		options.wiki = false
+		options.vanilla = false
 
 		options.selene = stdio.prompt("confirm", "Setup selene (linter)?")
 		options.darklua = stdio.prompt("confirm", "Setup darklua (bundler)?")
@@ -131,4 +148,5 @@ return function(args: { string })
 	generate("rokit", "Rokit", false)
 
 	generate("wiki", "Wiki", false)
+	generate("vanilla", "Vanilla", false)
 end
