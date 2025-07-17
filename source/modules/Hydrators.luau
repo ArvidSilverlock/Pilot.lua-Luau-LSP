@@ -22,12 +22,12 @@ local function deepClone(original, cache)
 	return copy
 end
 
-function Hydrators.object(className, class)
+function Hydrators.object(className, class, vanilla: boolean?)
 	local reformattedClass = deepClone(class)
 	local hydrator = reformattedClass.hydrator
 	reformattedClass.hydrator = nil
 
-	reformattedClass.class = {}
+	local resultingType = {}
 
 	if typeof(hydrator) == "table" then
 		if hydrator.events then
@@ -42,7 +42,7 @@ function Hydrators.object(className, class)
 				}
 				eventData.type = "Event"
 				eventData.parameters = nil
-				reformattedClass.class[event] = eventData
+				resultingType[event] = eventData
 			end
 		end
 
@@ -54,7 +54,7 @@ function Hydrators.object(className, class)
 				}
 				methodData.parameters, methodData.returns = nil
 
-				reformattedClass.class[method] = methodData
+				resultingType[method] = methodData
 			end
 		end
 
@@ -71,7 +71,7 @@ function Hydrators.object(className, class)
 					propertyData.documentation = { readonly = true }
 				end
 
-				reformattedClass.class[property] = propertyData
+				resultingType[property] = propertyData
 			end
 		end
 
@@ -79,10 +79,10 @@ function Hydrators.object(className, class)
 			local configurationTypeName = className .. "Configuration"
 
 			for configurable, configurableData in hydrator.configurables do
-				reformattedClass.class[configurable] = configurableData
+				resultingType[configurable] = configurableData
 			end
 
-			reformattedClass.class.Configure = {
+			resultingType.Configure = {
 				documentation = "A method to configure the object, will yield until specified string configurables are filtered.",
 				method = {
 					parameters = {
@@ -96,25 +96,41 @@ function Hydrators.object(className, class)
 			}
 		end
 
-		reformattedClass.class.ClassName = {
+		resultingType.ClassName = {
 			documentation = "The name of the class of the object.",
 			["string-type"] = hydrator["class-name"] or className,
 		}
 	else
-		reformattedClass.class.ClassName =
+		resultingType.ClassName =
 			{ documentation = "The name of the class of the object.", ["string-type"] = className }
 	end
 
-	local inheritanceSource = if hydrator.extends
-		then (
-			if typeof(hydrator.extends) == "table"
-				then hydrator.extends[1] -- sorry
-				else hydrator.extends
-		)
-		elseif not hydrator.abstract then "PilotObject"
-		else nil
+	if vanilla then
+		if hydrator.extends then
+			reformattedClass.union = { { type = resultingType } }
+			if typeof(hydrator.extends) == "table" then
+				for _, source in hydrator.extends do
+					table.insert(reformattedClass.union, { type = source })
+				end
+			else
+				table.insert(reformattedClass.union, { type = hydrator.extends })
+			end
+		else
+			reformattedClass.type = resultingType
+		end
+	else
+		reformattedClass.class = resultingType
+		local inheritanceSource = if hydrator.extends
+			then (
+				if typeof(hydrator.extends) == "table"
+					then hydrator.extends[1] -- sorry
+					else hydrator.extends
+			)
+			elseif not hydrator.abstract then "PilotObject"
+			else nil
 
-	reformattedClass.extends = inheritanceSource
+		reformattedClass.extends = inheritanceSource
+	end
 
 	return reformattedClass
 end
