@@ -172,7 +172,9 @@ function Hydrators.getPart(value)
 		table.insert(copy.intersection, {
 			["function"] = {
 				parameters = parameters,
-				returns = if hydrator.multiple then { { ["array-type"] = className } } else { { type = className } },
+				returns = if hydrator.multiple
+					then { { ["array-type"] = className } }
+					else { { ["nullable-type"] = className } },
 			},
 		})
 	end
