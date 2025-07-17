@@ -30,6 +30,17 @@ function Snippet:Insert(index: number?, value: any?)
 	return self
 end
 
+function Snippet:StripTrailingWhitespace()
+	while #self._lines > 0 do
+		self._lines[#self._lines] = self._lines[#self._lines]:gsub("%s+$", "")
+		if self._lines[#self._lines] ~= "" then
+			break
+		end
+		table.remove(self._lines)
+	end
+	return self
+end
+
 function Snippet:NewLine(count: number?)
 	self:Push(string.rep("\n", count or 1))
 	return self
