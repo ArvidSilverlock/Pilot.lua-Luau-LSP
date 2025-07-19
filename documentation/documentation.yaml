@@ -526,6 +526,8 @@ types:
           - type:
               RegionType:
                 string-type: Space
+              OrbitBody:
+                type: never
           - type: PlayableRegionInfo
       BlackHoleRegionInfo:
         documentation: The region info format of a black hole.
@@ -544,6 +546,8 @@ types:
                 type: never
               StarType:
                 type: never
+              OrbitBody:
+                type: never
           - type: PlayableRegionInfo
       StarRegionInfo:
         documentation: The region info format of a star.
@@ -561,6 +565,8 @@ types:
               BlackHoleSize:
                 type: never
               PlanetData:
+                type: never
+              OrbitBody:
                 type: never
           - type: PlayableRegionInfo
       PlanetRegionInfo:
@@ -607,6 +613,8 @@ types:
               StarType:
                 type: never
               StarSize:
+                type: never
+              OrbitBody:
                 type: never
           - type: PlayableRegionInfo
       CompleteRegionInfo:
@@ -3730,7 +3738,7 @@ classes:
           returns:
             - name: reading
               type:
-                [number]:
+                [string]:
                   type: Vector3
               documentation: A dictionary of humanoid names to their world positions.
         ListPlayers:
