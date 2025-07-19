@@ -48,11 +48,19 @@ function Hydrators.object(className, class, vanilla: boolean?)
 
 		if hydrator.methods then
 			for method, methodData in hydrator.methods do
-				methodData.method = {
-					parameters = methodData.parameters,
-					returns = methodData.returns,
-				}
-				methodData.parameters, methodData.returns = nil
+				if methodData.overloads then
+					methodData.intersection = {}
+					for _, overload in methodData.overloads do
+						table.insert(methodData.intersection, { method = overload })
+					end
+				else
+					methodData.method = {
+						parameters = methodData.parameters,
+						returns = methodData.returns,
+					}
+				end
+
+				methodData.overloads, methodData.parameters, methodData.returns = nil
 
 				resultingType[method] = methodData
 			end
