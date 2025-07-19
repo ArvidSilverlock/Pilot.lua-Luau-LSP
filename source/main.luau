@@ -16,21 +16,23 @@ local GENERATORS = {
 	"vanilla",
 }
 
+local DEFAULT_ARGUMENTS = {
+	o = "./workspace",
+	["types-dir"] = "types",
+
+	["vanilla-output"] = "vanilla.luau",
+
+	["snippet-casing"] = "camel",
+	["snippet-part-message"] = "expected <part> to be connected",
+	["snippet-port-message"] = "expected <part> to be connected on port <port>",
+}
+
 return function(args: { string })
-	local options = Utility.mergeTables(Utility.parseArguments(args, "o"), {
-		o = "./workspace",
-		["types-dir"] = "types",
-
-		["vanilla-output"] = "vanilla.luau",
-
-		["snippet-casing"] = "camel",
-		["snippet-part-message"] = "expected <part> to be connected",
-		["snippet-port-message"] = "expected <part> to be connected on port <port>",
-	})
+	local options = Utility.mergeTables(Utility.parseArguments(args, "o"), table.clone(DEFAULT_ARGUMENTS))
 
 	local argumentsSpecified = false
 	for option, _: any in options do
-		if option ~= "o" and option ~= "types-dir" then
+		if DEFAULT_ARGUMENTS[option] == nil then
 			argumentsSpecified = true
 			break
 		end
