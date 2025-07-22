@@ -1,6 +1,6 @@
 local luauTypes = {}
 
-export type TypeStyle = "type" | "function" | "union" | "intersection"
+export type TypeStyle = "type" | "function" | "union" | "intersection" | "class"
 
 export type Context = {
 	style: TypeStyle,
@@ -13,7 +13,7 @@ export type Context = {
 }
 
 export type TypeGroup = {
-	key: string,
+	key: { string },
 	value: any,
 	context: Context,
 	generics: { any }?,
@@ -21,11 +21,11 @@ export type TypeGroup = {
 }
 
 export type State = {
+	isRoot: false,
 	base: TypeGroup,
 	metatable: TypeGroup,
 	self: TypeGroup,
 	parent: State | RootState,
-	isRoot: false,
 	root: RootState,
 	source: any,
 }
@@ -33,9 +33,9 @@ export type State = {
 export type TypeContext = "class" | "declaration" | "type"
 
 export type RootState = {
-	name: string,
 	isRoot: true,
-	context: TypeContext,
+	name: string,
+	context: TypeContext?,
 	define: boolean?,
 }
 
@@ -51,7 +51,9 @@ local SELF_PREFIX = "self"
 
 local TYPE_STYLES = { "type", "function", "method", "union", "intersection", "class", "pack" }
 
-local function getTypeStyle(values)
+local Snippet = require("./Snippet")
+
+local function getTypeStyle(values): string?
 	for _, possibleTypeStyle in TYPE_STYLES do
 		if table.find(values, possibleTypeStyle) then
 			return possibleTypeStyle
@@ -143,7 +145,7 @@ function luauTypes.getTypeState(source, parent: (State | RootState)?): State?
 	end
 end
 
-function luauTypes.writeFromState(output, state: State)
+function luauTypes.writeFromState(output: Snippet.Snippet, state: State)
 	local context = state.base.context
 	local source = state.source
 
@@ -214,12 +216,12 @@ function luauTypes.writeFromState(output, state: State)
 	end
 end
 
-function luauTypes.write(output, source: any, parent: State)
+function luauTypes.write(output: Snippet.Snippet, source: any, parent: State)
 	local state = assert(luauTypes.getTypeState(source, parent), "no context found")
 	luauTypes.writeFromState(output, state)
 end
 
-local function writeKey(output, key: { string } | string)
+local function writeKey(output: Snippet.Snippet, key: { string } | string)
 	if typeof(key) == "table" then
 		assert(#key == 1 and typeof(key[1]) == "string", "malformed indexer")
 		output:Push("[", key[1], "]: ")
@@ -234,7 +236,7 @@ local function writeKey(output, key: { string } | string)
 	end
 end
 
-function luauTypes.writeType(output, state: State, group: TypeGroup)
+function luauTypes.writeType(output: Snippet.Snippet, state: State, group: TypeGroup)
 	local value, context = group.value, group.context
 
 	if context.isArray then
@@ -286,7 +288,7 @@ function luauTypes.writeType(output, state: State, group: TypeGroup)
 	end
 end
 
-function luauTypes.writePack(output, state: State, group: TypeGroup)
+function luauTypes.writePack(output: Snippet.Snippet, state: State, _group: TypeGroup)
 	local parameters = state.base.value
 
 	output:Push("(")
@@ -304,7 +306,7 @@ local function getParameters(state: State, group: TypeGroup)
 		return group.value.parameters
 	end
 
-	local node = state
+	local node: RootState | State = state
 	local previous
 	while node ~= nil and not node.isRoot and not node.self do
 		node, previous = node.parent, node
@@ -326,7 +328,7 @@ local function getParameters(state: State, group: TypeGroup)
 			type = node.name,
 			generics = generics,
 		})
-	elseif node then
+	elseif node and not node.isRoot then
 		local selfType = node.self
 
 		local keyTable = table.clone(selfType.key)
@@ -347,7 +349,7 @@ local function getParameters(state: State, group: TypeGroup)
 	return parameters
 end
 
-function luauTypes.writeFunction(output, state: State, group: TypeGroup)
+function luauTypes.writeFunction(output: Snippet.Snippet, state: State, group: TypeGroup)
 	local value, context = group.value, group.context
 	assert(not context.isString, "you cannot have a string literal function")
 
@@ -372,12 +374,10 @@ function luauTypes.writeFunction(output, state: State, group: TypeGroup)
 		for index, parameter in parameters do
 			local shouldWriteType = if isClassMethod then parameter.name ~= "self" else true
 
-			if isClassMethod then
+			if isClassMethod or parameter.name ~= "..." then
 				output:Push(parameter.name)
-			elseif parameter.name == "..." then
+			else
 				output:Push("...")
-			elseif parameter.name then
-				output:Push(parameter.name)
 			end
 
 			if shouldWriteType then
@@ -426,7 +426,7 @@ function luauTypes.writeFunction(output, state: State, group: TypeGroup)
 	end
 end
 
-function luauTypes.writeUnion(output, state: State, group: TypeGroup)
+function luauTypes.writeUnion(output: Snippet.Snippet, state: State, group: TypeGroup)
 	local value, context = group.value, group.context
 	local parent = state.parent
 
@@ -480,7 +480,7 @@ function luauTypes.writeUnion(output, state: State, group: TypeGroup)
 	end
 end
 
-function luauTypes.writeIntersection(output, state: State, group: TypeGroup)
+function luauTypes.writeIntersection(output: Snippet.Snippet, state: State, group: TypeGroup)
 	local value, context = group.value, group.context
 
 	assert(not context.isString, "you cannot have a string literal intersection")
@@ -517,7 +517,7 @@ function luauTypes.writeIntersection(output, state: State, group: TypeGroup)
 	end
 end
 
-function luauTypes.writeClass(output, state: State, group: TypeGroup)
+function luauTypes.writeClass(output: Snippet.Snippet, state: State, group: TypeGroup)
 	local value = group.value
 
 	assert(state.parent.isRoot, "classes must be defined as the root")

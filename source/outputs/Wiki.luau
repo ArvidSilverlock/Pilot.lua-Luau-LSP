@@ -19,7 +19,12 @@ end
 local function sortedIterate<T>(dictionary: { [string]: T }, deprioritizeDeprecated: boolean?): () -> (string, T)
 	local primary, secondary = {}, {}
 	for key, value in dictionary do
-		if deprioritizeDeprecated and value.documentation and value.documentation.deprecated then
+		if
+			typeof(value) == "table"
+			and deprioritizeDeprecated
+			and value.documentation
+			and value.documentation.deprecated
+		then
 			table.insert(secondary, key)
 		else
 			table.insert(primary, key)
@@ -134,7 +139,9 @@ local function escapeMarkdown(text)
 end
 
 local function getMarkdownType(value)
-	return escapeMarkdown(getType(value):gsub("\n\t*", " "):gsub(", }", " }"))
+	return escapeMarkdown(
+		(assert(getType(value), "no type to generate markdown of"):gsub("\n\t*", " "):gsub(", }", " }"))
+	)
 end
 
 local function formatSize(x, y, z)
@@ -166,7 +173,14 @@ local function findPossibleSizes(malleability)
 	return sizes
 end
 
-local function writeParameters(output, objectName, memberName, parameters, groupName, groupNamePlural)
+local function writeParameters(
+	output: MarkdownSnippet.MarkdownSnippet,
+	objectName,
+	memberName,
+	parameters,
+	groupName,
+	groupNamePlural
+)
 	for parameterIndex, parameter in parameters do
 		if #parameters == 1 then
 			output:Push("\n\nThe ")
@@ -230,13 +244,14 @@ local function writeParameters(output, objectName, memberName, parameters, group
 				end
 			else
 				output:Push(" can be any of the following types:\n"):BulletPointUp()
-				for index, value in base.value do
+				for _, value in base.value do
 					output:InlineCode(getMarkdownType(value)):NewLine()
 				end
 				output:BulletPointDown():Push("\n")
 			end
 		elseif context.style == "type" and typeof(base.value) == "table" and typeof((next(base.value))) == "table" then
 			local indexer, value = next(base.value)
+			assert(indexer, "never")
 
 			output
 				:Push(" is a dictionary with keys that are ")
@@ -318,7 +333,14 @@ local function addCodeSamples(output, data)
 	end
 end
 
-local function appendDocumentation(output, object, metadata, dontWriteDescription, objectName, imageLink)
+local function appendDocumentation(
+	output: MarkdownSnippet.MarkdownSnippet,
+	object: any,
+	metadata: any?,
+	dontWriteDescription: boolean?,
+	objectName: string?,
+	imageLink: string?
+)
 	if imageLink then
 		output
 			:PushLine('<div class="clearfix">')
@@ -476,7 +498,13 @@ function writeWithoutState(output, name, source: any, parent: luauTypes.State, d
 	writeIndividualTypeDescription(output, name, state, depth, tableOfContents)
 end
 
-function writeIndividualTypeDescription(output, key, state: luauTypes.State, depth, tableOfContents)
+function writeIndividualTypeDescription(
+	output: MarkdownSnippet.MarkdownSnippet,
+	key,
+	state: luauTypes.State,
+	depth,
+	tableOfContents
+)
 	local context = state.base.context
 	local source = state.source
 
@@ -652,7 +680,7 @@ function writeIndividualTypeDescription(output, key, state: luauTypes.State, dep
 	output:NewLine(2)
 end
 
-local function generateTypePage(key: string, value: any, parent, path: string, generatedPages, codeblockLinks)
+local function generateTypePage(key: string, value: any, parent, path: string, generatedPages: any, codeblockLinks: any)
 	local typeState = luauTypes.getTypeState(value, {
 		isRoot = true,
 		name = key,
@@ -702,7 +730,7 @@ end
 
 local Wiki = {}
 
-function Wiki.generate(options)
+function Wiki.generate(_options)
 	local codeblockLinks = {}
 	local generatedPages = {
 		objects = {},
@@ -770,16 +798,6 @@ function Wiki.generate(options)
 						else false
 
 					if methodData.overloads then
-						local parameterNames = {}
-						for index, parameter in methodData.parameters or {} do
-							table.insert(parameterNames, parameter.name or `<i>{string.char(96 + index)}</i>`)
-						end
-
-						local returnNames = {}
-						for index, value in methodData.returns or {} do
-							table.insert(returnNames, value.name or `<i>{string.char(96 + index)}</i>`)
-						end
-
 						writeMemberHeader(
 							(if isDeprecated then "<del><i>" else "")
 								.. methodName
@@ -807,13 +825,16 @@ function Wiki.generate(options)
 
 						for index, overload in methodData.overloads do
 							local parameterNames = {}
-							for index, parameter in overload.parameters or {} do
-								table.insert(parameterNames, parameter.name or `<i>{string.char(96 + index)}</i>`)
+							for parameterIndex, parameter in overload.parameters or {} do
+								table.insert(
+									parameterNames,
+									parameter.name or `<i>{string.char(96 + parameterIndex)}</i>`
+								)
 							end
 
 							local returnNames = {}
-							for index, value in overload.returns or {} do
-								table.insert(returnNames, value.name or `<i>{string.char(96 + index)}</i>`)
+							for returnIndex, value in overload.returns or {} do
+								table.insert(returnNames, value.name or `<i>{string.char(96 + returnIndex)}</i>`)
 							end
 
 							output:Push(

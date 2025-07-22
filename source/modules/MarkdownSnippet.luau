@@ -1,6 +1,6 @@
 local Snippet = require("./Snippet")
 
-local MarkdownSnippet = Snippet.new()
+local MarkdownSnippet = Snippet.new() :: any
 MarkdownSnippet.__index = MarkdownSnippet
 MarkdownSnippet.__tostring = Snippet.__tostring
 
@@ -14,7 +14,7 @@ function MarkdownSnippet.new(title: string)
 	return self
 end
 
-function MarkdownSnippet:Insert(index: number?, value: any?)
+function MarkdownSnippet.Insert(self: MarkdownSnippet, index: number?, value: any?)
 	local str = tostring(value)
 	if str == nil or str == "" then
 		return self
@@ -40,42 +40,42 @@ function MarkdownSnippet:Insert(index: number?, value: any?)
 	return self
 end
 
-function MarkdownSnippet:BlockStart(block: string)
+function MarkdownSnippet.BlockStart(self: MarkdownSnippet, block: string)
 	self:Push("<", block, ">")
 	return self
 end
 
-function MarkdownSnippet:BlockEnd(block: string)
+function MarkdownSnippet.BlockEnd(self: MarkdownSnippet, block: string)
 	self:Push("</", block, ">")
 	return self
 end
 
-function MarkdownSnippet:InlineWrap(block, ...)
+function MarkdownSnippet.InlineWrap(self: MarkdownSnippet, block, ...)
 	self:BlockStart(block):Push(...):BlockEnd(block)
 	return self
 end
 
-function MarkdownSnippet:MultilineWrap(block, ...)
+function MarkdownSnippet.MultilineWrap(self: MarkdownSnippet, block, ...)
 	self:BlockStart(block):PushLine(...):BlockEnd(block)
 	return self
 end
 
-function MarkdownSnippet:Delimiter()
+function MarkdownSnippet.Delimiter(self: MarkdownSnippet)
 	self:Push("\n\n---\n\n")
 	return self
 end
 
-function MarkdownSnippet:BulletPointUp()
+function MarkdownSnippet.BulletPointUp(self: MarkdownSnippet)
 	self._bulletPointDepth += 1
 	return self
 end
 
-function MarkdownSnippet:BulletPointDown()
+function MarkdownSnippet.BulletPointDown(self: MarkdownSnippet)
 	self._bulletPointDepth -= 1
 	return self
 end
 
-function MarkdownSnippet:MemberHeader(id: string, title: string?, group: string?)
+function MarkdownSnippet.MemberHeader(self: MarkdownSnippet, id: string, title: string?, group: string?)
 	if group and group ~= "group" then
 		self:Delimiter():Push('<Member id="', id, '" group="', group, '">', title or id, "</Member>\n\n")
 	else
@@ -94,38 +94,29 @@ end
 
 local function createMultilineWrapper(block: string, blockEnd: string?)
 	if blockEnd then
-		return function(self, ...)
+		return function(self: MarkdownSnippet, ...)
 			self:PushLine(block):Push(...):PushLine(blockEnd)
 			return self
-		end, function(self)
+		end, function(self: MarkdownSnippet)
 			self:PushLine(block)
 			return self
-		end, function(self)
+		end, function(self: MarkdownSnippet)
 			self:PushLine(blockEnd)
 			return self
 		end
 	else
-		return function(self, ...)
+		return function(self: MarkdownSnippet, ...)
 			self:MultilineWrap(block, ...)
 			return self
-		end, function(self)
+		end, function(self: MarkdownSnippet)
 			self:BlockStart(block)
 			return self
-		end, function(self)
+		end, function(self: MarkdownSnippet)
 			self:BlockEnd(block)
 			return self
 		end
 	end
 end
-
--- if isDeprecated then
--- 	table.insert(output, "\n:::warning\n\n") -- warning admonition
--- 	table.insert(output, "This method is deprecated.")
--- 	if typeof(isDeprecated) == "string" then
--- 		table.insert(output, " " .. isDeprecated)
--- 	end
--- 	table.insert(output, "\n\n:::\n\n")
--- end
 
 MarkdownSnippet.Bold = createInlineWrapper("b")
 MarkdownSnippet.Italic = createInlineWrapper("i")
@@ -133,7 +124,7 @@ MarkdownSnippet.Code, MarkdownSnippet.CodeStart, MarkdownSnippet.CodeEnd = creat
 MarkdownSnippet.InlineCode = createInlineWrapper("code")
 MarkdownSnippet.Strikethrough = createInlineWrapper("del")
 
-function MarkdownSnippet:AdmonitionStart(blockName: string, title: string?)
+function MarkdownSnippet.AdmonitionStart(self: MarkdownSnippet, blockName: string, title: string?)
 	self:Push("\n:::", blockName)
 	if title then
 		self:Push("[", title, "]")
@@ -142,7 +133,7 @@ function MarkdownSnippet:AdmonitionStart(blockName: string, title: string?)
 	return self
 end
 
-function MarkdownSnippet:AdmonitionEnd()
+function MarkdownSnippet.AdmonitionEnd(self: MarkdownSnippet)
 	self:PushLine("\n\n:::\n\n")
 	return self
 end
@@ -159,5 +150,7 @@ MarkdownSnippet.TipAdmonition = createAdmonitionWrapper("tip")
 MarkdownSnippet.InfoAdmonition = createAdmonitionWrapper("info")
 MarkdownSnippet.WarningAdmonition = createAdmonitionWrapper("warning")
 MarkdownSnippet.DangerAdmonition = createAdmonitionWrapper("danger")
+
+export type MarkdownSnippet = any
 
 return MarkdownSnippet

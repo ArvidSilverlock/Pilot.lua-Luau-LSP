@@ -93,7 +93,7 @@ return function(args: { string })
 
 		local startTime = os.clock()
 
-		local generator = require(`./outputs/{generatorName}`)
+		local generator = (require :: any)(`./outputs/{generatorName}`)
 
 		if generator.generate and generator.save then
 			generator.save(options, generator.generate(options))

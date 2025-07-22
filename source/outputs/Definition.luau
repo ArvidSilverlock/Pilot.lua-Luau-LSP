@@ -8,7 +8,7 @@ local documentation = require("../modules/PilotDocumentation")
 
 local Definition = {}
 
-local function writeTypeGroup(snippet, key: string, value: any, context: string)
+local function writeTypeGroup(snippet, key: string, value: any, context: luauTypes.TypeContext)
 	if value.hydrator and value.hydrator.name == "get-part" then
 		value = hydrators.getPart(value)
 	end
@@ -29,7 +29,7 @@ local function writeTypeGroup(snippet, key: string, value: any, context: string)
 	end
 end
 
-function Definition.generate(options)
+function Definition.generate(_options)
 	local snippet = Snippet.new()
 
 	writeTypeGroup(snippet, "globals", documentation.globals, "declaration")

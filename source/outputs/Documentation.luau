@@ -8,7 +8,7 @@ local documentation = require("../modules/PilotDocumentation")
 local NO_PARAMETER_RESERVED = "__RESERVE__NO_PARAMETERS___RESERVE_"
 local NO_PARAMETER_REMOVE = `"params":%s*{string.format("%q", NO_PARAMETER_RESERVED)}`
 
-local function extractDescription(key, state, value)
+local function extractDescription(value): string?
 	if not value.documentation then
 		return nil
 	elseif typeof(value.documentation) == "string" then
@@ -23,7 +23,7 @@ end
 local documentFunctionParameters, documentType
 
 function documentFunctionParameters(group: "parameters" | "returns", output, key, state)
-	local list = {}
+	local list: { { documentation: string, name: string } | string } = {}
 
 	if not state.base.value[group] then
 		return list
@@ -87,7 +87,7 @@ function documentType(output, key: string, state: luauTypes.State)
 		end
 
 		output[key] = {
-			documentation = extractDescription(key, state, state.source),
+			documentation = extractDescription(state.source),
 			keys = if next(keys) then keys else nil,
 		}
 	elseif context.style == "function" then
@@ -95,13 +95,13 @@ function documentType(output, key: string, state: luauTypes.State)
 		local returns = documentFunctionParameters("returns", output, key, state)
 
 		output[key] = {
-			documentation = extractDescription(key, state, state.source),
+			documentation = extractDescription(state.source),
 			params = if next(parameters) then parameters else NO_PARAMETER_RESERVED,
 			returns = if next(returns) then returns else nil,
 		}
 	else
 		output[key] = {
-			documentation = extractDescription(key, state, state.source),
+			documentation = extractDescription(state.source),
 		}
 	end
 

@@ -1,7 +1,7 @@
 local Snippet = {}
 Snippet.__index = Snippet
 
-function Snippet.new(name: string?)
+function Snippet.new(): Snippet
 	local self = setmetatable({
 		_lines = {},
 		_indent = 0,
@@ -10,7 +10,7 @@ function Snippet.new(name: string?)
 	return self
 end
 
-function Snippet:Insert(index: number?, value: any?)
+function Snippet.Insert(self: Snippet, index: number?, value: any?)
 	local str = tostring(value)
 	if str == nil or str == "" then
 		return self
@@ -30,7 +30,7 @@ function Snippet:Insert(index: number?, value: any?)
 	return self
 end
 
-function Snippet:StripTrailingWhitespace()
+function Snippet.StripTrailingWhitespace(self: Snippet)
 	while #self._lines > 0 do
 		self._lines[#self._lines] = self._lines[#self._lines]:gsub("%s+$", "")
 		if self._lines[#self._lines] ~= "" then
@@ -41,12 +41,12 @@ function Snippet:StripTrailingWhitespace()
 	return self
 end
 
-function Snippet:NewLine(count: number?)
+function Snippet.NewLine(self: Snippet, count: number?)
 	self:Push(string.rep("\n", count or 1))
 	return self
 end
 
-function Snippet:Push(...: any)
+function Snippet.Push(self: Snippet, ...: any)
 	for index = 1, select("#", ...) do
 		local line = select(index, ...)
 		if type(line) == "table" then
@@ -60,7 +60,7 @@ function Snippet:Push(...: any)
 	return self
 end
 
-function Snippet:PushLine(...: any)
+function Snippet.PushLine(self: Snippet, ...: any)
 	if select("#", ...) > 0 then
 		self:Push(...)
 		table.insert(self._lines, "\n")
@@ -68,12 +68,12 @@ function Snippet:PushLine(...: any)
 	return self
 end
 
-function Snippet:Indent(amount: number?)
+function Snippet.Indent(self: Snippet, amount: number?)
 	self._indent += amount or 1
 	return self
 end
 
-function Snippet:Dedent(amount: number?)
+function Snippet.Dedent(self: Snippet, amount: number?)
 	self._indent -= amount or 1
 	self._lines[#self._lines] = self._lines[#self._lines]:gsub("\t+", function(str)
 		return string.rep("\t", math.max(#str - (amount or 1), 0))
@@ -81,36 +81,44 @@ function Snippet:Dedent(amount: number?)
 	return self
 end
 
-function Snippet:ConditionalPush(condition: boolean?, ...: any)
+function Snippet.ConditionalPush(self: Snippet, condition: boolean?, ...: any)
 	if condition then
 		self:Push(...)
 	end
 	return self
 end
 
-function Snippet:Call(callback: (any, ...any) -> (), ...: any)
+function Snippet.Call(self: Snippet, callback: (any, ...any) -> (), ...: any)
 	callback(self, ...)
 	return self
 end
 
-function Snippet:ConditionalCall(condition: boolean?, callback: (any, ...any) -> (), ...: any)
+function Snippet.ConditionalCall(self: Snippet, condition: boolean?, callback: (any, ...any) -> (), ...: any)
 	if condition then
 		callback(self, ...)
 	end
 	return self
 end
 
-function Snippet:Break()
+function Snippet.Break(self: Snippet)
 	table.insert(self._lines, "")
 	return self
 end
 
-function Snippet:__tostring(): string
+function Snippet.__tostring(self: Snippet): string
 	return table.concat(self._lines, "")
 end
 
 function Snippet.isSnippet(value: any?): boolean
 	return type(value) == "table" and getmetatable(value) == Snippet
 end
+
+export type Snippet = typeof(setmetatable(
+	{} :: {
+		_lines: { string },
+		_indent: number,
+	},
+	Snippet
+))
 
 return Snippet
