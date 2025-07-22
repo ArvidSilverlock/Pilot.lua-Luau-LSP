@@ -1,29 +1,10 @@
 local documentation = require("../modules/PilotDocumentation")
+local Utility = require("../modules/Utility")
 
 local Hydrators = {}
 
-local function deepClone(original, cache)
-	cache = cache or {}
-
-	if type(original) ~= "table" then
-		return original
-	elseif cache[original] then
-		return cache[original]
-	end
-
-	local copy = {}
-	cache[original] = copy
-	for k, v in original do
-		copy[deepClone(k, cache)] = deepClone(v, cache)
-	end
-
-	setmetatable(copy, deepClone(getmetatable(original), cache))
-
-	return copy
-end
-
 function Hydrators.object(className, class, vanilla: boolean?)
-	local reformattedClass = deepClone(class)
+	local reformattedClass = Utility.deepClone(class)
 	local hydrator = reformattedClass.hydrator
 	reformattedClass.hydrator = nil
 

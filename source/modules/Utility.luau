@@ -29,6 +29,26 @@ function Utility.markdownDropdown(dropdown: string, content: string?): string?
 	return if content then `<details>\n\t<summary>{dropdown}</summary>\n{Utility.indent(content)}\n</details>` else nil
 end
 
+function Utility.deepClone(original, cache)
+	cache = cache or {}
+
+	if type(original) ~= "table" then
+		return original
+	elseif cache[original] then
+		return cache[original]
+	end
+
+	local copy = {}
+	cache[original] = copy
+	for k, v in original do
+		copy[Utility.deepClone(k, cache)] = Utility.deepClone(v, cache)
+	end
+
+	setmetatable(copy, Utility.deepClone(getmetatable(original), cache))
+
+	return copy
+end
+
 function Utility.deepFreeze(t)
 	table.freeze(t)
 	for _, value in t do
