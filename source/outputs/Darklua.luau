@@ -4,7 +4,7 @@ local Utility = require("../modules/Utility")
 
 local Darklua = {}
 
-function Darklua.save(options, generatedData)
+function Darklua.save(options, _generatedData)
 	local darkluaConfig = {
 		bundle = {
 			require_mode = {

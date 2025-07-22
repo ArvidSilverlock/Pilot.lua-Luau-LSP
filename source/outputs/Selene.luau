@@ -23,7 +23,7 @@ local NO_PARAMETER_REMOVE = `args:\n%s*%-%s*{string.format("%q", NO_PARAMETER_RE
 
 local Selene = {}
 
-local function documentSeleneType(typeState)
+local function documentSeleneType(typeState): any
 	local isOverloadedFunction = true
 	if typeState.base.context.style == "intersection" then
 		for _, intersection in typeState.base.value do
@@ -40,7 +40,7 @@ local function documentSeleneType(typeState)
 	if isOverloadedFunction then
 		return { args = { { type = "..." } } }
 	elseif typeState.base.context.style == "function" then
-		local functionDefinition = { args = {} }
+		local functionDefinition: any = { args = {} }
 
 		local parameters = typeState.base.value.parameters
 
@@ -67,15 +67,12 @@ local function documentSeleneType(typeState)
 	elseif typeState.base.context.style == "type" then
 		if typeof(typeState.base.value) == "string" then
 			local luauTypeSnippet = Snippet.new()
-			luauTypes.write(luauTypeSnippet, luauTypes.setNullable(typeState.source, false, nullable), typeState)
+			luauTypes.write(luauTypeSnippet, luauTypes.setNullable(typeState.source, false), typeState)
 
 			local trimmed = tostring(luauTypeSnippet):match("^%s*(.-)%s*$") :: string
 
 			return {
-				type = if typeState == "function"
-					then "function"
-					elseif table.find(VALID_SELENE_TYPES, trimmed) then trimmed
-					else { display = trimmed },
+				type = if table.find(VALID_SELENE_TYPES, trimmed) then trimmed else { display = trimmed },
 			}
 		else
 			local dictionary = { property = "read-only" }
@@ -113,7 +110,7 @@ local function writeTypeGroup(output, key: string, value: any, context: luauType
 	end
 end
 
-function Selene.generate(options)
+function Selene.generate(_options)
 	local output = {
 		base = "roblox",
 		name = "pilot",

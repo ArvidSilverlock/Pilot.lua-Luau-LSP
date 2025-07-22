@@ -8,7 +8,13 @@ local documentation = require("../modules/PilotDocumentation")
 
 local Vanilla = {}
 
-local function writeTypeGroup(snippet, key: string, value: any, context: string, callback)
+local function writeTypeGroup(
+	snippet,
+	key: string,
+	value: any,
+	context: luauTypes.TypeContext | "global",
+	callback: any?
+)
 	if value.hydrator and value.hydrator.name == "get-part" then
 		value = hydrators.getPart(value)
 	end
@@ -38,11 +44,11 @@ local function writeTypeGroup(snippet, key: string, value: any, context: string,
 	end
 end
 
-function Vanilla.generate(options)
+function Vanilla.generate(_options)
 	local snippet = Snippet.new()
 
-	local globalList = {}
-	writeTypeGroup(snippet, "globals", documentation.globals, "asd", function(_, key, _, _)
+	local globalList: { string } = {}
+	writeTypeGroup(snippet, "globals", documentation.globals, "global", function(_, key, _, _)
 		table.insert(globalList, key)
 	end)
 	table.sort(globalList)

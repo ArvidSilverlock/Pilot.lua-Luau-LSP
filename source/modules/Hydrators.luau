@@ -3,7 +3,7 @@ local Utility = require("../modules/Utility")
 
 local Hydrators = {}
 
-function Hydrators.object(className, class, vanilla: boolean?)
+function Hydrators.object(className: string, class: any, vanilla: boolean?)
 	local reformattedClass = Utility.deepClone(class)
 	local hydrator = reformattedClass.hydrator
 	reformattedClass.hydrator = nil

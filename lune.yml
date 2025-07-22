@@ -1,0 +1,8 @@
+base: luau
+name: lune
+globals:
+  warn:
+    args:
+      - type: any
+      - required: false
+        type: "..."
