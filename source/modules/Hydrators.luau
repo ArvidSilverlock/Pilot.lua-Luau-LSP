@@ -95,17 +95,17 @@ function Hydrators.object(className, class, vanilla: boolean?)
 	end
 
 	if vanilla then
+		reformattedClass.intersection = { { type = resultingType } }
 		if hydrator.extends then
-			reformattedClass.union = { { type = resultingType } }
 			if typeof(hydrator.extends) == "table" then
 				for _, source in hydrator.extends do
-					table.insert(reformattedClass.union, { type = source })
+					table.insert(reformattedClass.intersection, 1, { type = source })
 				end
 			else
-				table.insert(reformattedClass.union, { type = hydrator.extends })
+				table.insert(reformattedClass.intersection, 1, { type = hydrator.extends })
 			end
-		else
-			reformattedClass.type = resultingType
+		elseif not hydrator.abstract then
+			table.insert(reformattedClass.intersection, 1, { type = "PilotObject" })
 		end
 	else
 		reformattedClass.class = resultingType
@@ -125,7 +125,7 @@ function Hydrators.object(className, class, vanilla: boolean?)
 end
 
 function Hydrators.getPart(value)
-	local copy = deepClone(value)
+	local copy = Utility.deepClone(value)
 
 	local hydrator = copy.hydrator
 	copy.hydrator = nil
