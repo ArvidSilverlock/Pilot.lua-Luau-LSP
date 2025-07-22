@@ -57,13 +57,16 @@ function Vanilla.generate(options)
 	local classSnippets = {}
 
 	for className, class in documentation.classes do
+		local inheritanceSource = if not class.hydrator.abstract and not class.hydrator.extends
+			then "PilotObject"
+			elseif class.hydrator.extends then class.hydrator.extends[1]
+			else nil
 		local reformattedClass = hydrators.object(className, class, true)
 
 		local classSnippet = Snippet.new()
 		writeTypeGroup(classSnippet, className, reformattedClass, "type")
 		classSnippets[className] = classSnippet
 
-		local inheritanceSource = reformattedClass.extends
 		if inheritanceSource then
 			if inheritanceDependencies[inheritanceSource] then
 				table.insert(inheritanceDependencies[inheritanceSource], className)
