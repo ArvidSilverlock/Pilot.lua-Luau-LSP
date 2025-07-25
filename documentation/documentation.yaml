@@ -2861,7 +2861,7 @@ classes:
         SendMessage:
           parameters:
             - name: data
-              type: string
+              type: any
             - name: id
               nullable-type: string
         RequestAsync:
@@ -2875,7 +2875,10 @@ classes:
               type: ModemRequestResponse
       events:
         Loop: *LoopEvent
-        MessageSent: {}
+        MessageSent:
+          parameters:
+            - name: data
+              type: any
       configurables:
         NetworkID:
           documentation:
