@@ -28,9 +28,9 @@ variables:
   - &LoopEvent
     documentation: Fires when the object is updated by the game loop.
     parameters:
-      - name: deltaTime
+      - name: tickInterval
         type: number
-        documentation: The 'time' since the last tick, it does not represent the <i>actual</i> time since the last tick was occurred, rather just how often a game tick should be fired (it will always be precisely <code>1</code>).
+        documentation: The inverse of the tick rate. For example, if the tick rate is `20`, this will be `1 / 20` (or just `0.05`). If the tick rate commands are accessible, running them *will* change this value.
   - &OnClickEvent
     documentation: Fires when the object is clicked.
     parameters:
@@ -288,7 +288,8 @@ types:
             documentation:
               description: Converts the coordinates to an array representation.
               code-sample: |-
-                local coordinates = Coordinates.new(0, 0, 0, 0, false) -- hypothetical coordinate constructor
+                local coordinate = require("coordinate")
+                local coordinates = coordinate.new(0, 0, 0, 0, false)
                 local array = coordinates:ToArray() -- {0, 0, 0, 0, false}
             method:
               returns:
