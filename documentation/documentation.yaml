@@ -2802,9 +2802,10 @@ classes:
         SendLocalMessage:
           documentation: Sends a message to all modems in the same region of the same <code>NetworkID</code>.
           parameters:
-            - name: ...
+            - name: data
               type: any
-              documentation: Unknown.
+            - name: id
+              nullable-type: string
         PostRequest:
           documentation:
             deprecated: This function still 'exists', but has no effect.
@@ -2862,7 +2863,7 @@ classes:
         SendMessage:
           parameters:
             - name: data
-              type: string
+              type: JSON
             - name: id
               nullable-type: string
         RequestAsync:
@@ -2876,7 +2877,10 @@ classes:
               type: ModemRequestResponse
       events:
         Loop: *LoopEvent
-        MessageSent: {}
+        MessageSent:
+          parameters:
+            - name: data
+              type: any
       configurables:
         NetworkID:
           documentation:
@@ -3292,7 +3296,12 @@ classes:
           documentation: Ejects the seat occupant.
       events:
         Configured: *ConfiguredEvent
-        OccupantChanged: {}
+        OccupantChanged:
+          documentation: Fires when the occupant of the seat changes.
+          parameters:
+            - name: newOccupant
+              documentation: The <code>UserId</code> of the seat's occupant, or <code>nil</code> if there is no occupant.
+              nullable-type: number
       configurables:
         Speed:
           documentation:
@@ -3523,6 +3532,10 @@ classes:
       events:
         OccupantChanged:
           documentation: Fires when the occupant of the seat changes.
+          parameters:
+            - name: newOccupant
+              documentation: The <code>UserId</code> of the seat's occupant, or <code>nil</code> if there is no occupant.
+              nullable-type: number
   SteamTurbine:
     documentation:
       description: Produces power from steam at a base rate of 100 power each. Improves up to 250 per steam if consecutively ran at max speed. All bonuses are capped to the real consumption rate, so more steam equals better efficiency, but faster consumption rates. It may consume +0.5/s^2 steam, up to a maximum rate of 10 steam per second (for a total of 2500 power per second). Has a 10% chance to recover water for every steam consumed, improving up to 20%. Maximum efficiency can be reached in no less than 18 seconds if fed an optimal amount of steam.
