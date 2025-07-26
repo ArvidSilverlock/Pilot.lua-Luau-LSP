@@ -2801,9 +2801,10 @@ classes:
         SendLocalMessage:
           documentation: Sends a message to all modems in the same region of the same <code>NetworkID</code>.
           parameters:
-            - name: ...
+            - name: data
               type: any
-              documentation: Unknown.
+            - name: id
+              nullable-type: string
         PostRequest:
           documentation:
             deprecated: This function still 'exists', but has no effect.
@@ -2861,7 +2862,7 @@ classes:
         SendMessage:
           parameters:
             - name: data
-              type: any
+              type: JSON
             - name: id
               nullable-type: string
         RequestAsync:
