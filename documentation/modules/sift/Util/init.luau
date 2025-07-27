@@ -1,5 +1,5 @@
 return {
-	equalObjects = require("./equalObjects"),
-	func = require("./func"),
-	isEmpty = require("./isEmpty"),
+	equalObjects = require("@self/equalObjects"),
+	func = require("@self/func"),
+	isEmpty = require("@self/isEmpty"),
 }
