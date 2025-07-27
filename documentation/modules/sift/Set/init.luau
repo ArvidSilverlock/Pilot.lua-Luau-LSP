@@ -13,21 +13,21 @@
 	```
 ]=]
 local set = {
-	add = require("./add"),
-	copy = require("./copy"),
-	count = require("./count"),
-	delete = require("./delete"),
-	difference = require("./difference"),
-	differenceSymmetric = require("./differenceSymmetric"),
-	filter = require("./filter"),
-	fromArray = require("./fromArray"),
-	has = require("./has"),
-	intersection = require("./intersection"),
-	isSubset = require("./isSubset"),
-	isSuperset = require("./isSuperset"),
-	map = require("./map"),
-	merge = require("./merge"),
-	toArray = require("./toArray"),
+	add = require("@self/add"),
+	copy = require("@self/copy"),
+	count = require("@self/count"),
+	delete = require("@self/delete"),
+	difference = require("@self/difference"),
+	differenceSymmetric = require("@self/differenceSymmetric"),
+	filter = require("@self/filter"),
+	fromArray = require("@self/fromArray"),
+	has = require("@self/has"),
+	intersection = require("@self/intersection"),
+	isSubset = require("@self/isSubset"),
+	isSuperset = require("@self/isSuperset"),
+	map = require("@self/map"),
+	merge = require("@self/merge"),
+	toArray = require("@self/toArray"),
 }
 
 set.fromList = set.fromArray

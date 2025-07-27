@@ -1,5 +1,5 @@
 return {
-	MouseConstraint = require("./MouseConstraint"),
-	Quad = require("./Quad"),
-	Triangle = require("./Triangle"),
+	MouseConstraint = require("@self/MouseConstraint"),
+	Quad = require("@self/Quad"),
+	Triangle = require("@self/Triangle"),
 }

@@ -1,5 +1,5 @@
 --!strict
-local Types = require("./Types")
+local Types = require("@self/Types")
 
 --[=[
 	@class Sift
@@ -20,15 +20,15 @@ local Types = require("./Types")
 	The Luau types `Dictionary<K, V>`, `Array<T>` (aliased as `List<T>`) and `Set<T>` are exported from the Sift module (e.g. they can be used via `Sift.Array<string>`), but are also available from [Sift.Types].
 ]=]
 local Sift = {
-	Array = require("./Array"),
-	Dictionary = require("./Dictionary"),
-	Set = require("./Set"),
+	Array = require("@self/elf/Array"),
+	Dictionary = require("@self/elf/Dictionary"),
+	Set = require("@self/elf/Set"),
 
-	None = require("./None"),
-	Types = require("./Types"),
+	None = require("@self/elf/None"),
+	Types = require("@self/elf/Types"),
 
-	equalObjects = require("./Util/equalObjects"),
-	isEmpty = require("./Util/isEmpty"),
+	equalObjects = require("@self/elf/Util/equalObjects"),
+	isEmpty = require("@self/elf/Util/isEmpty"),
 }
 
 Sift.List = Sift.Array

@@ -5,8 +5,8 @@
 -- LinkToInstance fixed by Elttob.
 -- Cleanup edge cases fixed by codesenseAye.
 
-local GetPromiseLibrary = require("./GetPromiseLibrary")
-local Symbol = require("./Symbol")
+local GetPromiseLibrary = require("@self/GetPromiseLibrary")
+local Symbol = require("@self/Symbol")
 local FoundPromiseLibrary, Promise = GetPromiseLibrary()
 
 local IndicesReference = Symbol("IndicesReference")

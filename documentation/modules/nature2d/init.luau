@@ -1,1 +1,1 @@
-return require("nature2d") :: typeof(require("./Engine"))
+return require("nature2d") :: typeof(require("@self/Engine"))
