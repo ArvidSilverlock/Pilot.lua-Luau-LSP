@@ -2209,11 +2209,11 @@ classes:
             - name: part
               type: Part
         GetCursors:
-          documentation: Gets a dictionary of player usernames to their cursors.
+          documentation: Gets a dictionary of player <code>UserId</code>s to their cursors.
           returns:
             - name: cursors
               type:
-                [string]:
+                [number]:
                   type: ARCursor
         GetCursor:
           documentation: Returns the part owner's cursor, or, alternatively, any other player's cursor if the owner does not have a cursor (this is considered the primary user).
@@ -2965,7 +2965,7 @@ classes:
 
         Internally, it utilises a [<code>SurfaceGUI</code>](https://create.roblox.com/docs/reference/engine/classes/SurfaceGui), and is therefore no different from normal roblox GUIs.
 
-        There are some limitations with <code>Screen</code>s in Waste of Space, such as an inability to use <code>[ViewportFrame](https://create.roblox.com/docs/reference/engine/classes/SurfaceGui)</code>s
+        There are some limitations with <code>Screen</code>s in Waste of Space, such as an inability to use <code>[ViewportFrame](https://create.roblox.com/docs/reference/engine/classes/ViewportFrame)</code>s
       categories: [Logic, Electrical, Spawnable, Craftable]
       code-sample: |-
         -- Try and get the screen part, throw an error if we don't find it using `assert`.
