@@ -102,7 +102,7 @@ function VSCode.save(options)
 		GetPart = {
 			prefix = "getpart",
 			description = "Snippet to create a variable to get a part, asserting that it is connected.",
-			scope = "luau",
+			scope = "luau,lua",
 			body = {
 				getPartSnippet(options["snippet-casing"], options["snippet-part-message"], transformation),
 			},
@@ -110,13 +110,13 @@ function VSCode.save(options)
 		GetPartFromPort = {
 			prefix = "getport",
 			description = "Snippet to create a variable to get a part from a port, asserting that it is connected.",
-			scope = "luau",
+			scope = "luau,lua",
 			body = {
 				getPartFromPortSnippet(options["snippet-casing"], options["snippet-port-message"], transformation),
 			},
 		},
 	}
-	Utility.writeConfigurationFile(path(".vscode/*.code-snippets"), "json", snippets, true)
+	Utility.writeConfigurationFile(path(".vscode/pilot.code-snippets"), "json", snippets, true)
 end
 
 return VSCode
