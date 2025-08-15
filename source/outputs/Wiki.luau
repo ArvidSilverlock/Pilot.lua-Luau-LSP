@@ -51,6 +51,7 @@ end
 
 -- Hardcoded indefinite articles for all uses. This is to avoid non-phonetic spellings messing with the articles.
 local indefiniteArticles = {
+	json = "a",
 	range = "a",
 	network = "a",
 	port = "a",
@@ -761,13 +762,17 @@ function Wiki.generate(_options)
 		local function writeMemberHeader(
 			header: string,
 			group: "method" | "event" | "configurable" | "property",
-			id: string
+			id: string,
+			isDeprecated: boolean?
 		)
 			output:MemberHeader(id, header, group)
-			table.insert(
-				tableOfContents,
-				`\{value: "{id .. if group == "method" then "()" else ""}", id: "{id}", "level": 3\}`
-			)
+
+			local tableOfContentsHeader = id .. if group == "method" then "()" else ""
+			if isDeprecated then
+				tableOfContentsHeader = "<del>" .. tableOfContentsHeader .. "</del>"
+			end
+
+			table.insert(tableOfContents, `\{value: "{tableOfContentsHeader}", id: "{id}", "level": 3\}`)
 		end
 
 		if objectName == "PilotObject" then
@@ -803,7 +808,8 @@ function Wiki.generate(_options)
 								.. methodName
 								.. (if isDeprecated then "</i></del>" else ""),
 							"method",
-							methodName
+							methodName,
+							isDeprecated
 						)
 
 						if isDeprecated then
@@ -898,7 +904,8 @@ function Wiki.generate(_options)
 									else "")
 								.. (if isDeprecated then "</i></del>" else ""),
 							"method",
-							methodName
+							methodName,
+							isDeprecated
 						)
 
 						if isDeprecated then
