@@ -8,7 +8,7 @@ function Darklua.save(options, _generatedData)
 	local darkluaConfig = {
 		bundle = {
 			require_mode = {
-				name = "path",
+				name = "luau",
 				use_luau_configuration = true,
 			},
 			excludes = {},
