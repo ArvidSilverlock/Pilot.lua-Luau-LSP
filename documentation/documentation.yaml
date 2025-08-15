@@ -3588,7 +3588,7 @@ classes:
             range: [0, 1000]
           type: number
         TriggerAtDistance:
-          documentation: The range that it will trigger if it detect an object.
+          documentation: The range that it will trigger if it detects an object.
           type: Vector2
   Rail:
     documentation:
