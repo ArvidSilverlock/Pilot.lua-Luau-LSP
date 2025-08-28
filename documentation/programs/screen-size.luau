@@ -1,5 +1,5 @@
 -- Try and get the screen part, throw an error if we don't find it using `assert`.
-local screen = assert(GetPart("Screen"), "no screen connected")
+local screen = assert(Network:GetPart("Screen"), "no screen connected")
 
 -- Store the current screen size.
 local previousScreenSize = screen:GetDimensions()

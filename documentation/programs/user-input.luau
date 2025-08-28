@@ -9,10 +9,10 @@ local WHITELIST = {
 
 -- Get references to all the hardware, everything is *required* except for the
 -- seat, which is optional.
-local yawServo = assert(GetPartFromPort(1, "Servo"), "no yaw servo connected")
-local pitchServo = assert(GetPartFromPort(2, "Servo"), "no pitch servo connected")
-local keyboard = assert(GetPart("Keyboard"), "no keyboard connected")
-local seat = GetPart("Seat")
+local yawServo = assert(Network:GetPartFromPort(1, "Servo"), "no yaw servo connected")
+local pitchServo = assert(Network:GetPartFromPort(2, "Servo"), "no pitch servo connected")
+local keyboard = assert(Network:GetPart("Keyboard"), "no keyboard connected")
+local seat = Network:GetPart("Seat")
 
 -- Make sure the servos are wired properly!
 assert(yawServo ~= pitchServo, "there is only one servo connected")

@@ -1,7 +1,7 @@
 -- Get all of the necessary parts and throw a useful error if something isn't found.
-local anchor = assert(GetPart("Anchor"), "no anchor connected")
-local thrusterSwitch = assert(GetPart("Switch"), "no switch connected")
-local keyboard = assert(GetPart("Keyboard"), "no keyboard connected")
+local anchor = assert(Network:GetPart("Anchor"), "no anchor connected")
+local thrusterSwitch = assert(Network:GetPart("Switch"), "no switch connected")
+local keyboard = assert(Network:GetPart("Keyboard"), "no keyboard connected")
 
 -- Define the `UserId`s of people who are allowed.
 local WHITELIST = {

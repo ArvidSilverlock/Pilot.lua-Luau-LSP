@@ -1,8 +1,12 @@
 local sift = require("sift") -- Grab this fancy library for manipulating tables provided by wos.
 
 -- Get all of the types of objects with a `:SetColor` method and merge them into one big table.
-local objects =
-	sift.Array.merge(GetParts("Light"), GetParts("LightTube"), GetParts("SpotLight"), GetParts("EnergyShield"))
+local objects = sift.Array.merge(
+	Network:GetParts("Light"),
+	Network:GetParts("LightTube"),
+	Network:GetParts("SpotLight"),
+	Network:GetParts("EnergyShield")
+)
 
 -- We want this to run infinitely, but we want to run it every frame, rather than every game
 -- tick, so we won't use the `Microcontroller.Loop` event.

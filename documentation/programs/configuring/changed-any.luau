@@ -14,7 +14,7 @@ local function tabulateConfigurables(object: PilotObject, configuration: { [stri
 	return changes
 end
 
-local object = GetPart()
+local object = Network:GetPart()
 
 local configuration = {}
 

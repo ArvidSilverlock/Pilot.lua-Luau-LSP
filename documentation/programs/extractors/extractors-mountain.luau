@@ -18,7 +18,7 @@ local UPDATE_RATE = 1
 local sift = require("sift") -- fancy module provided by wos to modify tables
 
 -- make one big table with all the `Extractor`s and `MiningLaser`s
-local connectedObjects = sift.Array.concat(GetParts("Extractor"), GetParts("MiningLaser"))
+local connectedObjects = sift.Array.concat(Network:GetParts("Extractor"), Network:GetParts("MiningLaser"))
 
 -- variable to keep track of which material is being mined
 local resourceIndex = 1
