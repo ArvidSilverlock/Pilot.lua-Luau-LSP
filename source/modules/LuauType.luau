@@ -96,8 +96,12 @@ local function moveMerge(t, key, value)
 	end
 end
 
-function luauTypes.getTypeState(source, parent: (State | RootState)?): State?
+function luauTypes.getTypeState(source, parent: (State | RootState)?, hydratorCallback): State?
 	local output: State = {} :: any
+
+	if hydratorCallback then
+		source = hydratorCallback(source)
+	end
 
 	for key, value in source do
 		if key == METATABLE_PREFIX or key == SELF_PREFIX then
@@ -145,7 +149,7 @@ function luauTypes.getTypeState(source, parent: (State | RootState)?): State?
 	end
 end
 
-function luauTypes.writeFromState(output: Snippet.Snippet, state: State)
+function luauTypes.writeFromState(output: Snippet.Snippet, state: State, hydratorCallback)
 	local context = state.base.context
 	local source = state.source
 
@@ -171,7 +175,7 @@ function luauTypes.writeFromState(output: Snippet.Snippet, state: State)
 					output:Push(genericValue.name)
 					if next(genericValue, "name") or next(genericValue) then
 						output:Push(" = ")
-						luauTypes.write(output, genericValue, state)
+						luauTypes.write(output, genericValue, state, hydratorCallback)
 					end
 					if index < #generics then
 						output:Push(", ")
@@ -199,12 +203,17 @@ function luauTypes.writeFromState(output: Snippet.Snippet, state: State)
 		local metatableContext = state.metatable.context
 
 		output:PushLine("typeof(setmetatable("):Indent():Push("{} :: ")
-		luauTypes[`write{context.style:gsub("^%l", string.upper)}`](output, state, state.base)
+		luauTypes[`write{context.style:gsub("^%l", string.upper)}`](output, state, state.base, hydratorCallback)
 		output:Push(",\n{} :: ")
-		luauTypes[`write{metatableContext.style:gsub("^%l", string.upper)}`](output, state, state.metatable)
+		luauTypes[`write{metatableContext.style:gsub("^%l", string.upper)}`](
+			output,
+			state,
+			state.metatable,
+			hydratorCallback
+		)
 		output:Dedent():NewLine():Push("))")
 	else
-		luauTypes[`write{context.style:gsub("^%l", string.upper)}`](output, state, state.base)
+		luauTypes[`write{context.style:gsub("^%l", string.upper)}`](output, state, state.base, hydratorCallback)
 	end
 
 	if state.parent.isRoot then
@@ -216,9 +225,9 @@ function luauTypes.writeFromState(output: Snippet.Snippet, state: State)
 	end
 end
 
-function luauTypes.write(output: Snippet.Snippet, source: any, parent: State)
-	local state = assert(luauTypes.getTypeState(source, parent), "no context found")
-	luauTypes.writeFromState(output, state)
+function luauTypes.write(output: Snippet.Snippet, source: any, parent: State, hydratorCallback)
+	local state = assert(luauTypes.getTypeState(source, parent, hydratorCallback), "no context found")
+	luauTypes.writeFromState(output, state, hydratorCallback)
 end
 
 local function writeKey(output: Snippet.Snippet, key: { string } | string)
@@ -236,7 +245,7 @@ local function writeKey(output: Snippet.Snippet, key: { string } | string)
 	end
 end
 
-function luauTypes.writeType(output: Snippet.Snippet, state: State, group: TypeGroup)
+function luauTypes.writeType(output: Snippet.Snippet, state: State, group: TypeGroup, hydratorCallback)
 	local value, context = group.value, group.context
 
 	if context.isArray then
@@ -256,7 +265,7 @@ function luauTypes.writeType(output: Snippet.Snippet, state: State, group: TypeG
 			if group.generics then
 				output:Push("<")
 				for index, subValue in group.generics do
-					luauTypes.write(output, subValue, state)
+					luauTypes.write(output, subValue, state, hydratorCallback)
 					if index < #group.generics then
 						output:Push(", ")
 					end
@@ -267,7 +276,7 @@ function luauTypes.writeType(output: Snippet.Snippet, state: State, group: TypeG
 			output:PushLine("{"):Indent()
 			for key, subValue in value do
 				writeKey(output, key)
-				luauTypes.write(output, subValue, state)
+				luauTypes.write(output, subValue, state, hydratorCallback)
 				output:PushLine(",")
 			end
 			output:Dedent():Push("}")
@@ -288,12 +297,12 @@ function luauTypes.writeType(output: Snippet.Snippet, state: State, group: TypeG
 	end
 end
 
-function luauTypes.writePack(output: Snippet.Snippet, state: State, _group: TypeGroup)
+function luauTypes.writePack(output: Snippet.Snippet, state: State, _group: TypeGroup, hydratorCallback)
 	local parameters = state.base.value
 
 	output:Push("(")
 	for index, parameter in parameters do
-		luauTypes.write(output, parameter, state)
+		luauTypes.write(output, parameter, state, hydratorCallback)
 		if index < #parameters then
 			output:Push(", ")
 		end
@@ -349,7 +358,7 @@ local function getParameters(state: State, group: TypeGroup)
 	return parameters
 end
 
-function luauTypes.writeFunction(output: Snippet.Snippet, state: State, group: TypeGroup)
+function luauTypes.writeFunction(output: Snippet.Snippet, state: State, group: TypeGroup, hydratorCallback)
 	local value, context = group.value, group.context
 	assert(not context.isString, "you cannot have a string literal function")
 
@@ -384,7 +393,7 @@ function luauTypes.writeFunction(output: Snippet.Snippet, state: State, group: T
 				if parameter.name and (isClassMethod or parameter.name ~= "...") then
 					output:Push(": ")
 				end
-				luauTypes.write(output, parameter, state)
+				luauTypes.write(output, parameter, state, hydratorCallback)
 			end
 
 			if index < #parameters then
@@ -406,7 +415,7 @@ function luauTypes.writeFunction(output: Snippet.Snippet, state: State, group: T
 			if returnValue.name == "..." then
 				output:Push("...")
 			end
-			luauTypes.write(output, returnValue, state)
+			luauTypes.write(output, returnValue, state, hydratorCallback)
 			if index < #returns then
 				output:Push(", ")
 			end
@@ -426,7 +435,7 @@ function luauTypes.writeFunction(output: Snippet.Snippet, state: State, group: T
 	end
 end
 
-function luauTypes.writeUnion(output: Snippet.Snippet, state: State, group: TypeGroup)
+function luauTypes.writeUnion(output: Snippet.Snippet, state: State, group: TypeGroup, hydratorCallback)
 	local value, context = group.value, group.context
 	local parent = state.parent
 
@@ -457,7 +466,7 @@ function luauTypes.writeUnion(output: Snippet.Snippet, state: State, group: Type
 		end
 	else
 		for index, subValue in value do
-			luauTypes.write(output, subValue, state)
+			luauTypes.write(output, subValue, state, hydratorCallback)
 			if index < #value then
 				output:Push(" | ")
 			end
@@ -480,7 +489,7 @@ function luauTypes.writeUnion(output: Snippet.Snippet, state: State, group: Type
 	end
 end
 
-function luauTypes.writeIntersection(output: Snippet.Snippet, state: State, group: TypeGroup)
+function luauTypes.writeIntersection(output: Snippet.Snippet, state: State, group: TypeGroup, hydratorCallback)
 	local value, context = group.value, group.context
 
 	assert(not context.isString, "you cannot have a string literal intersection")
@@ -497,7 +506,7 @@ function luauTypes.writeIntersection(output: Snippet.Snippet, state: State, grou
 	end
 
 	for index, type in value do
-		luauTypes.write(output, type, state)
+		luauTypes.write(output, type, state, hydratorCallback)
 		if index < #value then
 			output:Push(" & ")
 		end
@@ -517,13 +526,13 @@ function luauTypes.writeIntersection(output: Snippet.Snippet, state: State, grou
 	end
 end
 
-function luauTypes.writeClass(output: Snippet.Snippet, state: State, group: TypeGroup)
+function luauTypes.writeClass(output: Snippet.Snippet, state: State, group: TypeGroup, hydratorCallback)
 	local value = group.value
 
 	assert(state.parent.isRoot, "classes must be defined as the root")
 
 	for key, member in value do
-		local memberState = assert(luauTypes.getTypeState(member, state), "no context found")
+		local memberState = assert(luauTypes.getTypeState(member, state, hydratorCallback), "no context found")
 
 		if memberState.base.context.style == "function" and memberState.base.context.isMethod then
 			assert(
@@ -540,8 +549,8 @@ function luauTypes.writeClass(output: Snippet.Snippet, state: State, group: Type
 	end
 end
 
-function luauTypes.setNullable(type, nullable: boolean)
-	local typeState = luauTypes.getTypeState(type)
+function luauTypes.setNullable(type, nullable: boolean, hydratorCallback)
+	local typeState = luauTypes.getTypeState(type, nil, hydratorCallback)
 	if typeState.base.context.isNullable == nullable then
 		return table.clone(type)
 	end

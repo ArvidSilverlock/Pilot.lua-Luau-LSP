@@ -9,21 +9,17 @@ local documentation = require("../modules/PilotDocumentation")
 local Definition = {}
 
 local function writeTypeGroup(snippet, key: string, value: any, context: luauTypes.TypeContext)
-	if value.hydrator and value.hydrator.name == "get-part" then
-		value = hydrators.getPart(value)
-	end
-
 	local typeState = luauTypes.getTypeState(value, {
 		isRoot = true,
 		name = key,
 		context = context,
 		define = true,
-	})
+	}, hydrators.apply)
 
 	if typeState then
-		luauTypes.writeFromState(snippet, typeState)
+		luauTypes.writeFromState(snippet, typeState, hydrators.apply)
 	else
-		for childName, child in value do
+		for childName, child in hydrators.apply(value) do
 			writeTypeGroup(snippet, childName, child, context)
 		end
 	end

@@ -130,6 +130,8 @@ function Hydrators.getPart(value)
 	local hydrator = copy.hydrator
 	copy.hydrator = nil
 
+	copy["function"] = nil
+	copy.method = nil
 	copy.intersection = {}
 
 	local initial = if hydrator.port
@@ -140,6 +142,8 @@ function Hydrators.getPart(value)
 			},
 		}
 		else {}
+
+	local functionType = if hydrator.method then "method" else "function"
 
 	for className, class in documentation.classes do
 		if not class.hydrator or typeof(class.hydrator) ~= "table" then
@@ -159,7 +163,7 @@ function Hydrators.getPart(value)
 		local parameters = table.clone(initial)
 		table.insert(parameters, { name = "class", ["string-type"] = className })
 		table.insert(copy.intersection, {
-			["function"] = {
+			[functionType] = {
 				parameters = parameters,
 				returns = if hydrator.multiple
 					then { { ["array-type"] = className } }
@@ -172,7 +176,7 @@ function Hydrators.getPart(value)
 		local parameters = table.clone(initial)
 		table.insert(parameters, { name = "class", type = "string" })
 		table.insert(copy.intersection, {
-			["function"] = {
+			[functionType] = {
 				parameters = parameters,
 				returns = if hydrator.multiple
 					then { { ["array-type"] = "PilotObject" } }
@@ -182,6 +186,19 @@ function Hydrators.getPart(value)
 	end
 
 	return copy
+end
+
+function Hydrators.apply(value)
+	if not value.hydrator then
+		return value
+	end
+
+	local name = value.hydrator.name
+	if name == "get-part" then
+		return Hydrators.getPart(value)
+	end
+
+	return value
 end
 
 return Hydrators
