@@ -13,7 +13,7 @@ local textLabel = screen:CreateElement("TextLabel", {
 	Text = "Hello, world!",
 	Size = UDim2.fromScale(1, 1),
 	BorderSizePixel = 0,
-	BackgroundColor = Color3.fromRGB(255, 255, 255),
+	BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 })
 
 -- Keep the microcontroller on by permanently 'yielding' the code (making it wait).
