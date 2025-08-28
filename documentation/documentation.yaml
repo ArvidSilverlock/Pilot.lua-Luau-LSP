@@ -3022,7 +3022,7 @@ classes:
         textLabel.Text = "Hello, world!"
         textLabel.Size = UDim2.fromScale(1, 1)
         textLabel.BorderSizePixel = 0
-        textLabel.BackgroundColor = Color3.fromRGB(255, 255, 255)
+        textLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 
         -- Parent it to the 'canvas' of the screen.
         textLabel.Parent = screen:GetCanvas()
