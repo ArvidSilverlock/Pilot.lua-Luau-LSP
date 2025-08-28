@@ -18,7 +18,7 @@ local WHITELIST = {
 -- }
 
 -- Try and get the life sensor, throw an informative error if we don't find it using `assert`.
-local lifeSensor = assert(GetPart("LifeSensor"), "no life sensor connected")
+local lifeSensor = assert(Network:GetPart("LifeSensor"), "no life sensor connected")
 
 -- Create a 'function' that we'll run whenever we find a player outside of the whitelist.
 -- You may notice the `: number` and `: CFrame`, these are 'types', they tell luau what types

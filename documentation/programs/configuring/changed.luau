@@ -1,6 +1,6 @@
 local TRACKED_CONFIGURABLE = "Seek"
 
-local object = GetPart("Gyro")
+local object = Network:GetPart("Gyro")
 local previousConfiguration = object[TRACKED_CONFIGURABLE]
 
 object.Configured:Connect(function()
@@ -9,7 +9,9 @@ object.Configured:Connect(function()
 		return
 	end
 
-	print(`{object}'s '{TRACKED_CONFIGURABLE}' configurable was changed from {previousConfiguration} to {currentConfiguration}!`)
+	print(
+		`{object}'s '{TRACKED_CONFIGURABLE}' configurable was changed from {previousConfiguration} to {currentConfiguration}!`
+	)
 
 	previousConfiguration = currentConfiguration
 end)

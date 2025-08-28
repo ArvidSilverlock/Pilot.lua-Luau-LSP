@@ -1,5 +1,5 @@
 -- Try and get the ar controller, throw an error if we don't find it using `assert`.
-local screen = assert(GetPart("ARController"), "no ar controller connected")
+local screen = assert(Network:GetPart("ARController"), "no ar controller connected")
 
 -- Clear the left over screen elements from the last time GUIs were loaded onto it.
 -- Note: If you utilise the `Instance.new` API instead, you do not need to do this,

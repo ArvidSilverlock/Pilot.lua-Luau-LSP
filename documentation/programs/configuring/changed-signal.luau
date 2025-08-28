@@ -19,7 +19,7 @@ local function getInstanceConfigurableChangedSignal(object: PilotObject, configu
 	return signal
 end
 
-local gyro = assert(GetPart("Gyro"), "no gyro connected!")
+local gyro = assert(Network:GetPart("Gyro"), "no gyro connected!")
 getInstanceConfigurableChangedSignal(gyro, "Seek"):Connect(function(currentConfiguration, previousConfiguration)
 	print(`{object}'s 'Seek' configurable was changed from {previousConfiguration} to {currentConfiguration}!`)
 end)

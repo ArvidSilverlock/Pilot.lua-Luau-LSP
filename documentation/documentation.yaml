@@ -1579,6 +1579,11 @@ types:
                 [PilotObject]:
                   type: true
       GetPart:
+        hydrator:
+          name: get-part
+          port: false
+          multiple: false
+          method: true
         method:
           parameters:
             - name: className
@@ -1587,6 +1592,11 @@ types:
             - name: object
               nullable-type: PilotObject
       GetPartFromPort:
+        hydrator:
+          name: get-part
+          port: true
+          multiple: false
+          method: true
         method:
           parameters:
             - name: port
@@ -1597,6 +1607,11 @@ types:
             - name: object
               nullable-type: PilotObject
       GetParts:
+        hydrator:
+          name: get-part
+          port: false
+          multiple: true
+          method: true
         method:
           parameters:
             - name: className
@@ -1605,6 +1620,11 @@ types:
             - name: objects
               array-type: PilotObject
       GetPartsFromPort:
+        hydrator:
+          name: get-part
+          port: true
+          multiple: true
+          method: true
         method:
           parameters:
             - name: port
@@ -1696,6 +1716,7 @@ globals:
             -- Get a `Screen` from any port
             local screen = GetPart("Screen")
           description: Gets a part of the specified type from any connected ports.
+          deprecated: Use <code>Network:GetPart()</code> instead.
         hydrator:
           name: get-part
           port: false
@@ -1706,6 +1727,7 @@ globals:
             -- Get a `TouchScreen` from port 1
             local touchScreen = GetPartFromPort(1, "TouchScreen")
           description: Gets a part of the specified type from any port of the specified ID.
+          deprecated: Use <code>Network:GetPartFromPort()</code> instead.
         hydrator:
           name: get-part
           port: true
@@ -1716,6 +1738,7 @@ globals:
             -- Get all `Switch`es connected to any port
             local switches = GetParts("Switch")
           description: Gets all the parts of the specified type from any connected ports.
+          deprecated: Use <code>Network:GetParts()</code> instead.
         hydrator:
           name: get-part
           port: false
@@ -1726,6 +1749,7 @@ globals:
             -- Get all `Light`s from port 1
             local lights = GetPartsFromPort(1, "Light")
           description: Gets all the parts of the specified type from any port of the specified ID.
+          deprecated: Use <code>Network:GetPartsFromPort()</code> instead.
         hydrator:
           name: get-part
           port: true
@@ -1737,6 +1761,7 @@ globals:
             -- Get port with an ID of 1
             local port = GetPort(1)
           description: Gets the connected port of the specified ID.
+          deprecated: Use <code>Network:GetPort()</code> instead.
         function:
           parameters:
             - name: id
@@ -1749,6 +1774,7 @@ globals:
             -- Get all ports, no matter the ID
             local ports = GetPort()
           description: Gets all the connected ports of the specified ID.
+          deprecated: Use <code>Network:GetPorts()</code> instead.
         function:
           parameters:
             - name: id
@@ -2703,7 +2729,7 @@ classes:
           end
         - |-
           -- Microcontroller B
-          local otherMicrocontroller = GetPartFromPort(1, "Microcontroller")
+          local otherMicrocontroller = Network:GetPartFromPort(1, "Microcontroller")
 
           local function receive(sender, command, ...)
               if command == "Why did the chicken cross the road?" then
@@ -2969,7 +2995,7 @@ classes:
       categories: [Logic, Electrical, Spawnable, Craftable]
       code-sample: |-
         -- Try and get the screen part, throw an error if we don't find it using `assert`.
-        local screen = assert(GetPart("Screen"), "no screen connected")
+        local screen = assert(Network:GetPart("Screen"), "no screen connected")
 
         -- Create a text label with the text 'Hello, world!' which takes up the entire screen.
         local textLabel = Instance.new("TextLabel")
@@ -3427,7 +3453,7 @@ classes:
             code-sample: |-
               local repr = require("repr")
 
-              local disk = assert(GetPart("Disk"), "no disk connected")
+              local disk = assert(Network:GetPart("Disk"), "no disk connected")
 
               local a = disk:ReadAll()
               disk:Write("foo", "bar")

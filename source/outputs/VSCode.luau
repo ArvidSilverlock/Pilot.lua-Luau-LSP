@@ -11,8 +11,8 @@ local SPLIT_PASCAL_REGEX = "(.*?)([a-z]|[0-9](?=[a-z]|[A-Z])|[A-Z](?=[A-Z][a-z0-
 -- group 1 is the first word, group 2 is the rest of the pascal variable
 local FIRST_PASCAL_FIRST_WORD_REGEX = "^([A-Z]+?)(?=[A-Z][a-z]|[a-z]|$)(.*)$"
 
-local GET_PART_FORMAT = 'local %s = assert(GetPart("%s"), "%s")'
-local GET_PORT_FORMAT = 'local %s = assert(GetPartFromPort(%s, "%s"), "%s")'
+local GET_PART_FORMAT = 'local %s = assert(Network:GetPart("%s"), "%s")'
+local GET_PORT_FORMAT = 'local %s = assert(Network:GetPartFromPort(%s, "%s"), "%s")'
 
 local REGEX_FORMAT = "${%%d/%s/%s/g}"
 local PASCAL_TO_PRINTABLE = REGEX_FORMAT:format(SPLIT_PASCAL_REGEX, "${1:/downcase}${2:/downcase}${3:+ }${3:/downcase}")

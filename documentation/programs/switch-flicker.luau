@@ -3,11 +3,11 @@ local sift = require("sift") -- Grab this fancy library for manipulating tables 
 -- Get all of the types of objects with a `SwitchValue` (save for `TemperatureGate`) configurable
 -- and merge them into one big table.
 local objects = sift.Array.merge(
-	GetParts("Switch"),
-	GetParts("TriggerSwitch"),
-	GetParts("Valve"),
-	GetParts("Hatch"),
-	GetParts("HeatValve")
+	Network:GetParts("Switch"),
+	Network:GetParts("TriggerSwitch"),
+	Network:GetParts("Valve"),
+	Network:GetParts("Hatch"),
+	Network:GetParts("HeatValve")
 )
 
 -- Have a 50/50 chance to be on/off when the code starts running.
