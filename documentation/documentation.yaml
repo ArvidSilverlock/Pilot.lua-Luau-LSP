@@ -1579,6 +1579,11 @@ types:
                 [PilotObject]:
                   type: true
       GetPart:
+        documentation:
+          code-sample: |-
+            -- Get a `Screen` from any port
+            local screen = Network:GetPart("Screen")
+          description: Gets a part of the specified type from any connected ports.
         hydrator:
           name: get-part
           port: false
@@ -1592,6 +1597,11 @@ types:
             - name: object
               nullable-type: PilotObject
       GetPartFromPort:
+        documentation:
+          code-sample: |-
+            -- Get a `TouchScreen` from port 1
+            local touchScreen = Network:GetPartFromPort(1, "TouchScreen")
+          description: Gets a part of the specified type from any port of the specified ID.
         hydrator:
           name: get-part
           port: true
@@ -1607,6 +1617,11 @@ types:
             - name: object
               nullable-type: PilotObject
       GetParts:
+        documentation:
+          code-sample: |-
+            -- Get all `Switch`es connected to any port
+            local switches = Network:GetParts("Switch")
+          description: Gets all the parts of the specified type that are directly connected to the microcontroller (they must not be on a port whatsoever, they maybe on an ethernet cable that directly touches the microcontroller, though).
         hydrator:
           name: get-part
           port: false
@@ -1620,6 +1635,11 @@ types:
             - name: objects
               array-type: PilotObject
       GetPartsFromPort:
+        documentation:
+          code-sample: |-
+            -- Get all `Light`s from port 1
+            local lights = Network:GetPartsFromPort(1, "Light")
+          description: Gets all the parts of the specified type from any port of the specified ID.
         hydrator:
           name: get-part
           port: true
