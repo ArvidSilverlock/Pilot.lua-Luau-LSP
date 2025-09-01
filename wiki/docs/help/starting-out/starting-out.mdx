@@ -12,62 +12,6 @@ This guide assumes a basic level of luau programming ability and Waste of Space 
 
 :::
 
-## Wiring
-
-<div style={{ display: "flex", alignItems: "top", gap: "1rem" }}>
-	<img
-		src="/Pilot.lua-Luau-LSP/image/wiring/first.png"
-		style={{
-			width: "min(500px, 25%)",
-			height: undefined,
-			aspectRatio: "auto",
-		}}
-	/>
-	<p>
-		To allow your code to interact with the game world, you must first obtain a
-		[<code>PilotObject</code>](/objects/PilotObject) instance. To do this, first
-		make sure that you have connected the part to the [
-		<code>Microcontroller</code>](/objects/Microcontroller) using a [
-		<code>Port</code>](/objects/Port#Configurables) _or_ a direct connection
-		_(see Figure 1)_.
-	</p>
-</div>
-
-<br />
-
-<div style={{ display: "flex", alignItems: "top", gap: "1rem" }}>
-	<img
-		src="/Pilot.lua-Luau-LSP/image/wiring/second.png"
-		style={{
-			width: "min(500px, 25%)",
-			height: undefined,
-			aspectRatio: "auto",
-		}}
-	/>
-	<p>
-		You can also extend the range of the microcontroller / ports by using [
-		<code>EthernetCable(s)</code>](/objects/EthernetCable) _(see Figure 2)_.
-	</p>
-</div>
-
-<br />
-
-<div style={{ display: "flex", alignItems: "top", gap: "1rem" }}>
-	<img
-		src="/Pilot.lua-Luau-LSP/image/wiring/third.png"
-		style={{
-			width: "min(500px, 25%)",
-			height: undefined,
-			aspectRatio: "auto",
-		}}
-	/>
-	<p>
-		If your build requires connections which are not practical to link with
-		wiring, you can use [<code>Routers</code>](/objects/Router) as a wireless
-		bridge _(see Figure 3)_.
-	</p>
-</div>
-
 ## API
 
 There are four main methods for getting parts: <code>Network:GetPart</code>, <code>Network:GetParts</code>, <code>Network:GetPartFromPort</code>, and <code>Network:GetPartsFromPort</code>.
@@ -105,6 +49,59 @@ For more documentation on ethernet networks: /types/Network
   get all connected ports.
 
 Note that once your code stops running and you have not binded any event listeners, the microcontroller will _shut off_. This can be an issue when making UI, as the game will delete your UI elements, and can be alleviated by simply adding <code>coroutine.yield()</code> at the end of your code. This is explained in more detail in [keeping your microcontroller enabled](/help/keeping-microcontroller-enabled)
+
+## Wiring
+
+<div style={{ display: "flex", alignItems: "top", gap: "1rem" }}>
+	<img
+		src="/Pilot.lua-Luau-LSP/image/wiring/first.png"
+		style={{
+			width: "min(500px, 25%)",
+			aspectRatio: "auto",
+		}}
+	/>
+	<p>
+		To allow your code to interact with the game world, you must first obtain a
+		[<code>PilotObject</code>](/objects/PilotObject) instance. To do this, first
+		make sure that you have connected the part to the [
+		<code>Microcontroller</code>](/objects/Microcontroller) using a [
+		<code>Port</code>](/objects/Port#Configurables) _or_ a direct connection
+		_(see Figure 1)_.
+	</p>
+</div>
+
+<br />
+
+<div style={{ display: "flex", alignItems: "top", gap: "1rem" }}>
+	<img
+		src="/Pilot.lua-Luau-LSP/image/wiring/second.png"
+		style={{
+			width: "min(500px, 25%)",
+			aspectRatio: "auto",
+		}}
+	/>
+	<p>
+		You can also extend the range of the microcontroller / ports by using [
+		<code>EthernetCable(s)</code>](/objects/EthernetCable) _(see Figure 2)_.
+	</p>
+</div>
+
+<br />
+
+<div style={{ display: "flex", alignItems: "top", gap: "1rem" }}>
+	<img
+		src="/Pilot.lua-Luau-LSP/image/wiring/third.png"
+		style={{
+			width: "min(500px, 25%)",
+			aspectRatio: "auto",
+		}}
+	/>
+	<p>
+		If your build requires connections which are not practical to link with
+		wiring, you can use [<code>Routers</code>](/objects/Router) as a wireless
+		bridge _(see Figure 3)_.
+	</p>
+</div>
 
 ## Examples
 
