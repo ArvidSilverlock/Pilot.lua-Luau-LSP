@@ -50,7 +50,7 @@ end`}
 			can get a life sensor like:
 		</p>
 		<CodeBlock language="lua">
-			{`local network = Network:GetSubnet(GetPort(1))
+			{`local network = Network:GetSubnet(1)
 local lifesensor = network:GetPartFromPort(1, "LifeSensor")`}
 		</CodeBlock>
 	</div>
@@ -74,8 +74,8 @@ local lifesensor = network:GetPartFromPort(1, "LifeSensor")`}
 			get the disk:
 		</p>
 		<CodeBlock language="lua">
-			{`local network = Network:GetSubnet(GetPort(1))
-local network2 = network:GetSubnet(network:GetPort(2))
+			{`local network = Network:GetSubnet(1)
+local network2 = network:GetSubnet(2)
 local disk = network2:GetPartFromPort(3, "Disk")`}
 		</CodeBlock>
 	</div>
