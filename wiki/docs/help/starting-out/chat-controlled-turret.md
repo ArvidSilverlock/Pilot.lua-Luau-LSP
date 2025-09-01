@@ -2,7 +2,7 @@
 
 This project will demonstrate how to use a [`Microphone`](/objects/Microphone) to set the [`Seek`](/objects/Gyro#Seek) configuration of a [`Gyro`](/objects/Gyro).
 
-![Turret](https://files.catbox.moe/v2532v.PNG)
+![Turret](/image/examples/turret/structure.png)
 
 **_Special configurations:_**
 
@@ -21,7 +21,7 @@ microphone.Chatted:Connect(function(userId, message)
 end)
 ```
 
-![Turret in action](https://files.catbox.moe/rrg5jt.png)
+![Turret in action](/image/examples/turret/firing.png)
 
 Model code:
 
