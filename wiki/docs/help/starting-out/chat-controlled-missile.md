@@ -1,5 +1,3 @@
-import ReactPlayer from "react-player";
-
 # Chat Controlled Missile
 
 This project will demonstrate using a [`Microphone`](/objects/Microphone) to launch a missile using [`Switch`](/objects/Switch), and a [`TriggerSwitch`](/objects/TriggerSwitch) to arm the warhead. It also contains code to detect if the player chatting is on the whitelist, and will only launch if the message contains a specified prefix.
