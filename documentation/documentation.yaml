@@ -654,6 +654,9 @@ types:
             string-type: Planet
       SimplePlanetRegionInfo:
         type:
+          Temperature:
+            documentation: The ambient temperature of the planet.
+            type: number
           BeaconCount:
             documentation: The amount of beacons in the region at the time of the scan.
             type: number
