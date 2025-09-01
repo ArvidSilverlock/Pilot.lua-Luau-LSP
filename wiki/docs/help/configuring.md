@@ -1,3 +1,7 @@
+---
+sidebar_position: 4
+---
+
 # Configuring Objects
 
 There are two different ways to configure objects in Waste of Space.
