@@ -1,0 +1,127 @@
+---
+sidebar_position: 1
+---
+
+import CodeBlock from "@theme/CodeBlock";
+
+# Starting Out
+
+:::warning
+
+This guide assumes a basic level of luau programming ability and Waste of Space knowledge!
+
+:::
+
+## Wiring
+
+<div style={{ display: "flex", alignItems: "top", gap: "1rem" }}>
+	<img
+		src="/Pilot.lua-Luau-LSP/image/wiring/first.png"
+		style={{
+			width: "min(500px, 25%)",
+			height: undefined,
+			aspectRatio: "auto",
+		}}
+	/>
+	<p>
+		To allow your code to interact with the game world, you must first obtain a
+		[<code>PilotObject</code>](/objects/PilotObject) instance. To do this, first
+		make sure that you have connected the part to the [
+		<code>Microcontroller</code>](/objects/Microcontroller) using a [
+		<code>Port</code>](/objects/Port#Configurables) _or_ a direct connection
+		_(see Figure 1)_.
+	</p>
+</div>
+
+<br />
+
+<div style={{ display: "flex", alignItems: "top", gap: "1rem" }}>
+	<img
+		src="/Pilot.lua-Luau-LSP/image/wiring/second.png"
+		style={{
+			width: "min(500px, 25%)",
+			height: undefined,
+			aspectRatio: "auto",
+		}}
+	/>
+	<p>
+		You can also extend the range of the microcontroller / ports by using [
+		<code>EthernetCable(s)</code>](/objects/EthernetCable) _(see Figure 2)_.
+	</p>
+</div>
+
+<br />
+
+<div style={{ display: "flex", alignItems: "top", gap: "1rem" }}>
+	<img
+		src="/Pilot.lua-Luau-LSP/image/wiring/third.png"
+		style={{
+			width: "min(500px, 25%)",
+			height: undefined,
+			aspectRatio: "auto",
+		}}
+	/>
+	<p>
+		If your build requires connections which are not practical to link with
+		wiring, you can use [<code>Routers</code>](/objects/Router) as a wireless
+		bridge _(see Figure 3)_.
+	</p>
+</div>
+
+## API
+
+There are four main methods for getting parts: <code>Network:GetPart</code>, <code>Network:GetParts</code>, <code>Network:GetPartFromPort</code>, and <code>Network:GetPartsFromPort</code>.
+The plural variations will return an array instead of a single part. These methods are global in all microcontroller code execution sandboxes.
+
+- <code>Network:GetPart(s)</code> will look through parts that are directly connected
+  _but not_ through ports.
+
+- <code>Network:GetPart(s)FromPort</code> will _only_ look through parts that are
+  connected through ports.
+
+These two special methods <code>Network:GetPort</code> and <code>Network:GetPorts</code> will return the port of the specified PortID, looking through all ports which are _directly connected_.
+
+For more documentation on ethernet networks: /types/Network
+
+#### Function signatures:
+
+- <code>Network:GetPartFromPort(Port | number, string) → PilotObject</code>
+  Gets a part of the specified type from any port of the specified ID.
+
+- <code>Network:GetPartsFromPort(Port | number, string) → \{PilotObject}</code>
+  Gets all the parts of the specified type from any port of the specified ID.
+
+- <code>Network:GetPart(string) → PilotObject</code>
+  Gets a part of the specified type from any connected parts.
+
+- <code>Network:GetParts(string) → \{PilotObject}</code>
+  Gets all the parts of the specified type from any connected parts.
+
+- <code>Network:GetPort(number) → Port</code>
+  Gets the connected port of the specified ID.
+
+- <code>Network:GetPorts(number?) → \{Port}</code>
+  Gets all the connected ports of the specified ID. If no ID is specified it will
+  get all connected ports.
+
+Note that once your code stops running and you have not binded any event listeners, the microcontroller will _shut off_. This can be an issue when making UI, as the game will delete your UI elements, and can be alleviated by simply adding <code>coroutine.yield()</code> at the end of your code. This is explained in more detail in [keeping your microcontroller enabled](/help/keeping-microcontroller-enabled)
+
+## Examples
+
+```lua
+-- Examples
+-- This code will work with all figures 1-3
+local switch = Network:GetPart("Switch")
+local microphone = Network:GetPartFromPort(1, "Microphone")
+
+-- Alternatively, you can pass in a Port into GetPart(s)FromPort:
+local port = Network:GetPort(1)
+local microphone = Network:GetPartFromPort(port, "Microphone")
+```
+
+It is recommended to use [<code>assert</code>](/help/assert) as to avoid wiring issues. This means if for whatever reason your code failed to find the switch or microphone, it would give you an error and directly say "no microphone".
+
+```lua
+local switch = assert(Network:GetPart("Switch"), "no switch")
+local microphone = assert(Network:GetPartFromPort(1, "Microphone"), "no microphone")
+```
