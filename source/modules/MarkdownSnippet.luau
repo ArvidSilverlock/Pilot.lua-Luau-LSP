@@ -75,13 +75,21 @@ function MarkdownSnippet.BulletPointDown(self: MarkdownSnippet)
 	return self
 end
 
-function MarkdownSnippet.MemberHeader(self: MarkdownSnippet, id: string, title: string?, group: string?)
+function MarkdownSnippet.MemberHeader(self: MarkdownSnippet, id: string, title: string?, group: string?, depth: number?)
 	if group and group ~= "group" then
-		self:Delimiter():Push('<Member id="', id, '" group="', group, '">', title or id, "</Member>\n\n")
+		self:Delimiter()
 	else
-		self:Push('\n\n<Member id="', id, '" group="group">', title or id, "</Member>\n\n")
+		self:Push("\n\n")
 	end
-	-- table.insert(self._toc, `\{value: "{id .. if group == "method" then "()" else ""}", id: "{id}", "level": 3\}`)
+
+	self:Push('<Member id="', id, '" group="', group, '"')
+
+	if depth then
+		self:Push(" depth={", depth, "}")
+	end
+
+	self:Push(">", title or id, "</Member>\n\n")
+
 	return self
 end
 

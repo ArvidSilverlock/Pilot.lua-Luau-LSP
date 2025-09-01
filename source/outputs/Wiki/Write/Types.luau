@@ -172,7 +172,8 @@ function writeIndividualTypeDescription(
 			:MemberHeader(
 				name,
 				headerText,
-				if context.style == "function" then (if context.isMethod then "method" else "function") else "property"
+				if context.style == "function" then (if context.isMethod then "method" else "function") else "property",
+				depth + 1
 			)
 			:NewLine()
 
