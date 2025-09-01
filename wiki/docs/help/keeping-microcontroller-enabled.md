@@ -5,7 +5,7 @@
 A simple program like this, one that does something, but only once, then never does anything again won't work.
 
 ```lua
-local screen = assert(GetPart("Screen"), "no screen connected")
+local screen = assert(Network:GetPart("Screen"), "no screen connected")
 
 local textLabel = Instance.new("TextLabel")
 textLabel.Size = UDim2.fromScale(1, 1)
@@ -22,8 +22,8 @@ You may be wondering why doesn't this happen with more complex programs, like th
 local players = require("players")
 
 -- get the objects
-local lifeSensor = assert(GetPart("LifeSensor"), "no life sensor connected")
-local screen = assert(GetPart("Screen"), "no screen connected")
+local lifeSensor = assert(Network:GetPart("LifeSensor"), "no life sensor connected")
+local screen = assert(Network:GetPart("Screen"), "no screen connected")
 
 -- add the text label we're outputting the usernames on
 local textLabel = Instance.new("TextLabel")
