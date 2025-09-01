@@ -1,3 +1,7 @@
+---
+sidebar_position: 7
+---
+
 # Legacy Code
 
 There are a lot of unmaintained, and therefore outdated sources of information.
