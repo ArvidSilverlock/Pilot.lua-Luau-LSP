@@ -19,9 +19,11 @@ import { useLocation } from "react-router-dom";
 export default function Heading({
   id,
   group,
+  depth,
   ...props
 }: Props & {
-  group: "method" | "function" | "property" | "configurable" | "event" | "group" | number;
+  group: "method" | "function" | "property" | "configurable" | "event" | "group";
+  depth?: number;
 }): JSX.Element {
   const brokenLinks = useBrokenLinks();
   const {
@@ -31,8 +33,8 @@ export default function Heading({
   brokenLinks.collectAnchor(id);
 
   let HeaderSize: keyof JSX.IntrinsicElements;
-  if (typeof group === "number" && group >= 1 && group <= 6) {
-    HeaderSize = `h${group}` as keyof JSX.IntrinsicElements;
+  if (typeof depth === "number") {
+    HeaderSize = `h${Math.min(6, Math.max(1, depth))}` as keyof JSX.IntrinsicElements;
   } else if (group === "group") {
     HeaderSize = "h2";
   } else {
