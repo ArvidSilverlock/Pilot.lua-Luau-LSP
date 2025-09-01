@@ -5,4 +5,4 @@
 
 [tools]
 StyLua = "JohnnyMorganz/StyLua@2.1.0"
-lune = "lune-org/lune@0.9.0"
+lune = "lune-org/lune@0.10.2"
