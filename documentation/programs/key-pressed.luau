@@ -12,7 +12,7 @@ local WHITELIST = {
 local BINDS = {
 	-- Toggle the anchor state when `R` is pressed.
 	[Enum.KeyCode.R] = function()
-		anchor.Anchor = not anchor.Anchor
+		anchor.Anchored = not anchor.Anchored
 	end,
 	-- Toggle the switch state when `X` is pressed.
 	[Enum.KeyCode.X] = function()
