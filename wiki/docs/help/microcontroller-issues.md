@@ -4,9 +4,9 @@ Here is a list of bugs that are known about microcontrollers that are not yet pa
 
 ## `_PLTinterruptCheck` Syntax Errors
 
-Issues [#461](https://github.com/Eggs-D-Studios/wos-issues/issues/461) and [#547](https://github.com/Eggs-D-Studios/wos-issues/issues/547) are related to the insertion of Waste of Space's interrupt checks (related to game crash prevention) being unable to handle return types propertly.
+Issues [#461](https://github.com/Eggs-D-Studios/wos-issues/issues/461) and [#547](https://github.com/Eggs-D-Studios/wos-issues/issues/547) are related to the insertion of Waste of Space's interrupt checks (related to game crash prevention) being unable to handle return types properly.
 
-Speculation as to the cause (specifically of #461, #547 is only triggered if you are inteionally trying to):
+Speculation as to the cause (specifically of #461, #547 is only triggered if you are intentionally trying to):
 
 ```lua
 local function foobar(): number -- works, `:` token is read, `number` token is skipped.
