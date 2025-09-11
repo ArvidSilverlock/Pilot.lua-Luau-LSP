@@ -2349,14 +2349,6 @@ classes:
                 - type:
                     [string]:
                       type: number
-        GetInventory:
-          documentation:
-            deprecated: Returns an empty, frozen table.
-          returns:
-            - name: inventory
-              type:
-                [string]:
-                  type: number
         GetRecipe:
           documentation: Returns the resource(s) required to craft the given item, or nil if the item doesn't have a recipe/doesn't exist.
           parameters:
@@ -2367,11 +2359,6 @@ classes:
               type:
                 [string]:
                   type: number
-        GetCraftCooldown:
-          documentation: How long until the assembler can craft again.
-          returns:
-            - name: craftCooldown
-              type: number
         Craft:
           documentation: |-
             Will pause and craft the desired item at the next available point, returning a boolean representing whether or not the item was successfully crafted.
