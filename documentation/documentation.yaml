@@ -3114,22 +3114,45 @@ classes:
       description: |-
         Plays audio of length up to 5 seconds, unless it is powered in which case it can play a full audio.
         When clicked or triggered, it will toggle playing music and will play the song id you give it.
-        Speaker:LoadSound(SoundId) will return a Sound object.
+        <code>Speaker:LoadSound(SoundId)</code> will return a <code>Sound</code> object or <code>nil</code> (see <code>LoadSound</code>).
       categories: [Electrical, Logic, Spawnable, Craftable]
     hydrator:
       name: wos-object
       methods:
         LoadSound:
-          documentation: |- 
-            Returns a roblox [<code>Sound</code>](https://create.roblox.com/docs/reference/engine/classes/Sound) object with the given <code>soundId</code>.
-            The <code>Sound</code> can only be modified using properties <code>SoundId</code>, <code>Looped</code>, <code>PlaybackSpeed</code>, <code>Pitch</code>, <code>TimePosition</code> and the methods <code>Play</code>, <code>Pause</code>, <code>Stop</code>, <code>Destroy</code>.
+          documentation:
+            description: |- 
+              Returns a roblox [<code>Sound</code>](https://create.roblox.com/docs/reference/engine/classes/Sound) object with the given <code>soundId</code>.
+              Sound IDs should follow this format "rbxassetid://[ID]" or the sound will fail to load.
+              The <code>Sound</code> can only be modified using properties <code>SoundId</code>, <code>Looped</code>, <code>PlaybackSpeed</code>, <code>Pitch</code>, <code>TimePosition</code> and the methods <code>Play</code>, <code>Pause</code>, <code>Stop</code>, <code>Destroy</code>.
+              This function will also return nil if more than 10 sounds have been loaded, to clear sounds use <code>Speaker:ClearSounds()</code>. Sounds remain loaded after the Microcontroller shuts down, so it is recommended to put this at the start of any scripts which use <code>LoadSound<\code>.
+            code-sample: |-
+              local LOOP_START = 2.5
+              local LOOP_END = 6.5
+              
+              local speaker = assert(Network:GetPart("Speaker"), "no speaker connected")
+              speaker:ClearSounds()
+              
+              local microwaveSound = assert(speaker:LoadSound("rbxassetid://4399963971"), "sound limit reached")
+              microwaveSound:Play()
+              
+              for _ = 1, 4 do
+                  microwaveSound.TimePosition = LOOP_START
+                  task.wait(LOOP_END - LOOP_START)
+              end
+              
+              microwaveSound:Stop()
+              microwaveSound:Destroy()
+              
+              local endingSound = assert(speaker:LoadSound("rbxassetid://110253665387820"), "sound limit reached")
+              endingSound:Play()
           parameters:
             - name: soundId
               type: string
               documentation: The ID of the sound to load.
           returns:
             - name: loadedSound
-              type: Sound
+              nullable-type: Sound
               documentation: The loaded sound object.
         ClearSounds:
           documentation: Stops and clears all sounds the speaker is currently playing.
