@@ -3114,14 +3114,15 @@ classes:
       description: |-
         Plays audio of length up to 5 seconds, unless it is powered in which case it can play a full audio.
         When clicked or triggered, it will toggle playing music and will play the song id you give it.
-        Speaker:LoadSound(SoundId) will return a Sound object
-        A Sound object can be modified using properties SoundId, Looped, PlaybackSpeed, Pitch, TimePositionand the methods Play, Pause, Stop, Destroy
+        Speaker:LoadSound(SoundId) will return a Sound object.
       categories: [Electrical, Logic, Spawnable, Craftable]
     hydrator:
       name: wos-object
       methods:
         LoadSound:
-          documentation: Returns a roblox [<code>Sound</code>](https://create.roblox.com/docs/reference/engine/classes/Sound) object with the given <code>soundId</code>.
+          documentation: |- 
+            Returns a roblox [<code>Sound</code>](https://create.roblox.com/docs/reference/engine/classes/Sound) object with the given <code>soundId</code>.
+            The <code>Sound</code> can only be modified using properties <code>SoundId</code>, <code>Looped</code>, <code>PlaybackSpeed</code>, <code>Pitch</code>, <code>TimePosition</code> and the methods <code>Play</code>, <code>Pause</code>, <code>Stop</code>, <code>Destroy</code>.
           parameters:
             - name: soundId
               type: string
