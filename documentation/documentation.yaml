@@ -3125,7 +3125,7 @@ classes:
               Returns a roblox [<code>Sound</code>](https://create.roblox.com/docs/reference/engine/classes/Sound) object with the given <code>soundId</code>.
               The provided sound ID is a [standard roblox asset URI](https://create.roblox.com/docs/projects/assets#asset-uris), most often of the form <code>rbxassetid://id</code>.
               The resulting <code>Sound</code> exposes only the properties <code>SoundId</code>, <code>Looped</code>, <code>PlaybackSpeed</code>, <code>Pitch</code>, <code>TimePosition</code> and the methods <code>:Play()</code>, <code>:Pause()</code>, <code>:Stop()</code>, and <code>:Destroy()</code>.
-              This function will also return <code>nil</nil> if more than 10 sounds have been loaded, to clear these sounds use <code>:ClearSounds()</code>.
+              This function will also return <code>nil</code> if more than 10 sounds have been loaded, to clear these sounds use <code>:ClearSounds()</code>.
             code-sample: |-
               local LOOP_START = 2.5
               local LOOP_END = 6.5
