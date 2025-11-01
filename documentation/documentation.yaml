@@ -3114,7 +3114,7 @@ classes:
       description: |-
         Plays audio of length up to 5 seconds, unless it is powered in which case it can play a full audio.
         When clicked or triggered, it will toggle playing music and will play the song id you give it.
-        Speaker:LoadSound(SoundId) will return a Sound object.
+        Speaker:LoadSound(SoundId) will return a Sound object or nil (see [<code>LoadSound</code>](https://arvidsilverlock.github.io/Pilot.lua-Luau-LSP/objects/Speaker#LoadSound))
       categories: [Electrical, Logic, Spawnable, Craftable]
     hydrator:
       name: wos-object
@@ -3123,6 +3123,7 @@ classes:
           documentation: |- 
             Returns a roblox [<code>Sound</code>](https://create.roblox.com/docs/reference/engine/classes/Sound) object with the given <code>soundId</code>.
             The <code>Sound</code> can only be modified using properties <code>SoundId</code>, <code>Looped</code>, <code>PlaybackSpeed</code>, <code>Pitch</code>, <code>TimePosition</code> and the methods <code>Play</code>, <code>Pause</code>, <code>Stop</code>, <code>Destroy</code>.
+            This will return nil if more than 10 sounds have been loaded - to clear sounds use <code>Speaker:ClearSounds()<\code>. Sounds remain loaded after the Microcontroller shuts down, so it is reccomended to put this at the start of any scripts which use <code>LoadSound<\code>.
           parameters:
             - name: soundId
               type: string
