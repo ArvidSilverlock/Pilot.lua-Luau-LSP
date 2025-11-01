@@ -3116,12 +3116,15 @@ classes:
         When clicked or triggered, it will toggle playing music and will play the song id you give it.
         Speaker:LoadSound(SoundId) will return a Sound object
         A Sound object can be modified using properties SoundId, Looped, PlaybackSpeed, Pitch, TimePositionand the methods Play, Pause, Stop, Destroy
+        Only 10 Sound objects can be loaded at once (LoadSound() will return nil if this is exceeded) - sound objects also persist after the Microcontroller has been turned off,
+        so you should use Speaker:ClearSounds() at the start of your scripts to ensure you have capacity to load sounds.
       categories: [Electrical, Logic, Spawnable, Craftable]
     hydrator:
       name: wos-object
       methods:
         LoadSound:
           documentation: Returns a roblox [<code>Sound</code>](https://create.roblox.com/docs/reference/engine/classes/Sound) object with the given <code>soundId</code>.
+          This Sound object is limited and you only have access to the properties SoundId, Looped, PlaybackSpeed, Pitch, TimePositionand the methods Play, Pause, Stop, Destroy.
           parameters:
             - name: soundId
               type: string
