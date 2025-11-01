@@ -23,6 +23,7 @@ cd Pilot.lua-Luau-LSP
 ```
 
 Once you are within the `Pilot.lua-Luau-LSP` directory, you need to install [lune](https://lune-org.github.io/docs).
+Make sure lune is version 0.10.2! Run ```rokit add lune-org/lune@0.10.2```. If this doesn't work then remove lune from the rokit.toml file and run the command again.
 
 Then run:
 
