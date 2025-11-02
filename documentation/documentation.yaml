@@ -3137,8 +3137,8 @@ classes:
               microwaveSound:Play()
 
               for _ = 1, 4 do
-                  microwaveSound.TimePosition = LOOP_START
                   task.wait(LOOP_END - LOOP_START)
+                  microwaveSound.TimePosition = LOOP_START
               end
 
               microwaveSound:Stop()
