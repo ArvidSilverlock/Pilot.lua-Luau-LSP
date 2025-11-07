@@ -174,7 +174,7 @@ function Hydrators.getPart(value)
 
 	do
 		local parameters = table.clone(initial)
-		table.insert(parameters, { name = "class", type = "string" })
+		table.insert(parameters, { name = "class", ["nullable-type"] = "string" })
 		table.insert(copy.intersection, {
 			[functionType] = {
 				parameters = parameters,
