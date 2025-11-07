@@ -1664,7 +1664,7 @@ types:
               nullable-type: PortLike
           returns:
             - name: objects
-              array-type: Port
+              type: Port
       GetPorts:
         method:
           parameters:
@@ -2567,6 +2567,7 @@ classes:
         Putting "Sun" as part of the list will make the seeker automatically target the main stellar body in the system.
 
         Gyros also have a property called MaxTorque. This allows you to control the max force on the gyro to stabilize it.
+      code-sample: gyro-intersection.luau
       categories: [Electrical, Spawnable, Craftable]
     hydrator:
       name: wos-object
@@ -2967,6 +2968,7 @@ classes:
         Deactivation raises the control rods, allowing fuel to react.
         FlipFlop will eject fuel or waste from the fuel rod with the least fuel.
       categories: [Spawnable, Craftable]
+      code-sample: reactor.luau
     hydrator:
       name: wos-object
       methods:
@@ -3196,14 +3198,17 @@ classes:
     documentation:
       description: |-
         A device that allows you to see and query information about other regions and planets in space while powered.
-        Click on the <code>Telescope</code> to open up a menu that will display information about any location within 100 units of your location.
-        To view a specific coordinate, configure the <code>Telescope</code> and set to the desired coordinates. This has a one minute cooldown.
+        Click on the <code>Telescope</code> to open up a menu that will display information about any location.
+        To view a specific coordinate, configure the <code>Telescope</code> and set to the desired coordinates.
+
+        There is no cooldown, and there is no range limit.
 
         The <code>Telescope</code> provides the following information:
         - Resources on the planet
         - The planet's temperature
         - The planet's distance from its star
         - The type of planet
+      code-sample: telescope-retrieve-info.luau
       categories: [Electrical, Spawnable, Craftable]
     hydrator:
       name: wos-object
@@ -3299,6 +3304,7 @@ classes:
         A <code>Screen</code>, but can handle player mouse input.
         This is to be used with programming.
       categories: [Logic, Electrical, Spawnable, Craftable]
+      code-sample: draggable-frames.luau
     hydrator:
       name: wos-object
       extends: Screen
@@ -4277,6 +4283,7 @@ classes:
         Has a configuration called Frequency which dictates how many times the polysilicon will repeat a trigger.
         For example, if a polysilicon was attached to a pulley, having a frequency of 5 and triggered, the pulley will be activated 5 times.
       categories: [Logic, Starter, Spawnable, Craftable]
+      code-sample: polysilicon-spam.luau
     hydrator:
       name: wos-object
       events:
@@ -4546,6 +4553,7 @@ classes:
         Make sure you set the correct coordinates OR YOU WILL BE STRANDED!
 
         Costs 1000 energy per teleport. Teleporter uses Energy regardless if a player is on the Teleporter at the moment it gets triggered.
+      code-sample: teleporter.luau
       categories: [Spawnable, Craftable]
     hydrator:
       name: wos-object
@@ -5539,6 +5547,7 @@ classes:
         This metal shell generates a small explosion upon impact.
         Costs 15 iron per shot.
       categories: [Weapons, Spawnable, Craftable]
+      code-sample: projectile-aim.luau
     hydrator: wos-object
   Ball:
     documentation:
@@ -5584,6 +5593,7 @@ classes:
         Must be supplied with an ammo material.
         Iron is prioritized, and results in one large cannonball being shot.
         Copper results in grapeshot.
+      code-sample: projectile-aim.luau
       categories: [Weapons, Spawnable, Craftable]
     hydrator: wos-object
   Cement:
@@ -6322,6 +6332,11 @@ classes:
     hydrator: wos-object
 
   # Worthless
+  Frog:
+    documentation:
+      description: Stupid frog for stupid people.
+      categories: [Unused]
+    hydrator: wos-object
   AdBoard:
     documentation:
       description: Allows the creation of Ad elements, automatically. Very useful for making money.
