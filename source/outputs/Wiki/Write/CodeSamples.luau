@@ -9,12 +9,11 @@ function CodeSamples.addIndividualCodeSample(output, codeSample)
 
 	output:Push("\n```lua\n")
 
-	local filePath = codeSample:match("^(.-%.luau)$")
-	if filePath then
-		output:Push(fs.readFile(`documentation/programs/{filePath}`))
-	else
-		output:Push(codeSample)
-	end
+	local source = if codeSample:match("^.-%.luau$")
+		then fs.readFile(`documentation/programs/{codeSample}`)
+		else codeSample
+	local trimmedSource = source:match("^%s*(.-)%s*$")
+	output:Push(trimmedSource)
 
 	output:Push("\n```")
 end
