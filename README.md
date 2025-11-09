@@ -14,6 +14,7 @@ Note that this is, by default, set up for usage with Visual Studio Code. If you'
 If you want to contribute, or want more control over the generation, you'll need to install this repo locally with some other tools to run the Luau code.
 
 Install [lune](https://lune-org.github.io/docs), a Luau runtime, note, only install this when the steps require you to, and install it _within_ the specified directory (unless of course, you know what you're doing).
+Make sure you install lune 0.10.2!
 
 ### Steps
 
