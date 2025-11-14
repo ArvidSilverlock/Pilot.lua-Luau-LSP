@@ -3760,15 +3760,28 @@ classes:
         A special device used to control the length of constraints attached to it.
         When attaching a constraint to the Winch, click the Winch first.
         When triggered with polysilicon, it will increase (Activate) or decrease (Deactivate).
+        
+        Any length adjustments to the constraint will be tweened over a duration of 1 second.
+        If an adjustment is made via a polysilicon trigger during a tween, the tween is cancelled and another tween starts toward the updated target length.
+
+        Adjustments made via polysilicon triggers have no debounce/cooldown.
       categories: [Spawnable, Craftable]
     hydrator:
       name: wos-object
       methods:
         AdjustLength:
+          documentation: |-
+            Changes the constraint's length by <code>adjustment</code>.
+            This method has a 1 second debounce window.
+            Calls made during the window will not affect the winch.
           parameters:
             - name: adjustment
               type: number
         SetLength:
+          documentation: |-
+            Sets the constraint's length to <code>length</code>.
+            This method has a 1 second debounce window.
+            Calls made during the window will not affect the winch.
           parameters:
             - name: length
               type: number
