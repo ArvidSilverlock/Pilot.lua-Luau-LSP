@@ -221,7 +221,7 @@ types:
       documentation: A full JSON value, can be a string, number, boolean, buffer, a JSON array, or another JSON dictionary.
       union:
         - type:
-            [JSONValue]:
+            !indexer JSONValue:
               type: JSON
         - array-type: JSON
         - type: JSONValue
@@ -869,7 +869,7 @@ types:
             parameters:
               - name: contents
                 type:
-                  [string]:
+                  !indexer string:
                     type: FileSystemFileNode
               - name: attributes
                 type: FileAttributes
@@ -950,7 +950,7 @@ types:
         - type: boolean
         - array-type: primitive
         - type:
-            [primitive]:
+            !indexer primitive:
               type: primitive
 
     File Metadata:
@@ -958,7 +958,7 @@ types:
         type:
           metadata:
             nullable-type:
-              [primitive]:
+              !indexer primitive:
                 type: primitive
           permissions:
             nullable-union:
@@ -969,7 +969,7 @@ types:
                       - type: number
                   userPermissions:
                     nullable-type:
-                      [number]:
+                      !indexer number:
                         type: FilePermissions
               - type: FilePermissions
       FilePermissions:
@@ -1009,7 +1009,7 @@ types:
             nullable-type: FileAttributes
           contents:
             type:
-              [string]:
+              !indexer string:
                 type: FileSystemFileNode
           kind:
             string-type: directory
@@ -1093,7 +1093,7 @@ types:
         Headers:
           documentation: The headers of the request.
           nullable-type:
-            [string]:
+            !indexer string:
               type: any
         Method:
           documentation: The HTTP method to use for the request.
@@ -1114,7 +1114,7 @@ types:
         Headers:
           documentation: The headers of the response.
           type:
-            [string]:
+            !indexer string:
               type: any
         StatusCode:
           documentation: The HTTP status code of the response.
@@ -1290,7 +1290,7 @@ types:
               description: A dictionary of <code>Enum.UserInputType.GamepadX</code> keys to an array of <code>InputObject</code>s representing the current state of all available inputs for said gamepad as values.
               source: https://discord.com/channels/616089055532417036/823313507167502336/1038621144397381692
             type:
-              [Enum.UserInputType]:
+              !indexer Enum.UserInputType:
                 array-type: InputObject
           GamepadEnabled:
             documentation: This property describes whether the device being used by a user has an available gamepad. If gamepads are available.
@@ -1579,7 +1579,7 @@ types:
           returns:
             - name: history
               type:
-                [PilotObject]:
+                !indexer PilotObject:
                   type: true
       GetPart:
         documentation:
@@ -1994,7 +1994,7 @@ classes:
             - name: configurables
               documentation: An dictionary of configurable names to data about that configurable.
               type:
-                [string]:
+                !indexer string:
                   type: ConfigurableData
         GetEvents:
           documentation: Gets information about the events of the object.
@@ -2008,7 +2008,7 @@ classes:
             - name: methods
               documentation: An dictionary of method names to data about that method.
               type:
-                [string]:
+                !indexer string:
                   type: MethodData
         GetNameOfOwnerAsync:
           documentation:
@@ -2233,7 +2233,7 @@ classes:
               type: string
             - name: properties
               type:
-                [string]:
+                !indexer string:
                   type: any
             - name: context
               type: CanvasContext
@@ -2252,7 +2252,7 @@ classes:
                 - CornerWedge
             - name: properties
               type:
-                [string]:
+                !indexer string:
                   type: any
           returns:
             - name: part
@@ -2262,7 +2262,7 @@ classes:
           returns:
             - name: cursors
               type:
-                [number]:
+                !indexer number:
                   type: ARCursor
         GetCursor:
           documentation: Returns the part owner's cursor, or, alternatively, any other player's cursor if the owner does not have a cursor (this is considered the primary user).
@@ -2327,7 +2327,7 @@ classes:
               union:
                 - array-type: string
                 - type:
-                    [string]:
+                    !indexer string:
                       type: number
               documentation: A list of parts <em>or</em> a dictionary of each part with how many of said part to craft.
           returns:
@@ -2335,7 +2335,7 @@ classes:
               type:
                 Power:
                   type: number
-                [string]:
+                !indexer string:
                   type: number
               documentation: Information relating to the crafting recipe.
         CraftItems:
@@ -2347,7 +2347,7 @@ classes:
               union:
                 - array-type: string
                 - type:
-                    [string]:
+                    !indexer string:
                       type: number
         GetRecipe:
           documentation: Returns the resource(s) required to craft the given item, or nil if the item doesn't have a recipe/doesn't exist.
@@ -2357,7 +2357,7 @@ classes:
           returns:
             - name: recipe
               type:
-                [string]:
+                !indexer string:
                   type: number
         Craft:
           documentation: |-
@@ -2397,7 +2397,7 @@ classes:
           returns:
             - name: materials
               type:
-                [string]:
+                !indexer string:
                   type: number
               documentation: The materials required to generate the model.
       events:
@@ -2805,7 +2805,7 @@ classes:
               nullable-type: boolean
             - name: headers
               nullable-type:
-                [string]:
+                !indexer string:
                   type: any
           returns:
             - name: response
@@ -2828,7 +2828,7 @@ classes:
               documentation: Determines whether the data is compressed (<b>gzipped</b>) when sent.
             - name: headers
               nullable-type:
-                [string]:
+                !indexer string:
                   documentation: A HTTP request header.
                   type: any
               documentation: Used to specify some HTTP request headers.
@@ -2888,7 +2888,7 @@ classes:
                     type: any
             - name: optionalHeaders
               nullable-type:
-                [string]:
+                !indexer string:
                   type: any
           returns:
             - name: response
@@ -3040,7 +3040,7 @@ classes:
               type: string
             - name: properties
               type:
-                [string]:
+                !indexer string:
                   type: any
           returns:
             - name: element
@@ -3314,7 +3314,7 @@ classes:
           returns:
             - name: cursors
               type:
-                [string]:
+                !indexer string:
                   type: Cursor
               documentation: A dictionary of player usernames to their cursors.
         GetCursor:
@@ -3482,7 +3482,7 @@ classes:
           returns:
             - name: content
               type:
-                [any]:
+                !indexer any:
                   type: any
               documentation: The content of the disk as a dictionary.
         WriteAll:
@@ -3517,7 +3517,7 @@ classes:
           parameters:
             - name: content
               type:
-                [any]:
+                !indexer any:
                   type: any
         Read:
           documentation: Reads the specified key from the disk and returns the value.
@@ -3534,7 +3534,7 @@ classes:
           returns:
             - name: content
               type:
-                [any]:
+                !indexer any:
                   type: any
         ClearDisk:
           documentation:
@@ -3820,7 +3820,7 @@ classes:
           returns:
             - name: reading
               type:
-                [string]:
+                !indexer string:
                   type: Vector3
               documentation: A dictionary of humanoid names to their world positions.
         ListPlayers:
@@ -3835,7 +3835,7 @@ classes:
           returns:
             - name: players
               type:
-                [number]:
+                !indexer number:
                   type: CFrame
               documentation: A dictionary of player <code>UserId</code>s to their world CFrames.
   LightTube:
@@ -3884,7 +3884,7 @@ classes:
           returns:
             - name: bodies
               type:
-                [string]:
+                !indexer string:
                   documentation: A celestial body.
                   type:
                     PlanetType:

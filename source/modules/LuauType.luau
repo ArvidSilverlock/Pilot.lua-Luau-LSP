@@ -232,8 +232,14 @@ end
 
 local function writeKey(output: Snippet.Snippet, key: { string } | string)
 	if typeof(key) == "table" then
-		assert(#key == 1 and typeof(key[1]) == "string", "malformed indexer")
-		output:Push("[", key[1], "]: ")
+		local indexer = (key :: any)["!indexer"]
+		for k, _ in key do
+			if k ~= "!indexer" then
+				error("malformed indexer")
+			end
+		end
+
+		output:Push("[", indexer, "]: ")
 	elseif typeof(key) == "string" then
 		if key:match("^[_%a][_%w]*$") then
 			output:Push(key, ": ")
