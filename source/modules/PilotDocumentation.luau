@@ -14,7 +14,7 @@ for className, class in documentation.classes do
 			local configurationTypeName = className .. "Configuration"
 			documentation.configurations[configurationTypeName] = {
 				documentation = `The configuration of the <code>{className}</code> object.`,
-				type = { [{ "string" }] = { type = "any" } }, -- yeah, i know
+				type = { [{ ["!indexer"] = "string" }] = { type = "any" } }, -- yeah, i know
 			}
 
 			for configurable, configurableData in hydrator.configurables do

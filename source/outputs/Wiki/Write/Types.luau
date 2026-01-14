@@ -143,11 +143,17 @@ function writeIndividualTypeDescription(
 		return
 	end
 
-	local name = if typeof(key) == "table" then `[{key[1]}]` else key
+	local headerText = key
+	if typeof(key) == "table" then
+		headerText = "[" .. (key :: any)["!indexer"] .. "]"
+		for k, _ in key do
+			if k ~= "!indexer" then
+				error("malformed indexer")
+			end
+		end
+	end
 
 	if depth > 1 then
-		local headerText = if typeof(name) == "table" then `[{name[1]}]` else name
-
 		if context.style == "function" then
 			local parameterNames, returnNames = {}, {}
 
@@ -170,7 +176,7 @@ function writeIndividualTypeDescription(
 
 		output
 			:MemberHeader(
-				name,
+				headerText,
 				headerText,
 				if context.style == "function" then (if context.isMethod then "method" else "function") else "property",
 				depth + 1
@@ -179,7 +185,7 @@ function writeIndividualTypeDescription(
 
 		table.insert(
 			tableOfContents,
-			`\{value: "{name .. if context.style == "function" then "()" else ""}", id: "{name}", "level": {depth}\}`
+			`\{value: "{headerText .. if context.style == "function" then "()" else ""}", id: "{headerText}", "level": {depth}\}`
 		)
 	end
 
@@ -189,7 +195,7 @@ function writeIndividualTypeDescription(
 	if context.style == "type" then
 		writeStandardType(output, context, state, depth, tableOfContents)
 	elseif context.style == "function" then
-		writeFunctionType(output, source, name, state)
+		writeFunctionType(output, source, headerText, state)
 	elseif context.style == "union" then
 		writeUnionType(output, context, state, depth, tableOfContents)
 	elseif context.style == "intersection" then

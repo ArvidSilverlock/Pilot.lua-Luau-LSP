@@ -8,4 +8,7 @@
 	"[json]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
+	"yaml.customTags": [
+		"!indexer"
+	]
 }
