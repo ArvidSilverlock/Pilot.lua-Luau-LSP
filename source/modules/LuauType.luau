@@ -185,10 +185,11 @@ function luauTypes.writeFromState(output: Snippet.Snippet, state: State, hydrato
 			end
 			output:Push(" = ")
 		elseif state.root.context == "class" then
-			output:Push("declare class ", state.root.name)
+			output:Push("declare extern type ", state.root.name)
 			if source.extends then
 				output:Push(" extends ", source.extends)
 			end
+			output:Push(" with")
 			output:NewLine():Indent()
 		elseif state.root.context == "declaration" then
 			if context.style == "function" then
