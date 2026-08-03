@@ -8,6 +8,22 @@ if (process.env.NODE_ENV !== 'production') {
 	require('dotenv').config();
 }
 
+// Features that need secrets are only enabled when those secrets are present,
+// so the site can still be built/served without a `.env` file.
+const gtagTrackingID = process.env.GTAG_TRACKING_ID;
+
+const algoliaAppId = process.env.ALGOLIA_APP_ID;
+const algoliaApiKey = process.env.ALGOLIA_SEARCH_API_KEY;
+const algoliaIndexName = process.env.ALGOLIA_INDEX_NAME;
+const algoliaEnabled = !!(algoliaAppId && algoliaApiKey && algoliaIndexName);
+
+if (!gtagTrackingID) {
+	console.warn("[config] GTAG_TRACKING_ID not set, analytics disabled.");
+}
+if (!algoliaEnabled) {
+	console.warn("[config] Algolia env vars not set, search disabled.");
+}
+
 const config: Config = {
 	title: "Waste of Space Wiki",
 	tagline:
@@ -49,10 +65,14 @@ const config: Config = {
 				theme: {
 					customCss: "./src/css/custom.css",
 				},
-				gtag: {
-					trackingID: process.env.GTAG_TRACKING_ID,
-					anonymizeIP: true,
-				},
+				...(gtagTrackingID
+					? {
+							gtag: {
+								trackingID: gtagTrackingID,
+								anonymizeIP: true,
+							},
+					  }
+					: {}),
 			} satisfies Preset.Options,
 		],
 	],
@@ -138,12 +158,16 @@ const config: Config = {
 			],
 			copyright: `Copyright © ${new Date().getFullYear()} ArvidSilverlock. Built with Docusaurus.`,
 		},
-		algolia: {
-			appId: process.env.ALGOLIA_APP_ID,
-			apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
-			indexName: process.env.ALGOLIA_INDEX_NAME,
-			contextualSearch: true,
-		},
+		...(algoliaEnabled
+			? {
+					algolia: {
+						appId: algoliaAppId,
+						apiKey: algoliaApiKey,
+						indexName: algoliaIndexName,
+						contextualSearch: true,
+					},
+			  }
+			: {}),
 		prism: {
 			theme: prismThemes.github,
 			darkTheme: prismThemes.dracula,
