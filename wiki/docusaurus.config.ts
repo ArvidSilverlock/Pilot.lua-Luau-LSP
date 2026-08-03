@@ -119,6 +119,11 @@ const config: Config = {
 				},
 				{
 					position: "right",
+					label: "Universe Scanner",
+					to: "/universe-scanner",
+				},
+				{
+					position: "right",
 					label: "Raw Documentation",
 					to: "raw-documentation",
 				},
