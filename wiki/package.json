@@ -17,16 +17,21 @@
 	},
 	"dependencies": {
 		"@docusaurus/core": "^3.8.1",
+		"@docusaurus/plugin-content-docs": "^3.8.1",
 		"@docusaurus/plugin-google-gtag": "^3.8.1",
 		"@docusaurus/preset-classic": "^3.8.1",
+		"@docusaurus/theme-common": "^3.8.1",
 		"@easyops-cn/docusaurus-search-local": "^0.46.1",
 		"@mdx-js/react": "^3.0.0",
 		"clsx": "^2.0.0",
 		"dotenv": "^17.0.0",
+		"gray-matter": "^4.0.3",
 		"prism-react-renderer": "^2.3.0",
 		"react": "^18.0.0",
 		"react-dom": "^18.0.0",
-		"react-toastify": "^11.0.2"
+		"react-router-dom": "^5.3.4",
+		"react-toastify": "^11.0.2",
+		"yarn": "^1.22.22"
 	},
 	"devDependencies": {
 		"@docusaurus/module-type-aliases": "3.7.0",
@@ -48,5 +53,6 @@
 	},
 	"engines": {
 		"node": ">=18.0"
-	}
+	},
+	"packageManager": "yarn@4.18.0"
 }
