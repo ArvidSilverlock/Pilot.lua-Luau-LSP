@@ -130,7 +130,6 @@ types:
   Range:
     documentation: Specifies a range of values, it is a string of the form <code>min:max</code>.
     type: string
-
   Events:
     EventConnection:
       generic-definitions:
@@ -1331,64 +1330,52 @@ types:
           CFrame:
             documentation:
               source: https://create.roblox.com/docs/reference/engine/classes/Camera#CFrame
-            readonly: true
-            type: CFrame
+            read: CFrame
           CameraType:
             documentation:
               source: https://create.roblox.com/docs/reference/engine/classes/Camera#CameraType
-            readonly: true
-            type: Enum.CameraType
+            read: Enum.CameraType
           DiagonalFieldOfView:
             documentation:
               source: https://create.roblox.com/docs/reference/engine/classes/Camera#DiagonalFieldOfView
-            readonly: true
-            type: number
+            read: number
           FieldOfView:
             documentation:
               source: https://create.roblox.com/docs/reference/engine/classes/Camera#FieldOfView
-            readonly: true
-            type: number
+            read: number
           FieldOfViewMode:
             documentation:
               source: https://create.roblox.com/docs/reference/engine/classes/Camera#FieldOfViewMode
-            readonly: true
-            type: Enum.FieldOfViewMode
+            read: Enum.FieldOfViewMode
           Focus:
             documentation:
               source: https://create.roblox.com/docs/reference/engine/classes/Camera#Focus
-            readonly: true
-            type: CFrame
+            read: CFrame
           HeadScale:
             documentation:
               source: https://create.roblox.com/docs/reference/engine/classes/Camera#HeadScale
-            readonly: true
-            type: number
+            read: number
           MaxAxisFieldOfView:
             documentation:
               source: https://create.roblox.com/docs/reference/engine/classes/Camera#MaxAxisFieldOfView
-            readonly: true
-            type: number
+            read: number
           NearPlaneZ:
             documentation:
               source: https://create.roblox.com/docs/reference/engine/classes/Camera#NearPlaneZ
-            readonly: true
-            type: number
+            read: number
           RenderCFrame:
             documentation:
               description: The <code>CFrame</code> the camera is rendered at (for VR).
               source: https://create.roblox.com/docs/reference/engine/classes/Camera#RenderCFrame
-            readonly: true
-            type: CFrame
+            read: CFrame
           ViewportSize:
             documentation:
               description: The size of the camera viewport.
               source: https://create.roblox.com/docs/reference/engine/classes/Camera#ViewportSize
-            readonly: true
-            type: Vector2
+            read: Vector2
           ViewportSizeUI:
             documentation: The size of the camera viewport (2D UI context)
-            readonly: true
-            type: Vector2
+            read: Vector2
       ARCursor:
         documentation: A cursor that represents a player's mouse in the 3D world. For use with AR devices.
         type:
@@ -2636,7 +2623,10 @@ classes:
       configurables:
         Coordinates:
           documentation: The coordinates to warp to.
-          type: Coordinates
+          read: Coordinates
+          write-union:
+            - type: Coordinates
+            - type: string
   Instrument:
     documentation:
       description: |-
@@ -3238,7 +3228,10 @@ classes:
       configurables:
         ViewCoordinates:
           documentation: The coordinates to view.
-          type: Coordinates
+          read: Coordinates
+          write-union:
+            - type: Coordinates
+            - type: string
   TemperatureGate:
     documentation:
       description: |-
@@ -3760,7 +3753,7 @@ classes:
         A special device used to control the length of constraints attached to it.
         When attaching a constraint to the Winch, click the Winch first.
         When triggered with polysilicon, it will increase (Activate) or decrease (Deactivate).
-        
+
         Any length adjustments to the constraint will be tweened over a duration of 1 second.
         If an adjustment is made via a polysilicon trigger during a tween, the tween is cancelled and another tween starts toward the updated target length.
 
@@ -3815,7 +3808,10 @@ classes:
       configurables:
         ViewCoordinates:
           documentation: The coordinates to view.
-          type: Coordinates
+          read: Coordinates
+          write-union:
+            - type: Coordinates
+            - type: string
 
   # Has methods and is both craftable and spawnable
   LifeSensor:
@@ -4304,7 +4300,10 @@ classes:
       configurables:
         PolysiliconMode:
           documentation: The mode of the Polysilicon. Each mode results in different behaviors for objects.
-          type: PolysiliconMode
+          read: number
+          write-union:
+            - type: PolysiliconMode
+            - type: number
         Frequency:
           documentation:
             description: The amount of times to activate the Polysilicon from a single trigger.
@@ -4575,7 +4574,10 @@ classes:
       configurables:
         Coordinates:
           documentation: The coordinates to your Destination.
-          type: Coordinates
+          read: Coordinates
+          write-union:
+            - type: Coordinates
+            - type: string
         TeleporterID:
           documentation:
             description: The ID of the teleporter at the goal coordinates to teleport directly to.
