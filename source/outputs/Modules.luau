@@ -32,7 +32,7 @@ function Modules.save(options)
 	end
 
 	Utility.writeConfigurationFile(`{options.o}/.luaurc`, "json", {
-		languageMode = "strict",
+		languageMode = if options["new-solver"] then "strict" else "nonstrict",
 		aliases = {
 			wos = `./{typesDirectory}/modules`,
 		},
