@@ -2,13 +2,15 @@
 
 Navigate to the [releases](https://github.com/ArvidSilverlock/Pilot.lua-Luau-LSP/releases) and download the latest `workspace.zip`, unzip it, and open it in Visual Studio Code.
 
+There is an alternative download, `workspace-new-solver.zip`, for Luau's new type solver.
+
 You'll need to install the [Luau LSP](https://marketplace.visualstudio.com/items?itemName=JohnnyMorganz.luau-lsp) visual studio code extension.
 
 Note that this is, by default, set up for usage with Visual Studio Code. If you're a neovim user or use some other editor, I trust you're smart enough to set it up properly on your own.
 
 ## Building From Source
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > Do _not_ attempt this route if you are not technically oriented, many have tried, and failed, despite how simple it looks. Read the 'Installation' section if you think you fall into this category.
 
 If you want to contribute, or want more control over the generation, you'll need to install this repo locally with some other tools to run the Luau code.
@@ -31,8 +33,6 @@ lune run pilot-generate
 ```
 
 You should then open the generated `workspace` folder as the root folder in visual studio code.
-
-Due to lune you have to add `--` after `pilot-generate` for any command options to work (i.e., `lune run pilot-generate -- -o ./workspace`).
 
 ### Optional
 
@@ -57,6 +57,7 @@ Install [selene](https://kampfkarren.github.io/selene), a Luau linter.
 | `--selene`                                      | Generate a `selene.toml` and `pilot.yml` file for Selene linting and Pilot integration.                                                                              |
 | `--rokit`                                       | Generate a `rokit.toml` configuration file.                                                                                                                          |
 | `--wiki`                                        | Generate markdown files for all documentation in the designated wiki docs directory.                                                                                 |
+| `--new-solver`                                  | Generate types for Luau's new type solver, which understands `read`/`write` types and type functions.                                                                |
 | `-o <path>`                                     | Output directory for all generated files. <br>- Defaults to `./workspace`.                                                                                           |
 | `--types-dir=<type-directory>`                  | Subdirectory (within the output directory) where types, documentation, and modules are placed. <br>- Defaults to `types`.                                            |
 

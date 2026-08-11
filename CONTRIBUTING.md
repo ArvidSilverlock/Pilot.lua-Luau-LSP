@@ -74,6 +74,59 @@ foobar:
       type: V
 ```
 
+## Read & Write Types
+
+Luau lets the members of a table (and of a `declare` block) have a different type when they are read to when they are written to, this is done with the `read` and `write` prefixes:
+
+```lua
+type Person = {
+	read name: string,
+	read age: string, -- maybe it stringifies the age when read
+	write age: number,
+	email: string,
+}
+```
+
+To do this, you use the `read` and `write` keys _in place of_ the `type` key, so the type above is written as:
+
+```yaml
+Person:
+  type:
+    name:
+      read: string
+    age:
+      read: string
+      write: number
+    email:
+      type: string
+```
+
+You do not have to specify both, `read` on its own means the member cannot be assigned to, and `write` on its own means it cannot be read.
+
+Specifying a `type` key alongside a `read` or `write` key is an error, you either have `type`, or you have `read`/`write`.
+
+Just like `type`, these are type keys, so all the prefixes still apply, and they can be combined with the other type keys. As in Luau, the access goes first, so you would write `read-nullable-type`, `write-sparse-array-type`, `read-string-type`, `read-union` or `read-method`.
+
+As it is luau, and not this format, that only allows these on members, you will get an error if you try to use `read`/`write` anywhere else (such as on a whole type, a member of a union, or a parameter of a function).
+
+### The Old Type Solver
+
+Only Luau's new type solver understands these, and the old one (which is what luau-lsp uses unless you turn `luau-lsp.fflags.enableNewSolver` on) does not just ignore what it cannot represent, it throws out the _entire_ definition file, leaving you with no types whatsoever.
+
+So, they are written out in full when you generate with `--new-solver`, and otherwise are collapsed into something the old solver will take:
+
+| Written as                                     | With `--new-solver`                               | By default                        |
+| ---------------------------------------------- | ------------------------------------------------- | --------------------------------- |
+| a `read` (or `write`) member of a class        | `read Position: Vector3`                          | `read Position: Vector3`          |
+| a `read` (or `write`) member of a table type   | `read CFrame: CFrame`                             | `CFrame: CFrame`                  |
+| both a `read` and a `write` for one member     | `read Mode: number`, `write Mode: Mode \| number` | `Mode: Mode \| number`            |
+
+A lone `read`/`write` on a class member is kept either way, as the old solver loads it happily (it just does not enforce it), whereas the other two are collapsed down to the type you are allowed to write.
+
+This is also why the configuration types (the tables you pass to `Configure`) are built out of the `write` type of a configurable: they are tables you write, and a split there would have the value you pass checked against the type you _read_.
+
+Write the types as they really are, the compatibility fallback is the generator's problem, not yours.
+
 ## Unions & Intersections
 
 You may be familiar with these from Luau typechecking, or even set theory.
@@ -183,7 +236,19 @@ Type:
     - type: K
 ```
 
-As of writing this document, there is no way to specify generic functions, if you are in need of generic functions, please make an issue about it or contact me on discord, and I will implement it, or, if you feel capable, you can implement it yourself.
+A `function` or `method` can be generic too, by giving it `generic-definitions` as a sibling of its type key, which writes the generics onto the function itself rather than onto a type:
+
+```yaml
+GetPart:
+  generic-definitions:
+    - name: Name
+  function:
+    parameters:
+      - name: class
+        type: Name
+```
+
+Which is the type `<Name>(class: Name) -> ()`. This is what the part getters use, see 'Part Getters' below.
 
 ## Self
 
@@ -322,7 +387,7 @@ PilotObject:
 
 All you have is a `hydrator` key, with the `name` set to `wos-object` (if this object is incredibly simple, such as grass, you can directly set `hydrator` to the string `wos-object` rather than make it an object).
 
-This hydrator key has the keys `events`, `methods`, `configurables` and `properties` (you rarely need properties, they are only used for the `PilotObject` class to specify things like `Position`).
+This hydrator key has the keys `events`, `methods`, `configurables` and `properties` (you rarely need properties, they are only used for the `PilotObject` class to specify things like `Position`). Properties are generated as `read` members, as, unlike configurables, they cannot be assigned to.
 
 It also has an `abstract` key (i.e., if you made a `ContainerObject` class, it doesn't really exist in the game, but many objects act like containers) to specify whether it is a real object or just a class of object (like Roblox `BasePart`s).
 
@@ -338,6 +403,29 @@ Part100k:
 There is also an `extends` key for inheritence, it defaults to `PilotObject` for classes who have `abstract` as undefined or `false`.
 
 The only divergence between how the types are specified once categoried is that `events` are their own custom format (and are later translated to normal Luau types), and `methods` directly specify `parameters` and `returns` without specifying the `method` key.
+
+## Part Getters
+
+`GetPart`, `GetPartFromPort`, `GetParts` and `GetPartsFromPort` (both the `Network` methods and the deprecated globals) all use the `get-part` hydrator, which has three keys, all booleans: `port` (does it take a port), `multiple` (does it give back an array) and `method` (is it a method of `Network`).
+
+They have to narrow to a class from the class name you pass in, which is done in one of two ways.
+
+By default, every class gets its own overload, giving you a type that is hundreds of overloads long. That is the only way the old type solver can do it, but it is so large that the _new_ solver refuses to typecheck it ('Code is too complex to typecheck!'), which is why `--new-solver` instead writes them as a generic function over `PilotObjects`, a generated map of every class that can be narrowed to:
+
+```lua
+export type function ObjectFromClassName(objects: type, className: type, fallback: type)
+	if className.tag == "singleton" then
+		local object = objects:readproperty(className)
+		if object then
+			return object
+		end
+	end
+
+	return fallback
+end
+
+declare function GetPartFromPort<Name>(port: PortLike?, class: (Name | keyof<PilotObjects> | "")?): (ObjectFromClassName<PilotObjects, Name, PilotObject>?)
+```
 
 ## Documentation
 
