@@ -74,6 +74,9 @@ jobs:
       - name: Run pilot-generate for workspace
         if: needs.filter.outputs.workspace == 'true'
         run: lune run pilot-generate -- --release
+      - name: Run pilot-generate for the new solver workspace
+        if: needs.filter.outputs.workspace == 'true'
+        run: lune run pilot-generate -- --release --solver-v2 -o ./workspace-new-solver --vanilla-output=vanilla-new-solver.luau
       - name: Run pilot-generate for wiki
         if: needs.filter.outputs.wiki == 'true'
         run: lune run pilot-generate -- --wikionly
@@ -96,12 +99,25 @@ jobs:
           name: workspace
           path: workspace.zip
 
-      - name: Upload vanilla.luau artifact
+      - name: Zip new solver workspace directory
+        if: needs.filter.outputs.workspace == 'true'
+        run: zip -r ../workspace-new-solver.zip .
+        working-directory: workspace-new-solver
+      - name: Upload new solver workspace artifact (as zip)
+        uses: actions/upload-artifact@v4
+        if: needs.filter.outputs.workspace == 'true'
+        with:
+          name: workspace-new-solver
+          path: workspace-new-solver.zip
+
+      - name: Upload vanilla.luau artifacts
         uses: actions/upload-artifact@v4
         if: needs.filter.outputs.workspace == 'true'
         with:
           name: vanilla
-          path: vanilla.luau
+          path: |
+            vanilla.luau
+            vanilla-new-solver.luau
 
   deploy_wiki:
     needs: pilot-generate
@@ -159,6 +175,11 @@ jobs:
         with:
           name: workspace
           path: .
+      - name: Download new solver workspace artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: workspace-new-solver
+          path: .
       - name: Download vanilla artifact
         uses: actions/download-artifact@v4
         with:
@@ -211,12 +232,32 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Upload New Solver Workspace Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./workspace-new-solver.zip
+          asset_name: workspace-new-solver.zip
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Upload Vanilla Types Release Asset
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./vanilla.luau
           asset_name: vanilla-types.luau
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload New Solver Vanilla Types Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./vanilla-new-solver.luau
+          asset_name: vanilla-types-new-solver.luau
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
