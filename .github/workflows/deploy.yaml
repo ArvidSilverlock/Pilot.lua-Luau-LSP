@@ -41,7 +41,7 @@ jobs:
               - 'documentation/partdata.json'
               - 'documentation/documentation.yaml'
               - 'documentation/programs/**'
-              - 'source/outputs/Wiki.luau'
+              - 'source/outputs/Wiki/**'
               - '.github/workflows/deploy.yaml'
             workspace:
               - 'source/main.luau'
