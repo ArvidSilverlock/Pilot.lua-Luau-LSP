@@ -90,6 +90,7 @@ function VSCode.save(options)
 		["luau-lsp.platform.type"] = "roblox",
 		["luau-lsp.types.definitionFiles"] = { `./{typesDirectory}/global.d.luau` },
 		["luau-lsp.types.documentationFiles"] = { `./{typesDirectory}/documentation.d.json` },
+		["luau-lsp.fflags.enableNewSolver"] = if options["new-solver"] then true else nil,
 	})
 
 	Utility.writeConfigurationFile(path(".vscode/extensions.json"), "json", {

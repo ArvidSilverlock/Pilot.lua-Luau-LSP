@@ -67,7 +67,11 @@ local function documentSeleneType(typeState): any
 	elseif typeState.base.context.style == "type" then
 		if typeof(typeState.base.value) == "string" then
 			local luauTypeSnippet = Snippet.new()
-			luauTypes.write(luauTypeSnippet, luauTypes.setNullable(typeState.source, false), typeState)
+
+			local nonNullableSource = luauTypes.setNullable(typeState.source, false)
+			local nonNullableState =
+				assert(luauTypes.getTypeState(nonNullableSource, typeState), "type has no type state")
+			luauTypes.writeFromState(luauTypeSnippet, nonNullableState, nil, nonNullableState.base)
 
 			local trimmed = tostring(luauTypeSnippet):match("^%s*(.-)%s*$") :: string
 

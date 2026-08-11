@@ -20,6 +20,8 @@ local DEFAULT_ARGUMENTS = {
 	o = "./workspace",
 	["types-dir"] = "types",
 
+	["new-solver"] = false,
+
 	["vanilla-output"] = "vanilla.luau",
 
 	["snippet-casing"] = "camel",

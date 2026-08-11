@@ -13,10 +13,11 @@ local function writeTypeGroup(
 	key: string,
 	value: any,
 	context: luauTypes.TypeContext | "global",
+	accessSupported: boolean,
 	callback: any?
 )
 	if value.hydrator and value.hydrator.name == "get-part" then
-		value = hydrators.getPart(value)
+		value = hydrators.getPart(value, accessSupported)
 	end
 
 	local typeState = luauTypes.getTypeState(value, {
@@ -24,6 +25,7 @@ local function writeTypeGroup(
 		name = key,
 		context = if context ~= "global" then context else nil,
 		define = true,
+		accessSupported = accessSupported,
 	})
 
 	if typeState then
@@ -39,16 +41,23 @@ local function writeTypeGroup(
 		end
 	else
 		for childName, child in value do
-			writeTypeGroup(snippet, childName, child, context, callback)
+			writeTypeGroup(snippet, childName, child, context, accessSupported, callback)
 		end
 	end
 end
 
-function Vanilla.generate(_options)
+function Vanilla.generate(options)
 	local snippet = Snippet.new()
 
+	local accessSupported = options["new-solver"] == true
+
+	if accessSupported then
+		snippet:PushLine(hydrators.objectLookupTypeFunction)
+		writeTypeGroup(snippet, hydrators.objectMapType, hydrators.objectMap(), "type", accessSupported)
+	end
+
 	local globalList: { string } = {}
-	writeTypeGroup(snippet, "globals", documentation.globals, "global", function(_, key, _, _)
+	writeTypeGroup(snippet, "globals", documentation.globals, "global", accessSupported, function(_, key, _, _)
 		table.insert(globalList, key)
 	end)
 	table.sort(globalList)
@@ -56,7 +65,7 @@ function Vanilla.generate(_options)
 	snippet:PushLine("--!nolint UnknownGlobal")
 	snippet:PushLine("-- PilotLua Globals: ", table.concat(globalList, ", "))
 
-	writeTypeGroup(snippet, "types", documentation.types, "type")
+	writeTypeGroup(snippet, "types", documentation.types, "type", accessSupported)
 
 	local independentClasses = {}
 	local inheritanceDependencies = {}
@@ -70,7 +79,7 @@ function Vanilla.generate(_options)
 		local reformattedClass = hydrators.object(className, class, true)
 
 		local classSnippet = Snippet.new()
-		writeTypeGroup(classSnippet, className, reformattedClass, "type")
+		writeTypeGroup(classSnippet, className, reformattedClass, "type", accessSupported)
 		classSnippets[className] = classSnippet
 
 		if inheritanceSource then
@@ -98,10 +107,10 @@ function Vanilla.generate(_options)
 		end
 	end
 
-	writeTypeGroup(snippet, "configurations", documentation.configurations, "type")
+	writeTypeGroup(snippet, "configurations", documentation.configurations, "type", accessSupported)
 
 	snippet:PushLine("return setmetatable("):Indent():PushLine("{"):Indent()
-	writeTypeGroup(snippet, "globals", documentation.globals, "global")
+	writeTypeGroup(snippet, "globals", documentation.globals, "global", accessSupported)
 	snippet:Dedent():PushLine("},"):PushLine("{"):Indent():PushLine("__call = function(self)"):Indent():Push("return ")
 
 	for index, global in globalList do

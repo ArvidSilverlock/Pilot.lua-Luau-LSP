@@ -1,4 +1,5 @@
 local documentation = require("../modules/PilotDocumentation")
+local luauTypes = require("../modules/LuauType")
 local Utility = require("../modules/Utility")
 
 local Hydrators = {}
@@ -48,19 +49,9 @@ function Hydrators.object(className: string, class: any, vanilla: boolean?)
 		end
 
 		if hydrator.properties then
+			-- properties are read only configurables, so they cannot be assigned to
 			for property, propertyData in hydrator.properties do
-				if typeof(propertyData.documentation) == "string" then
-					propertyData.documentation = {
-						description = propertyData.documentation,
-						readonly = true,
-					}
-				elseif propertyData.documentation then
-					propertyData.documentation.readonly = true
-				else
-					propertyData.documentation = { readonly = true }
-				end
-
-				resultingType[property] = propertyData
+				resultingType[property] = luauTypes.setAccess(propertyData, "read")
 			end
 		end
 
@@ -87,11 +78,11 @@ function Hydrators.object(className: string, class: any, vanilla: boolean?)
 
 		resultingType.ClassName = {
 			documentation = "The name of the class of the object.",
-			["string-type"] = hydrator["class-name"] or className,
+			["read-string-type"] = hydrator["class-name"] or className,
 		}
 	else
 		resultingType.ClassName =
-			{ documentation = "The name of the class of the object.", ["string-type"] = className }
+			{ documentation = "The name of the class of the object.", ["read-string-type"] = className }
 	end
 
 	if vanilla then
@@ -124,7 +115,82 @@ function Hydrators.object(className: string, class: any, vanilla: boolean?)
 	return reformattedClass
 end
 
-function Hydrators.getPart(value)
+--[[
+	The part getters have an overload for every class of object, which is hundreds of them, so, for the new type
+	solver, they are instead written as a generic function over a map of every class (`PilotObjects`).
+
+	`index<PilotObjects, Name>` cannot be used directly, as it has nothing to give back when you do not name a class
+	(or name one out of a variable), so a type function does the lookup and falls back to `PilotObject`.
+]]
+local OBJECT_MAP_TYPE = "PilotObjects"
+local OBJECT_LOOKUP_TYPE_FUNCTION = "ObjectFromClassName"
+local CLASS_NAME_GENERIC = "Name"
+
+local OBJECT_LOOKUP_SOURCE = [[
+export type function %s(objects: type, className: type, fallback: type)
+	if className.tag == "singleton" then
+		local object = objects:readproperty(className)
+		if object then
+			return object
+		end
+	end
+
+    print("this doesn't seem to be a valid object")
+
+    return fallback
+end
+]]
+
+Hydrators.objectMapType = OBJECT_MAP_TYPE
+Hydrators.objectLookupTypeFunction = OBJECT_LOOKUP_SOURCE:format(OBJECT_LOOKUP_TYPE_FUNCTION)
+
+-- the map of every class the part getters can give you back, the `PilotObjects` type
+function Hydrators.objectMap()
+	local map = {}
+
+	for className, class in documentation.classes do
+		map[className] = { type = className }
+	end
+
+	return {
+		documentation = "A map of every class of object that the part getters can narrow to, keyed by class name.",
+		type = map,
+	}
+end
+
+local function getGenericPart(copy, hydrator, functionType)
+	local parameters = if hydrator.port then { { name = "port", ["nullable-type"] = "PortLike" } } else {}
+
+	table.insert(parameters, {
+		name = "class",
+		documentation = "The class of object to get, leaving it out gives you objects of any class.",
+		["nullable-union"] = {
+			{ type = CLASS_NAME_GENERIC },
+			{ type = "keyof", generics = { { type = OBJECT_MAP_TYPE } } },
+			{ ["string-type"] = "" },
+		},
+	})
+
+	local returnValue: any = {
+		name = if hydrator.multiple then "objects" else "object",
+		generics = {
+			{ type = OBJECT_MAP_TYPE },
+			{ type = CLASS_NAME_GENERIC },
+			{ type = "PilotObject" },
+		},
+	}
+	returnValue[if hydrator.multiple then "array-type" else "nullable-type"] = OBJECT_LOOKUP_TYPE_FUNCTION
+
+	copy["generic-definitions"] = { { name = CLASS_NAME_GENERIC } }
+	copy[functionType] = {
+		parameters = parameters,
+		returns = { returnValue },
+	}
+
+	return copy
+end
+
+function Hydrators.getPart(value, accessSupported: boolean?)
 	local copy = Utility.deepClone(value)
 
 	local hydrator = copy.hydrator
@@ -132,6 +198,13 @@ function Hydrators.getPart(value)
 
 	copy["function"] = nil
 	copy.method = nil
+
+	local functionType = if hydrator.method then "method" else "function"
+
+	if accessSupported then
+		return getGenericPart(copy, hydrator, functionType)
+	end
+
 	copy.intersection = {}
 
 	local initial = if hydrator.port
@@ -143,23 +216,7 @@ function Hydrators.getPart(value)
 		}
 		else {}
 
-	local functionType = if hydrator.method then "method" else "function"
-
 	for className, class in documentation.classes do
-		if not class.hydrator or typeof(class.hydrator) ~= "table" then
-			continue
-		end
-
-		local classHydrator = class.hydrator
-		if
-			not classHydrator.events
-			and not classHydrator.methods
-			and not classHydrator.properties
-			and not classHydrator.configurables
-		then
-			continue
-		end
-
 		local parameters = table.clone(initial)
 		table.insert(parameters, { name = "class", ["string-type"] = className })
 		table.insert(copy.intersection, {
@@ -172,7 +229,7 @@ function Hydrators.getPart(value)
 		})
 	end
 
-	do
+	--[[do
 		local parameters = table.clone(initial)
 		table.insert(parameters, { name = "class", ["nullable-type"] = "string" })
 		table.insert(copy.intersection, {
@@ -183,19 +240,19 @@ function Hydrators.getPart(value)
 					else { { type = "PilotObject" } },
 			},
 		})
-	end
+	end]]
 
 	return copy
 end
 
-function Hydrators.apply(value)
+function Hydrators.apply(value, accessSupported: boolean?)
 	if not value.hydrator then
 		return value
 	end
 
 	local name = value.hydrator.name
 	if name == "get-part" then
-		return Hydrators.getPart(value)
+		return Hydrators.getPart(value, accessSupported)
 	end
 
 	return value

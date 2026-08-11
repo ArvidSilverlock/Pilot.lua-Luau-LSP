@@ -18,8 +18,9 @@ for className, class in documentation.classes do
 			}
 
 			for configurable, configurableData in hydrator.configurables do
+				local writtenData = luauTypes.collapseAccess(configurableData, "write")
 				documentation.configurations[configurationTypeName].type[configurable] =
-					luauTypes.setNullable(configurableData, true)
+					luauTypes.setNullable(writtenData, true)
 			end
 		end
 	end

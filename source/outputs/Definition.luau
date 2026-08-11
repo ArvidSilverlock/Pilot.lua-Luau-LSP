@@ -8,28 +8,40 @@ local documentation = require("../modules/PilotDocumentation")
 
 local Definition = {}
 
-local function writeTypeGroup(snippet, key: string, value: any, context: luauTypes.TypeContext)
+local function writeTypeGroup(snippet, key: string, value: any, context: luauTypes.TypeContext, accessSupported)
+	local function apply(source)
+		return hydrators.apply(source, accessSupported)
+	end
+
 	local typeState = luauTypes.getTypeState(value, {
 		isRoot = true,
 		name = key,
 		context = context,
 		define = true,
-	}, hydrators.apply)
+		accessSupported = accessSupported,
+	}, apply)
 
 	if typeState then
-		luauTypes.writeFromState(snippet, typeState, hydrators.apply)
+		luauTypes.writeFromState(snippet, typeState, apply)
 	else
-		for childName, child in hydrators.apply(value) do
-			writeTypeGroup(snippet, childName, child, context)
+		for childName, child in apply(value) do
+			writeTypeGroup(snippet, childName, child, context, accessSupported)
 		end
 	end
 end
 
-function Definition.generate(_options)
+function Definition.generate(options)
 	local snippet = Snippet.new()
 
-	writeTypeGroup(snippet, "globals", documentation.globals, "declaration")
-	writeTypeGroup(snippet, "types", documentation.types, "type")
+	local accessSupported = options["new-solver"] == true
+
+	if accessSupported then
+		snippet:PushLine(hydrators.objectLookupTypeFunction)
+		writeTypeGroup(snippet, hydrators.objectMapType, hydrators.objectMap(), "type", accessSupported)
+	end
+
+	writeTypeGroup(snippet, "globals", documentation.globals, "declaration", accessSupported)
+	writeTypeGroup(snippet, "types", documentation.types, "type", accessSupported)
 
 	local independentClasses = {}
 	local inheritanceDependencies = {}
@@ -39,7 +51,7 @@ function Definition.generate(_options)
 		local reformattedClass = hydrators.object(className, class)
 
 		local classSnippet = Snippet.new()
-		writeTypeGroup(classSnippet, className, reformattedClass, "class")
+		writeTypeGroup(classSnippet, className, reformattedClass, "class", accessSupported)
 		classSnippets[className] = classSnippet
 
 		local inheritanceSource = reformattedClass.extends
@@ -68,7 +80,7 @@ function Definition.generate(_options)
 		end
 	end
 
-	writeTypeGroup(snippet, "configurations", documentation.configurations, "type")
+	writeTypeGroup(snippet, "configurations", documentation.configurations, "type", accessSupported)
 
 	return tostring(snippet)
 end

@@ -6,6 +6,16 @@ local writeParameters = require("./Parameters")
 local sortedIterate = require("../SortedIterate")
 local urlEncode = require("../UrlEncode")
 
+local DEFAULT_SUBJECT = "It"
+local ACCESS_SUBJECTS = {
+	read = "When read, it",
+	write = "When written to, it",
+}
+local ACCESS_NOTES = {
+	read = "It is read-only, it cannot be assigned to.",
+	write = "It is write-only, it cannot be read.",
+}
+
 local writeIndividualTypeDescription
 
 local function writeWithoutState(output, name, source: any, parent: luauTypes.State, depth, tableOfContents)
@@ -42,89 +52,97 @@ local function writeDescription(output, documentation)
 	end
 end
 
-local function writeStandardType(output, context, state, depth, tableOfContents)
-	if typeof(state.base.value) == "table" then
+local function writeStandardType(output, subject, group, state, depth, tableOfContents)
+	local context = group.context
+
+	if typeof(group.value) == "table" then
 		if context.isArray then
-			output:PushLine("It is an array of dictionaries of the form:")
+			output:PushLine(`{subject} is an array of dictionaries of the form:`)
 		end
 
-		for memberName, memberValue in sortedIterate(state.base.value) do
+		for memberName, memberValue in sortedIterate(group.value) do
 			writeWithoutState(output, memberName, memberValue, state, depth + 1, tableOfContents)
 		end
 	elseif context.isString then
-		output:Push("It is always ")
+		output:Push(`{subject} is always `)
 		if context.isArray then
 			output:Push("an array of ")
 		end
-		output:Push("the string "):InlineCode(state.base.value):PushLine(".")
+		output:Push("the string "):InlineCode(group.value):PushLine(".")
 	else
-		output:Push("It is ")
+		output:Push(`{subject} is `)
 		if context.isArray then
 			output:Push("an array whose values are ")
 		end
-		output:Push("of the type "):InlineCode(state.base.value):PushLine(".")
+		output:Push("of the type "):InlineCode(group.value):PushLine(".")
 	end
 end
 
-local function writeFunctionType(output, source, name, state)
-	local parameters = state.base.value.parameters
-	local returns = state.base.value.returns
+local function writeFunctionType(output, subject, group, source, name)
+	local parameters = group.value.parameters
+	local returns = group.value.returns
 
 	if parameters and #parameters > 0 then
 		writeParameters(output, source.name, name, parameters, "parameter", "parameters")
 	else
-		output:PushLine("\n\nIt has no parameters.")
+		output:PushLine(`\n\n{subject} has no parameters.`)
 	end
 
 	if returns and #returns > 0 then
 		writeParameters(output, source.name, name, returns, "return", "returns")
 	else
-		output:PushLine("\n\nIt has no return values.")
+		output:PushLine(`\n\n{subject} has no return values.`)
 	end
 end
 
-local function writeStringUnionType(output, context, state)
+local function writeStringUnionType(output, subject, group)
+	local context = group.context
+
 	if context.isArray then
-		output:Push("It is an array whose values ")
+		output:Push(`{subject} is an array whose values `)
 	else
-		output:Push("It ")
+		output:Push(`{subject} `)
 	end
 	if context.isOpenString then
 		output:Push("can be any string, some "):Italic("example"):Push(" possibilities include: ")
 	else
 		output:Push("can be any of the following strings: ")
 	end
-	for index, memberValue in state.base.value do
+	for index, memberValue in group.value do
 		output:InlineCode(string.format("%q", memberValue))
-		if index < #state.base.value then
+		if index < #group.value then
 			output:Push(", ")
 		end
 	end
 	output:PushLine(".")
 end
 
-local function writeUnionType(output, context, state, depth, tableOfContents)
+local function writeUnionType(output, subject, group, state, depth, tableOfContents)
+	local context = group.context
+
 	if context.isString then
-		writeStringUnionType(output, context, state)
+		writeStringUnionType(output, subject, group)
 		return
 	end
-	output:Push("It is ")
+	output:Push(`{subject} is `)
 	if context.isArray then
 		output:Push("an array whose values are all ")
 	end
 	output:PushLine("one (not all) of the following types:")
-	for index, memberValue in state.base.value do
+	for index, memberValue in group.value do
 		writeWithoutState(output, `Subtype {string.char(64 + index)}`, memberValue, state, depth + 1, tableOfContents)
 	end
 end
 
-local function writeIntersectionType(output, context, state, depth, tableOfContents)
-	output:Push("It is ")
+local function writeIntersectionType(output, subject, group, state, depth, tableOfContents)
+	local context = group.context
+
+	output:Push(`{subject} is `)
 	if context.isArray then
 		output:Push("an array whose values are all ")
 	end
 	output:PushLine("the combination of the following types:")
-	for index, memberValue in state.base.value do
+	for index, memberValue in group.value do
 		writeWithoutState(output, `Subtype {string.char(64 + index)}`, memberValue, state, depth + 1, tableOfContents)
 	end
 end
@@ -192,20 +210,33 @@ function writeIndividualTypeDescription(
 	writeDescription(output, source.documentation)
 	appendDocumentation(output, source, nil, true)
 
-	if context.style == "type" then
-		writeStandardType(output, context, state, depth, tableOfContents)
-	elseif context.style == "function" then
-		writeFunctionType(output, source, headerText, state)
-	elseif context.style == "union" then
-		writeUnionType(output, context, state, depth, tableOfContents)
-	elseif context.style == "intersection" then
-		writeIntersectionType(output, context, state, depth, tableOfContents)
-	else
-		error(`Unknown context style: {context.style}`)
-	end
+	-- a member with both a `read` and a `write` type gets a description of each, so neither is an afterthought
+	local groups = luauTypes.getAccessGroups(state)
+	local isSplitByAccess = #groups > 1
 
-	if context.isNullable then
-		output:PushLine("It may also be <code>nil</code>.")
+	for _, group in groups do
+		local groupContext = group.context
+		local subject = if isSplitByAccess then ACCESS_SUBJECTS[groupContext.access] else DEFAULT_SUBJECT
+
+		if groupContext.style == "type" then
+			writeStandardType(output, subject, group, state, depth, tableOfContents)
+		elseif groupContext.style == "function" then
+			writeFunctionType(output, subject, group, source, headerText)
+		elseif groupContext.style == "union" then
+			writeUnionType(output, subject, group, state, depth, tableOfContents)
+		elseif groupContext.style == "intersection" then
+			writeIntersectionType(output, subject, group, state, depth, tableOfContents)
+		else
+			error(`Unknown context style: {groupContext.style}`)
+		end
+
+		if groupContext.isNullable then
+			output:PushLine(`{subject} may also be <code>nil</code>.`)
+		end
+
+		if not isSplitByAccess and groupContext.access then
+			output:PushLine(ACCESS_NOTES[groupContext.access])
+		end
 	end
 
 	output:NewLine(2)
@@ -217,6 +248,8 @@ local function generateTypePage(key: string, value: any, parent, path: string, g
 		name = key,
 		context = "type",
 		define = true,
+		-- the wiki documents the types as they are written, not as the old solver has to see them
+		accessSupported = true,
 	})
 
 	local encodedKey = urlEncode(key)

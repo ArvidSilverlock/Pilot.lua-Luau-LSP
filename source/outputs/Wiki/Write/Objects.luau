@@ -1,6 +1,7 @@
 local fs = require("@lune/fs")
 local serde = require("@lune/serde")
 
+local luauTypes = require("../../../modules/LuauType")
 local MarkdownSnippet = require("../../../modules/MarkdownSnippet")
 
 local LuauTypeStrings = require("../LuauTypeStrings")
@@ -176,6 +177,37 @@ local function documentMethods(output, tableOfContents, methods, objectName)
 	end
 end
 
+local function getTypeDescription(value): string
+	local state = LuauTypeStrings.getState(value)
+	local groups = luauTypes.getAccessGroups(state)
+
+	local sentences = {}
+
+	for _, group in groups do
+		local typeString = LuauTypeStrings.getTypeFromState(state, group) or "unknown"
+		local subject = if #groups == 1
+			then "It is"
+			elseif group.context.access == "read" then "When read, it is"
+			else "When written to, it is"
+
+		table.insert(
+			sentences,
+			`{subject} {determineIndefiniteArticle(typeString)} <code>{escapeMarkdown(typeString)}</code>.`
+		)
+	end
+
+	if #groups == 1 then
+		local access = groups[1].context.access
+		if access == "read" then
+			table.insert(sentences, "It is read-only, it cannot be assigned to.")
+		elseif access == "write" then
+			table.insert(sentences, "It is write-only, it cannot be read.")
+		end
+	end
+
+	return table.concat(sentences, " ")
+end
+
 local function documentConfigurables(output, tableOfContents, configurables, readonly)
 	writeGroupHeader(output, tableOfContents, if readonly then "Properties" else "Configurables")
 
@@ -183,9 +215,7 @@ local function documentConfigurables(output, tableOfContents, configurables, rea
 		writeMemberHeader(output, tableOfContents, configurableName, "configurable", configurableName)
 
 		local configurableDocs = configurableData.documentation
-		local typeString = LuauTypeStrings.getType(configurableData) or "unknown"
-		local configurableType =
-			`It is {determineIndefiniteArticle(typeString)} <code>{escapeMarkdown(typeString)}</code>.`
+		local configurableType = getTypeDescription(configurableData)
 
 		if typeof(configurableDocs) == "table" then
 			if configurableDocs.description then
