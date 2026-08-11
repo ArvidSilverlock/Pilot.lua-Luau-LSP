@@ -14,7 +14,8 @@ end
 local WIKI_ROOT = { isRoot = true, context = "type", define = false, accessSupported = true }
 
 function LuauTypeStrings.getState(value)
-	return assert(luauTypes.getTypeState(value, WIKI_ROOT :: any), "no context found")
+	local state = assert(luauTypes.getTypeState(value, WIKI_ROOT :: any), "no context found")
+	return state
 end
 
 function LuauTypeStrings.getType(value)
