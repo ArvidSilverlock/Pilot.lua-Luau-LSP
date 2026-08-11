@@ -32,6 +32,7 @@ function Modules.save(options)
 	end
 
 	Utility.writeConfigurationFile(`{options.o}/.luaurc`, "json", {
+		languageMode = "strict",
 		aliases = {
 			wos = `./{typesDirectory}/modules`,
 		},
