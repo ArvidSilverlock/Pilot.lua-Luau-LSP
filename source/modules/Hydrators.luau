@@ -115,34 +115,42 @@ function Hydrators.object(className: string, class: any, vanilla: boolean?)
 	return reformattedClass
 end
 
---[[
-	The part getters have an overload for every class of object, which is hundreds of them, so, for the new type
-	solver, they are instead written as a generic function over a map of every class (`PilotObjects`).
-
-	`index<PilotObjects, Name>` cannot be used directly, as it has nothing to give back when you do not name a class
-	(or name one out of a variable), so a type function does the lookup and falls back to `PilotObject`.
-]]
 local OBJECT_MAP_TYPE = "PilotObjects"
 local OBJECT_LOOKUP_TYPE_FUNCTION = "ObjectFromClassName"
 local CLASS_NAME_GENERIC = "Name"
 
 local OBJECT_LOOKUP_SOURCE = [[
 export type function %s(objects: type, className: type, fallback: type)
-	if className.tag == "singleton" then
+	local tag = className.tag
+
+	if tag == "singleton" then
 		local object = objects:readproperty(className)
 		if object then
 			return object
 		end
+	elseif tag == "union" or tag == "intersection" then
+		local objectsFound = {}
+		for index, component in className:components() do
+			objectsFound[index] = %s(objects, component, fallback)
+		end
+
+		return if tag == "union"
+			then types.unionof(table.unpack(objectsFound))
+			else types.intersectionof(table.unpack(objectsFound))
+	elseif tag == "unknown" or tag == "nil" or tag == "any" then
+		return fallback
 	end
 
-    print("this doesn't seem to be a valid object")
+	print("this doesn't seem to be a valid object")
 
-    return fallback
+	return fallback
 end
 ]]
 
 Hydrators.objectMapType = OBJECT_MAP_TYPE
-Hydrators.objectLookupTypeFunction = OBJECT_LOOKUP_SOURCE:format(OBJECT_LOOKUP_TYPE_FUNCTION)
+-- the name is needed twice, the second is the recursive call it makes for a union or intersection of class names
+Hydrators.objectLookupTypeFunction =
+	OBJECT_LOOKUP_SOURCE:format(OBJECT_LOOKUP_TYPE_FUNCTION, OBJECT_LOOKUP_TYPE_FUNCTION)
 
 -- the map of every class the part getters can give you back, the `PilotObjects` type
 function Hydrators.objectMap()
@@ -158,33 +166,51 @@ function Hydrators.objectMap()
 	}
 end
 
-local function getGenericPart(copy, hydrator, functionType)
-	local parameters = if hydrator.port then { { name = "port", ["nullable-type"] = "PortLike" } } else {}
+local function getPortParameters(hydrator)
+	return if hydrator.port then { { name = "port", ["nullable-type"] = "PortLike" } } else {}
+end
 
-	table.insert(parameters, {
+local function getGenericPart(copy, hydrator, functionType)
+	local returnStyle = if hydrator.multiple then "array-type" else "nullable-type"
+	local returnName = if hydrator.multiple then "objects" else "object"
+
+	local namedParameters = getPortParameters(hydrator)
+	table.insert(namedParameters, {
 		name = "class",
 		documentation = "The class of object to get, leaving it out gives you objects of any class.",
-		["nullable-union"] = {
+		union = {
 			{ type = CLASS_NAME_GENERIC },
 			{ type = "keyof", generics = { { type = OBJECT_MAP_TYPE } } },
-			{ ["string-type"] = "" },
 		},
 	})
 
-	local returnValue: any = {
-		name = if hydrator.multiple then "objects" else "object",
+	local namedReturn: any = {
+		name = returnName,
 		generics = {
 			{ type = OBJECT_MAP_TYPE },
 			{ type = CLASS_NAME_GENERIC },
 			{ type = "PilotObject" },
 		},
 	}
-	returnValue[if hydrator.multiple then "array-type" else "nullable-type"] = OBJECT_LOOKUP_TYPE_FUNCTION
+	namedReturn[returnStyle] = OBJECT_LOOKUP_TYPE_FUNCTION
 
-	copy["generic-definitions"] = { { name = CLASS_NAME_GENERIC } }
-	copy[functionType] = {
-		parameters = parameters,
-		returns = { returnValue },
+	local anyReturn: any = { name = returnName }
+	anyReturn[returnStyle] = "PilotObject"
+
+	copy.intersection = {
+		{
+			["generic-definitions"] = { { name = CLASS_NAME_GENERIC } },
+			[functionType] = {
+				parameters = namedParameters,
+				returns = { namedReturn },
+			},
+		},
+		{
+			[functionType] = {
+				parameters = getPortParameters(hydrator),
+				returns = { anyReturn },
+			},
+		},
 	}
 
 	return copy
@@ -228,19 +254,6 @@ function Hydrators.getPart(value, accessSupported: boolean?)
 			},
 		})
 	end
-
-	--[[do
-		local parameters = table.clone(initial)
-		table.insert(parameters, { name = "class", ["nullable-type"] = "string" })
-		table.insert(copy.intersection, {
-			[functionType] = {
-				parameters = parameters,
-				returns = if hydrator.multiple
-					then { { ["array-type"] = "PilotObject" } }
-					else { { type = "PilotObject" } },
-			},
-		})
-	end]]
 
 	return copy
 end

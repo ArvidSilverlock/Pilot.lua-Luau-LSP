@@ -181,6 +181,8 @@ These are rather simple, the definitions of methods and functions are identical 
 
 All you need is to specify an array of `parameters` and `returns`, note that none of the prefixes work with these two. Something to note with these is that you're allowed to specify a _name_ at the same scope level as the type key.
 
+A `method` member of a table type is marked `read` for you, as a method is something you call, not a field you swap out. You do not write the `read` yourself, and you cannot opt out of it. This does not apply to `function` members (things like `Network.new`, which are plain fields that happen to hold a function), nor to the methods of a class, which luau already writes as `function Name(self, ...)` rather than as an assignable member.
+
 Variadic returns/parameters are done through setting the name to `...`.
 
 You are allowed to leave either `parameters` or `returns` blank, but if you leave both blank, YAML will attempt to discard the `function` or `method` key, so you need to explicitly specify it as `{}`.
@@ -403,29 +405,6 @@ Part100k:
 There is also an `extends` key for inheritence, it defaults to `PilotObject` for classes who have `abstract` as undefined or `false`.
 
 The only divergence between how the types are specified once categoried is that `events` are their own custom format (and are later translated to normal Luau types), and `methods` directly specify `parameters` and `returns` without specifying the `method` key.
-
-## Part Getters
-
-`GetPart`, `GetPartFromPort`, `GetParts` and `GetPartsFromPort` (both the `Network` methods and the deprecated globals) all use the `get-part` hydrator, which has three keys, all booleans: `port` (does it take a port), `multiple` (does it give back an array) and `method` (is it a method of `Network`).
-
-They have to narrow to a class from the class name you pass in, which is done in one of two ways.
-
-By default, every class gets its own overload, giving you a type that is hundreds of overloads long. That is the only way the old type solver can do it, but it is so large that the _new_ solver refuses to typecheck it ('Code is too complex to typecheck!'), which is why `--new-solver` instead writes them as a generic function over `PilotObjects`, a generated map of every class that can be narrowed to:
-
-```lua
-export type function ObjectFromClassName(objects: type, className: type, fallback: type)
-	if className.tag == "singleton" then
-		local object = objects:readproperty(className)
-		if object then
-			return object
-		end
-	end
-
-	return fallback
-end
-
-declare function GetPartFromPort<Name>(port: PortLike?, class: (Name | keyof<PilotObjects> | "")?): (ObjectFromClassName<PilotObjects, Name, PilotObject>?)
-```
 
 ## Documentation
 
