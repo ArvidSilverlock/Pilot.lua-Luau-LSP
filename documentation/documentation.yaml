@@ -142,10 +142,10 @@ types:
                 type: unknown
       type:
         _eventName:
-          type: Name
+          read: Name
         Callback:
           documentation: The function that will be called when the event is fired.
-          type: Callback
+          read: Callback
       metatable:
         type: EventConnectionMetatable
         generics:
@@ -168,9 +168,9 @@ types:
         Unbind:
           method: {}
         __mode:
-          string-type: v
+          read-string-type: v
         __index:
-          type: EventConnectionMetatable
+          read: EventConnectionMetatable
           generics:
             - type: Name
             - type: Callback
@@ -192,7 +192,7 @@ types:
           type: ...unknown
       type:
         _eventName:
-          type: Name
+          read: Name
         Connect:
           documentation: Connect the provided callback to be called when the event is fired.
           method:
@@ -260,7 +260,7 @@ types:
               returns:
                 - type: string
           __index:
-            type: CoordinatesMetatable
+            read: CoordinatesMetatable
           Clone:
             documentation: Makes a copy of the coordinates.
             method:
@@ -297,7 +297,7 @@ types:
                     - type: boolean
                   documentation: An array representation of the coordinates.
           type:
-            string-type: Coordinates
+            read-string-type: Coordinates
       Coordinates:
         documentation: |-
           The class that represents universe coordinates.
@@ -351,17 +351,17 @@ types:
             documentation:
               description: The red channel of the region color.
               range: [0, 1]
-            type: number
+            read: number
           G:
             documentation:
               description: The green channel of the region color.
               range: [0, 1]
-            type: number
+            read: number
           B:
             documentation:
               description: The blue channel of the region color.
               range: [0, 1]
-            type: number
+            read: number
       RegionEntryLocation:
         documentation: The location where the player warps into a region.
         export: false
@@ -371,19 +371,19 @@ types:
               description: The <code>X</code> position of the location.
               range: [-5000, 5000]
               increment: 1
-            type: number
+            read: number
           Y:
             documentation:
               description: The <code>Y</code> position of the location.
               range: [4000, 6000]
               increment: 1
-            type: number
+            read: number
           Z:
             documentation:
               description: The <code>Z</code> position of the location.
               range: [-5000, 5000]
               increment: 1
-            type: number
+            read: number
       RingData:
         documentation: The data about the rings of a planet, if it has any.
         export: false
@@ -392,21 +392,21 @@ types:
             documentation:
               range: [6000, 12000]
               increment: 1
-            type: number
+            read: number
           RingsEnd:
             documentation:
               range: [6800, 15000]
               increment: 1
-            type: number
+            read: number
           RingsAmount:
             documentation:
               description: The total amount of individual asteroids within the rings.
               range: [500, 1250]
               increment: 1
-            type: number
+            read: number
           RingsType:
             documentation: The physical material the majority of the rings are made of.
-            string-union:
+            read-string-union:
               - Ice
               - Stone
       TerrainData:
@@ -416,118 +416,118 @@ types:
           Height:
             documentation:
               length: 2
-            array-type: number
+            read-array-type: number
           Life:
             documentation: Inherits the value of the planet's <code>Atmosphere</code>.
-            type: boolean
+            read: boolean
           MountainDensity:
             documentation:
               length: 2
-            array-type: number
+            read-array-type: number
           RockDensity:
             documentation:
               length: 2
-            array-type: number
+            read-array-type: number
           Roughness:
             documentation:
               length: 2
-            array-type: number
+            read-array-type: number
           Slopes:
             documentation:
               length: 2
-            array-type: number
+            read-array-type: number
           Temperature:
             documentation:
               length: 2
-            array-type: number
+            read-array-type: number
           TreeSettings:
-            type:
+            read:
               amount_of_branches:
                 documentation:
                   length: 2
-                array-type: number
+                read-array-type: number
               amount_of_splits:
                 documentation:
                   length: 2
-                array-type: number
+                read-array-type: number
               branch_angles:
                 documentation:
                   length: 2
-                array-type: number
+                read-array-type: number
               branch_offset:
                 documentation:
                   length: 2
-                array-type: number
+                read-array-type: number
               branch_size_percentage:
-                type:
+                read:
                   max:
-                    type:
+                    read:
                       width:
-                        type: number
+                        read: number
                       height:
-                        type: number
+                        read: number
                   min:
-                    type:
+                    read:
                       width:
-                        type: number
+                        read: number
                       height:
-                        type: number
+                        read: number
               trunk_size:
-                type:
+                read:
                   max:
-                    type:
+                    read:
                       width:
-                        type: number
+                        read: number
                       height:
-                        type: number
+                        read: number
                   min:
-                    type:
+                    read:
                       width:
-                        type: number
+                        read: number
                       height:
-                        type: number
+                        read: number
           Water:
             documentation: Inherits the value of the planet's <code>WaterLevel ~= nil</code>.
-            type: boolean
+            read: boolean
 
       PlayableRegionInfo:
         documentation: A region that can be entered by the player, say, the orbit of a planet, the planet itself or a space region.
         type:
           Coordinate:
             documentation: The coordinates of the region in the non-serialisable <code>Coordinates</code> format.
-            type: Coordinates
+            read: Coordinates
           EnterLocation:
             documentation: The location where the player warps into the region.
-            type: RegionEntryLocation
+            read: RegionEntryLocation
           Name:
             documentation: The name of the region.
-            type: string
+            read: string
           RegionSeed:
-            type: number
+            read: number
           RegionServer:
-            type: string
+            read: string
           StringCoordinate:
             documentation: The coordinates of the region as a string (i.e., <code>0, 0, 0, 0, false</code>).
-            type: string
+            read: string
       OrbitRegionInfo:
         intersection:
           - type:
               OrbitBody:
-                union:
+                read-union:
                   - type: BlackHoleRegionInfo
                   - type: StarRegionInfo
                   - type: PlanetRegionInfo
               RegionType:
-                string-type: Orbit
+                read-string-type: Orbit
           - type: PlayableRegionInfo
       SpaceRegionInfo:
         documentation: The region info format of an empty region of space.
         intersection:
           - type:
               RegionType:
-                string-type: Space
+                read-string-type: Space
               OrbitBody:
-                type: never
+                read: never
           - type: PlayableRegionInfo
       BlackHoleRegionInfo:
         documentation: The region info format of a black hole.
@@ -537,85 +537,85 @@ types:
                 documentation:
                   range: [500, 15000]
                   increment: 1
-                type: number
+                read: number
               EnterLocation:
-                type: RegionEntryLocation
+                read: RegionEntryLocation
               PlanetData:
-                type: never
+                read: never
               StarSize:
-                type: never
+                read: never
               StarType:
-                type: never
+                read: never
               OrbitBody:
-                type: never
+                read: never
           - type: PlayableRegionInfo
       StarRegionInfo:
         documentation: The region info format of a star.
         intersection:
           - type:
               EnterLocation:
-                type: RegionEntryLocation
+                read: RegionEntryLocation
               StarType:
-                type: StarType
+                read: StarType
               StarSize:
                 documentation:
                   range: [2000, 6000]
                   increment: 1
-                type: number
+                read: number
               BlackHoleSize:
-                type: never
+                read: never
               PlanetData:
-                type: never
+                read: never
               OrbitBody:
-                type: never
+                read: never
           - type: PlayableRegionInfo
       PlanetRegionInfo:
         documentation: The region info format of a planet.
         intersection:
           - type:
               PlanetData:
-                type:
+                read:
                   Atmosphere:
-                    type: boolean
+                    read: boolean
                   DayCycleIncrement:
-                    type: number
+                    read: number
                   EnterLocation:
-                    type: RegionEntryLocation
+                    read: RegionEntryLocation
                   GenerationHeightScale:
-                    type: number
+                    read: number
                   Gravity:
-                    type: number
+                    read: number
                   PlanetMaterial:
-                    string-union:
+                    read-string-union:
                       - Grass
                       - Sand
                       - Snow
                       - Rock1
                       - Rock2
                   PlanetType:
-                    type: PlanetType
+                    read: PlanetType
                   PrimaryColor:
-                    type: RegionColor
+                    read: RegionColor
                   Resources:
-                    array-type: string
+                    read-array-type: string
                   Rings:
-                    nullable-type: RingData
+                    read-nullable-type: RingData
                   SecondaryColor:
-                    type: RegionColor
+                    read: RegionColor
                   StartingTime:
-                    type: number
+                    read: number
                   Temperature:
-                    type: number
+                    read: number
                   TerrainConfig:
-                    type: TerrainData
+                    read: TerrainData
               BlackHoleSize:
-                type: never
+                read: never
               StarType:
-                type: never
+                read: never
               StarSize:
-                type: never
+                read: never
               OrbitBody:
-                type: never
+                read: never
           - type: PlayableRegionInfo
       CompleteRegionInfo:
         documentation: A type that demonstrates how the different region info types are returned interchangeably.
@@ -636,98 +636,98 @@ types:
         type:
           BeaconCount:
             documentation: The amount of beacons in the region at the time of the scan.
-            type: number
+            read: number
           HasRings:
             documentation: Whether the region has planetary rings.
-            type: boolean
+            read: boolean
           Name:
             documentation: The name of the region.
-            type: string
+            read: string
           SubType:
-            type: never
+            read: never
           TidallyLocked:
             documentation: This value contains meaningless data for a space region, but is nonetheless present.
-            type: boolean
+            read: boolean
           Type:
             documentation: The type of the region.
-            string-type: Planet
+            read-string-type: Planet
       SimplePlanetRegionInfo:
         type:
           Temperature:
             documentation: The ambient temperature of the planet.
-            type: number
+            read: number
           BeaconCount:
             documentation: The amount of beacons in the region at the time of the scan.
-            type: number
+            read: number
           Color:
             documentation: The primary color of the planet.
-            type: Color3
+            read: Color3
           Gravity:
             documentation: The gravity of the planet.
-            type: number
+            read: number
           HasAtmosphere:
             documentation: Whether the planet has an atmosphere.
-            type: boolean
+            read: boolean
           HasRings:
             documentation: Whether the planet has planetary rings.
-            type: boolean
+            read: boolean
           Name:
             documentation: The name of the planet.
-            type: string
+            read: string
           Resources:
             documentation: The resources that can be found on the planet.
-            array-type: string
+            read-array-type: string
           SubType:
             documentation: The type of the planet, such as <code>Desert</code>, <code>Terra</code>, <code>EarthLike</code>, etc.
-            type: PlanetType
+            read: PlanetType
           TidallyLocked:
             documentation: Whether the planet is tidally locked, meaning, whether it has a day/night cycle.
-            type: boolean
+            read: boolean
           Type:
             documentation: The type of the region.
-            string-type: Planet
+            read-string-type: Planet
       SimpleBlackHoleRegionInfo:
         type:
           BeaconCount:
             documentation: The amount of beacons in the region at the time of the scan.
-            type: number
+            read: number
           Name:
             documentation: The name of the region.
-            type: string
+            read: string
           Size:
             documentation:
               description: The visual size of the black hole.
               range: [500, 15000]
               increment: 1
-            type: number
+            read: number
           Type:
             documentation: The type of the region.
-            string-type: BlackHole
+            read-string-type: BlackHole
       SimpleStarRegionInfo:
         type:
           BeaconCount:
             documentation: The amount of beacons in the region at the time of the scan.
-            type: number
+            read: number
           Name:
             documentation: The name of the region.
-            type: string
+            read: string
           Size:
             documentation:
               description: The visual size of the star.
               range: [2000, 6000]
               increment: 1
-            type: number
+            read: number
           SubType:
             documentation: The type of the star, such as <code>Red</code>, <code>Orange</code>, <code>Yellow</code>, etc.
-            type: StarType
+            read: StarType
           Type:
             documentation: The type of the region.
-            string-type: Star
+            read-string-type: Star
   File System:
     FileSystem:
       type:
         __index:
-          type: FileSystem
+          read: FileSystem
         chdir:
           method:
             parameters:
@@ -851,7 +851,7 @@ types:
             returns:
               - array-type: string
         separator:
-          type: string
+          read: string
     RawFileSystem:
       type:
         Device:
@@ -904,9 +904,9 @@ types:
             returns:
               - type: FileSystemRoot
         SYSTEM_NOACCESS:
-          type: FileAttributes
+          read: FileAttributes
         SYSTEM_READONLY:
-          type: FileAttributes
+          read: FileAttributes
         read:
           method:
             parameters:
@@ -1041,45 +1041,45 @@ types:
       type:
         Description:
           documentation: A description of the method parameter.
-          nullable-type: string
+          read-nullable-type: string
         Name:
           documentation: The name of the method parameter.
-          nullable-type: string
+          read-nullable-type: string
         Type:
           documentation: The type of the method parameter.
-          nullable-type: string
+          read-nullable-type: string
     MethodData:
       type:
         Arguments:
           documentation: The arguments that the method takes.
-          array-type: MethodParameter
+          read-array-type: MethodParameter
         Description:
           documentation: A description of the method.
-          nullable-type: string
+          read-nullable-type: string
         Name:
           documentation: The name of the method.
-          type: string
+          read: string
         Results:
-          array-type: MethodParameter
+          read-array-type: MethodParameter
     ConfigurableData:
       type:
         DefaultValue:
           documentation: The default value of the configurable, if it has one.
-          nullable-type: any
+          read-nullable-type: any
         Description:
           documentation: A description of the configurable.
-          type: string
+          read: string
         Name:
           documentation: The name of the configurable.
-          type: string
+          read: string
         Options:
           documentation: The options that the configurable can take.
-          nullable-union:
+          read-nullable-union:
             - array-type: string
             - array-type: number
         Type:
           documentation: The type of the configurable.
-          type: string
+          read: string
   Modems:
     ModemRequest:
       type:
@@ -1109,51 +1109,51 @@ types:
       type:
         Body:
           documentation: The body of the response, is usually a JSON string.
-          type: any
+          read: any
         Headers:
           documentation: The headers of the response.
-          type:
+          read:
             !indexer string:
-              type: any
+              read: any
         StatusCode:
           documentation: The HTTP status code of the response.
-          type: number
+          read: number
         StatusMessage:
           documentation: The HTTP status message of the response.
-          type: string
+          read: string
         Success:
           documentation: Whether the request was successful or not.
-          type: boolean
+          read: boolean
   Object Detector:
     ObjectDetectorHitNothing:
       documentation: The data provided by the object detector when it doesn't hit anything.
       type:
         isTerrain:
           documentation: Whether or not the hit object is terrain.
-          type: true
+          read: true
         Distance:
           documentation: Will be greater than or equal to the <code>ObjectDetector</code>'s <code>MaxDistance</code> configuration, note, there is a slight error in this value so it may be ~1e-3 less than it should be.
-          type: number
+          read: number
         Name:
-          type: never
+          read: never
         Position:
-          type: never
+          read: never
         Color:
-          type: never
+          read: never
         CFrame:
-          type: never
+          read: never
         Size:
-          type: never
+          read: never
     ObjectDetectorHitTerrain:
       documentation: The data provided by the object detector when it hits terrain.
       type:
         isTerrain:
           documentation: Whether or not the hit object is terrain.
-          type: true
+          read: true
         Name:
           documentation: |-
             The name of the hit object. If it is "Collider" then the object detector is hitting an <code>EnergyShield</code>, it can also be a player's limb, it will not provide the name of the player, just the name of the hit limb.
-          open-string-union:
+          read-open-string-union:
             - Head
             - Torso
             - Left Arm
@@ -1163,56 +1163,56 @@ types:
             - Collider
         Color:
           documentation: The <code>Color</code> of the hit object.
-          type: Color3
+          read: Color3
         Position:
           documentation: The <code>Position</code> of the hit object itself, not the <code>Position</code> of contact between the ray and the object.
-          type: Vector3
+          read: Vector3
         CFrame:
           documentation: The <code>CFrame</code> of the hit object.
-          type: CFrame
+          read: CFrame
         Size:
           documentation: The <code>Size</code> of the hit object.
-          type: Vector3
+          read: Vector3
         Distance:
           documentation: The distance between the start of the ray and the contact point.
-          type: number
+          read: number
     ObjectDetectorHitObject:
       documentation: The data provided by the object detector when it hits an object.
       type:
         isTerrain:
           documentation: Whether or not the hit object is terrain.
-          type: false
+          read: false
         CreatedBy:
           documentation: |-
             The <code>UserId</code> of the person who <em>created</em> the part.
             Parts created by "THE DEVELOPERS" or "???" have a <code>CreatedBy</code> value of <code>-1</code>.
             It <em>can</em> be <code>nil</code> if the game doesn't know who created the part.
-          nullable-type: number
+          read-nullable-type: number
         LockedBy:
           documentation: |-
             The <code>UserId</code> of the person who <em>locked</em> the part.
             Parts locked by "THE DEVELOPERS" have a <code>LockedBy</code> value of <code>-2</code>
             Parts locked by "???" have a <code>LockedBy</code> value of <code>-1</code>
             This value will be <code>nil</code> if the part is unlocked.
-          nullable-type: number
+          read-nullable-type: number
         Name:
           documentation: The name of the hit object.
-          type: string
+          read: string
         Color:
           documentation: The <code>Color</code> of the hit object.
-          type: Color3
+          read: Color3
         Position:
           documentation: The <code>Position</code> of the hit object itself, not the <code>Position</code> of contact between the ray and the object.
-          type: Vector3
+          read: Vector3
         CFrame:
           documentation: The <code>CFrame</code> of the hit object.
-          type: CFrame
+          read: CFrame
         Size:
           documentation: The <code>Size</code> of the hit object.
-          type: Vector3
+          read: Vector3
         Distance:
           documentation: The distance between the start of the ray and the contact point.
-          type: number
+          read: number
     ObjectDetectorHitData:
       documentation: A type that demonstrates the fact that what type the object detector returns depends on what it hits.
       union:
@@ -1238,47 +1238,47 @@ types:
       type:
         Desc:
           documentation: A description of the event that happened in the region.
-          type: string
+          read: string
         Event:
           documentation: The type of event that happened in the region.
-          type: RegionLogType
+          read: RegionLogType
         TimeAgo:
           documentation: The time since the event happened, in seconds. Does not update in real time.
-          type: number
+          read: number
   User Input Mediums:
     UserInputObject:
       documentation: The Waste of Space equivalent of ROBLOX's <code>InputObject</code>.
       type:
         KeyCode:
           documentation: Contains a <code>Enum.KeyCode</code> enum that describes what kind of input was used. For types of input like keyboard, this describes what key was pressed. For inputs like the mouse, this provides no additional information.
-          type: Enum.KeyCode
+          read: Enum.KeyCode
         KeyName:
           documentation: Will be capitalised if <code>Enum.KeyCode.LeftShift</code> <em>or</em> <code>Enum.KeyCode.RightShift</code> was held at the time of the input.
-          type: string
+          read: string
         UserInputState:
           documentation: Describes what the state of input this <code>UserInputObject</code> represents, such as whether the input has began, ended, or been changed somehow.
-          type: Enum.UserInputState
+          read: Enum.UserInputState
         UserInputType:
           documentation: Describes what kind of input this <code>UserInputObject</code> represents, such as mouse, keyboard, touch or gamepad input.
-          type: Enum.UserInputType
+          read: Enum.UserInputType
     Cursor:
       documentation: A specific user's cursor on a <code>TouchScreen</code>.
       type:
         Player:
           documentation: The <code>Username</code> of the <code>Cursor</code>'s owner.
-          type: string
+          read: string
         UserId:
           documentation: The <code>UserId</code> of the <code>Cursor</code>'s owner.
-          type: number
+          read: number
         Pressed:
           documentation: Whether or not the left mouse button is held.
-          type: boolean
+          read: boolean
         X:
           documentation: The <code>X</code> position of the <code>Cursor</code> relative to the top left corner of the display.
-          type: number
+          read: number
         Y:
           documentation: The <code>Y</code> position of the <code>Cursor</code> relative to the top left corner of the display.
-          type: number
+          read: number
     AR:
       ARInput:
         documentation: This class is obtained through <code>ARCursor.UserInput</code> and provides information about the user's input.
@@ -1288,42 +1288,42 @@ types:
             documentation:
               description: A dictionary of <code>Enum.UserInputType.GamepadX</code> keys to an array of <code>InputObject</code>s representing the current state of all available inputs for said gamepad as values.
               source: https://discord.com/channels/616089055532417036/823313507167502336/1038621144397381692
-            type:
+            read:
               !indexer Enum.UserInputType:
-                array-type: InputObject
+                read-array-type: InputObject
           GamepadEnabled:
             documentation: This property describes whether the device being used by a user has an available gamepad. If gamepads are available.
-            type: boolean
+            read: boolean
           Keyboard:
             documentation:
               description: An array of <code>InputObject</code>s associated with the keys currently being pressed.
               source: https://create.roblox.com/docs/reference/engine/classes/UserInputService#GetKeysPressed
-            array-type: InputObject
+            read-array-type: InputObject
           KeyboardEnabled:
             documentation:
               description: This property describes whether the user's device has a keyboard available. This property is <code>true</code> when the user's device has an available keyboard, and <code>false</code> when it does not.
               source: https://create.roblox.com/docs/reference/engine/classes/UserInputService#KeyboardEnabled
-            type: boolean
+            read: boolean
           LastInputType:
             documentation:
               description: The <code>Enum.UserInputType</code> associated with the user's most recent input.
               source: https://create.roblox.com/docs/reference/engine/classes/UserInputService#GetLastInputType
-            type: Enum.UserInputType
+            read: Enum.UserInputType
           Mouse:
             documentation:
               description: An array of <code>InputObject</code>s corresponding to the mouse buttons currently being currently held down.
               source: https://create.roblox.com/docs/reference/engine/classes/UserInputService#GetMouseButtonsPressed
-            array-type: InputObject
+            read-array-type: InputObject
           TouchEnabled:
             documentation:
               description: This property describes whether the user's current device has a touch screen available.
               source: https://create.roblox.com/docs/reference/engine/classes/UserInputService#TouchEnabled
-            type: boolean
+            read: boolean
           VREnabled:
             documentation:
               description: This property describes whether the user is using a virtual reality (VR) device.
               source: https://create.roblox.com/docs/reference/engine/classes/UserInputService#VREnabled
-            type: boolean
+            read: boolean
       ARCamera:
         documentation: The player's camera, used for AR devices.
         type:
@@ -1381,61 +1381,61 @@ types:
         type:
           Player:
             documentation: The name of the player the cursor is for.
-            type: string
+            read: string
           UserId:
             documentation: The user ID of the player.
-            type: number
+            read: number
           Origin:
             documentation: A CFrame indicating where the mouse originated from. It is positioned at the camera and oriented toward the mouse's 3D position.
-            type: Vector3
+            read: Vector3
           UnitRay:
             documentation: A Ray directed toward the mouse's position in 3D space. It originates from the CFrame of the camera. Like all unit rays, it has a magnitude of 1.
-            type: Ray
+            read: Ray
           WorldPosition:
             documentation: The world position of the mouse cursor.
-            type: Vector3
+            read: Vector3
           Target:
             documentation: The PartObject that is being hovered over. You can call methods on this part!
-            type: PilotObject
+            read: PilotObject
           Pressed:
             documentation: A boolean for whether or not the mouse button is pressed.
-            type: boolean
+            read: boolean
           UserInput:
             documentation: A table of input data (would suggest printing with repr) - Contains Mouse, Keyboard, Gamepad, VREnabled, KeyboardEnabled, TouchEnabled, GamepadEnabled, and LastInputType.
-            type: ARInput
+            read: ARInput
           ScreenPosition:
             documentation: The XY screen position of the mouse cursor.
-            type: Vector2
+            read: Vector2
           UserCFrames:
             documentation: Contains <code>Head</code>, <code>LeftHand</code>, and <code>RightHand</code> <code>CFrame</code>s for VR.
-            type:
+            read:
               RightHand:
-                type: CFrame
+                read: CFrame
               LeftHand:
-                type: CFrame
+                read: CFrame
               Head:
-                type: CFrame
+                read: CFrame
           X:
             documentation: The <code>X</code> position of the cursor on the screen.
-            type: number
+            read: number
           Y:
             documentation: The <code>Y</code> position of the cursor on the screen.
-            type: number
+            read: number
           VirtualWorldPosition:
             documentation: The world position of the mouse cursor in the virtual 3D space.
-            type: Vector3
+            read: Vector3
           Hit:
             documentation: The <code>CFrame</code> the user's mouse is located at.
-            type: CFrame
+            read: CFrame
           VirtualTarget:
             documentation: The hovered part in the virtual 3D space.
-            type: BasePart
+            read: BasePart
           MouseDelta:
             documentation: The current change in position of the mouse for the frame that was sent.
-            type: Vector2
+            read: Vector2
           Camera:
             documentation: The camera of the player associated with the mouse.
-            type: ARCamera
+            read: ARCamera
   String Enums:
     General:
       ComponentName:
@@ -1670,7 +1670,7 @@ types:
             - name: subnet
               type: Network
       __index:
-        type: Network
+        read: Network
       new:
         documentation:
           warning: This function is volatile and may be subject to change as it is primarily for internal use.
@@ -1982,7 +1982,7 @@ classes:
               documentation: An dictionary of configurable names to data about that configurable.
               type:
                 !indexer string:
-                  type: ConfigurableData
+                  read: ConfigurableData
         GetEvents:
           documentation: Gets information about the events of the object.
           returns:
@@ -1996,7 +1996,7 @@ classes:
               documentation: An dictionary of method names to data about that method.
               type:
                 !indexer string:
-                  type: MethodData
+                  read: MethodData
         GetNameOfOwnerAsync:
           documentation:
             description: Returns the username of the owner of the part, if the part is locked, otherwise returns the username of the creator of the part.
@@ -2250,7 +2250,7 @@ classes:
             - name: cursors
               type:
                 !indexer number:
-                  type: ARCursor
+                  read: ARCursor
         GetCursor:
           documentation: Returns the part owner's cursor, or, alternatively, any other player's cursor if the owner does not have a cursor (this is considered the primary user).
           returns:
@@ -2321,9 +2321,9 @@ classes:
             - name: recipe
               type:
                 Power:
-                  type: number
+                  read: number
                 !indexer string:
-                  type: number
+                  read: number
               documentation: Information relating to the crafting recipe.
         CraftItems:
           documentation:
@@ -2345,7 +2345,7 @@ classes:
             - name: recipe
               type:
                 !indexer string:
-                  type: number
+                  read: number
         Craft:
           documentation: |-
             Will pause and craft the desired item at the next available point, returning a boolean representing whether or not the item was successfully crafted.
@@ -2385,7 +2385,7 @@ classes:
             - name: materials
               type:
                 !indexer string:
-                  type: number
+                  read: number
               documentation: The materials required to generate the model.
       events:
         Configured: *ConfiguredEvent
@@ -2668,7 +2668,10 @@ classes:
       configurables:
         Type:
           documentation: The type of instrument readout to display on the instrument.
-          type: InstrumentType
+          read: number
+          write-union:
+            - type: InstrumentType
+            - type: number
   Light:
     documentation:
       description: Emits light when powered with electricity. Can be colored in different ways, changing the light color.
@@ -2884,9 +2887,9 @@ classes:
             - name: response
               type:
                 success:
-                  type: boolean
+                  read: boolean
                 response:
-                  type: string
+                  read: string
         SendMessage:
           parameters:
             - name: data
@@ -3308,7 +3311,7 @@ classes:
             - name: cursors
               type:
                 !indexer string:
-                  type: Cursor
+                  read: Cursor
               documentation: A dictionary of player usernames to their cursors.
         GetCursor:
           documentation: Gets the specified player's cursor.
@@ -3372,7 +3375,10 @@ classes:
           type: number
         Mode:
           documentation: "The control mode of the seat. Horizontal: Rotate horizontally with A/D. Full: Rotate horizontally and vertically with W/A/S/D. Mouse: point towards the player's mouse when holding click."
-          type: VehicleSeatMode
+          read: number
+          write-union:
+            - type: VehicleSeatMode
+            - type: number
         Enabled:
           documentation: Determines whether this seat should control its rotation. Turning this off results in a regular seat.
           type: boolean
@@ -3830,7 +3836,7 @@ classes:
             - name: reading
               type:
                 !indexer string:
-                  type: Vector3
+                  read: Vector3
               documentation: A dictionary of humanoid names to their world positions.
         ListPlayers:
           documentation:
@@ -3845,7 +3851,7 @@ classes:
             - name: players
               type:
                 !indexer number:
-                  type: CFrame
+                  read: CFrame
               documentation: A dictionary of player <code>UserId</code>s to their world CFrames.
   LightTube:
     documentation:
@@ -3895,10 +3901,10 @@ classes:
               type:
                 !indexer string:
                   documentation: A celestial body.
-                  type:
+                  read:
                     PlanetType:
                       documentation: The type of the celestial body.
-                      type: PlanetType
+                      read: PlanetType
               documentation: The celestial bodies in the current system.
 
   # Has events, is configurable, and is both craftable and spawnable
@@ -3932,7 +3938,10 @@ classes:
       configurables:
         Limb:
           documentation: The name of the limb that this Apparel is for.
-          type: PlayerLimb
+          read: number
+          write-union:
+            - type: PlayerLimb
+            - type: number
         Transparency:
           documentation:
             description: The transparency of this Apparel.
@@ -4350,7 +4359,10 @@ classes:
       configurables:
         Limb:
           documentation: The name of the limb that this Prosthetic is for.
-          type: PlayerLimb
+          read: number
+          write-union:
+            - type: PlayerLimb
+            - type: number
   ProximityButton:
     documentation:
       description: Sends trigger signals when interacted via its ProximityPrompt.
@@ -4680,7 +4692,10 @@ classes:
       configurables:
         Shape:
           documentation: The shape of the blade.
-          type: BladeShape
+          read: number
+          write-union:
+            - type: BladeShape
+            - type: number
   FluidProjector:
     documentation:
       description: |-
@@ -5408,10 +5423,16 @@ classes:
       configurables:
         Swing:
           documentation: What the tool should do when clicking. Point mode will aim the handle at the mouse cursor.
-          type: HandleSwingMode
+          read: number
+          write-union:
+            - type: HandleSwingMode
+            - type: number
         TriggerMode:
           documentation: Determines when this Handle should send trigger signals.
-          type: HandleTriggerMode
+          read: number
+          write-union:
+            - type: HandleTriggerMode
+            - type: number
         ToolName:
           documentation:
             description: The name of the tool.
@@ -5433,7 +5454,10 @@ classes:
           type: number
         RemoteControlMode:
           documentation: The way in which trigger signals should be transmitted. This setting only affects parts that are connective to trigger signals (e.g. TriggerWire).
-          type: RemoteControlMode
+          read: number
+          write-union:
+            - type: RemoteControlMode
+            - type: number
   Router:
     documentation:
       description: A wireless transmitter that can transmit an ethernet connection.
@@ -5521,7 +5545,10 @@ classes:
       configurables:
         Mode:
           documentation: The mode of the relay. Send outputs materials to other receiving relays; Receive receives materials from sending relays.
-          type: RelayMode
+          read: number
+          write-union:
+            - type: RelayMode
+            - type: number
         LinkerID:
           documentation:
             description: The ID of the relay, to send or take materials to or from other relays with the same ID.
