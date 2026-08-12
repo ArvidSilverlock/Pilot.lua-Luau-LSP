@@ -1,4 +1,4 @@
-local polysilicons = GetParts("Polysilicon")
+local polysilicons = Network:GetParts("Polysilicon")
 
 while true do
 	for _, polysilicon in polysilicons do
