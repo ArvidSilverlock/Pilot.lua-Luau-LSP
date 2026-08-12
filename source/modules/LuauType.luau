@@ -185,12 +185,6 @@ function luauTypes.getTypeState(source, parent: (State | RootState)?, hydratorCa
 	end
 end
 
---[[
-	The groups a member of a table (or of a class) is written from.
-
-	This is a single group for ordinary members, but `read`/`write` members are written as one entry per access,
-	as that is how luau represents them (i.e., `read foo: string, write foo: number`).
-]]
 function luauTypes.getAccessGroups(state: State): { TypeGroup }
 	if not (state.read or state.write) then
 		return { state.base }
@@ -215,15 +209,6 @@ local function withoutAccess(group: TypeGroup): TypeGroup
 	return plainGroup
 end
 
---[[
-	The groups that are actually written out for a member.
-
-	Luau's old type solver (the one luau-lsp uses unless the new solver is opted into) rejects an entire definition
-	file that has `read`/`write` in a table type, or that has both a `read` and a `write` for the same member. So,
-	unless the root opted into the new solver (see `accessSupported`), those are collapsed into a single plain type.
-
-	A lone `read`/`write` on a class member is written either way, as the old solver loads it (it just ignores it).
-]]
 function luauTypes.getOutputGroups(state: State, isClassMember: boolean?): { TypeGroup }
 	local groups = luauTypes.getAccessGroups(state)
 
@@ -356,6 +341,23 @@ local function writeKey(output: Snippet.Snippet, key: { string } | string, acces
 	end
 end
 
+local function isCallOnly(state: State, group: TypeGroup, hydratorCallback): boolean
+	local context = group.context
+
+	if context.style ~= "intersection" then
+		return context.isMethod == true
+	end
+
+	for _, element in group.value do
+		local elementState = luauTypes.getTypeState(element, state, hydratorCallback)
+		if not (elementState and elementState.base.context.isMethod) then
+			return false
+		end
+	end
+
+	return true
+end
+
 function luauTypes.writeType(output: Snippet.Snippet, state: State, group: TypeGroup, hydratorCallback)
 	local value, context = group.value, group.context
 
@@ -390,7 +392,20 @@ function luauTypes.writeType(output: Snippet.Snippet, state: State, group: TypeG
 					assert(luauTypes.getTypeState(subValue, state, hydratorCallback), "no context found")
 
 				for _, memberGroup in luauTypes.getOutputGroups(memberState) do
-					writeKey(output, key, memberGroup.context.access)
+					local memberContext = memberGroup.context
+
+					-- a method is called, not swapped out, so it is written as a member you can only read
+					local access = memberContext.access
+					if
+						not access
+						and state.root
+						and state.root.accessSupported
+						and isCallOnly(memberState, memberGroup, hydratorCallback)
+					then
+						access = READ_ACCESS
+					end
+
+					writeKey(output, key, access)
 					luauTypes.writeFromState(output, memberState, hydratorCallback, memberGroup)
 					output:PushLine(",")
 				end
@@ -720,13 +735,6 @@ function luauTypes.setNullable(type, nullable: boolean, hydratorCallback)
 	return typeCopy
 end
 
---[[
-	Returns a copy of `type` holding only the type you can `access`, written without the access modifier.
-
-	This is for the places that need a plain type out of a `read`/`write` type, such as the configuration types,
-	which are tables you write, and so are built out of the `write` type. If the type has no `access` type (i.e.,
-	the write type of a read-only member) the type it does have is used, just without its access modifier.
-]]
 function luauTypes.collapseAccess(type, access: Access, hydratorCallback)
 	local typeState = luauTypes.getTypeState(type, nil, hydratorCallback)
 
